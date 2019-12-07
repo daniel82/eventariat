@@ -1,0 +1,94 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+
+$color_green : rgb(186, 218, 85) !default;
+$color_blue: #3490dc;
+$color_red: #cc0000;
+
+.bg-black
+{
+  background: rgba(34, 34, 34, 0.98);
+}
+
+.color-green
+{
+    color: $color_green;
+}
+
+.color-blue
+{
+    color: $color_blue;
+}
+
+.color-red
+{
+    color: $color_red;
+}
+
+.is-required
+{
+    &:after
+    {
+        content: "*";
+        color: $color_red;
+        margin-left: 5px;
+        font-weight: bold;
+    }
+}
+
+
+html, body
+{
+    background-color: #fff;
+
+    font-family: 'Nunito', sans-serif;
+    font-weight: 200;
+    height: 100vh;
+    margin: 0;
+}
+
+
+.ev-header
+{
+    a
+    {
+        color: white;
+        padding: 0.5rem 1rem;
+        display: block;
+
+        &:hover,
+        &:focus
+        {
+            color: $color_green;
+        }
+    }
+}
+
+
+button
+{
+    background: transparent;
+}
+
+
+.ev-add-btn
+{
+    padding: 0;
+    border: 0;
+    font-size: 3rem;
+    color: $color_blue;
+
+    &:hover,
+    &:focus
+    {
+            color: darken($color_blue, 20);
+    }
+}
+
