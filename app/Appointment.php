@@ -51,4 +51,11 @@ class Appointment extends Model
     // dd($date_from);
     return $query->where($date_from);
   }
+
+  public function leaveDayToJson()
+  {
+
+  }
+
+
 }

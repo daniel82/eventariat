@@ -16,6 +16,12 @@ class User extends Model
 
     use Notifiable;
 
+
+    public function __construct()
+    {
+        // dump($this);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -38,7 +44,6 @@ class User extends Model
 
     public function setMobileAttribute( $value )
     {
-
         if ( trim($value) )
         {
             if ( $value[0] === "0" )
