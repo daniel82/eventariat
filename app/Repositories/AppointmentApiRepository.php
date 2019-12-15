@@ -30,11 +30,7 @@ class AppointmentApiRepository
 
     $from_month      = Carbon::create($date_from)->month;
     $to_month        = Carbon::create($date_to)->month;
-    $from_month      = Carbon::create($date_from)->month;
-    $to_month        = Carbon::create($date_to)->month;
-
     $period          = new CarbonPeriod($date_from, '1 day', $date_to);
-
 
     $data = [];
 
@@ -60,11 +56,8 @@ class AppointmentApiRepository
       $the_date_end = $date->format("Y-m-d")." 24:00:00";
       $data[$the_date] = collect();
 
-      // fewo & urlaub
-      //
 
-
-
+      // Urlaub
       $leave_dates = $leaveDays->filter(function ($appointment, $key) use($the_date)
       {
         return ($appointment->date_from >= $the_date && $appointment->date_to <= $the_date);
@@ -75,14 +68,13 @@ class AppointmentApiRepository
       }
 
 
-
+      // Ereignisse ohne Lokalitaet
       if ( $events = $top_events->whereBetween("date_from", [$the_date_start, $the_date_end] ) )
       {
         $data[$the_date] = $data[$the_date]->merge($events);
       }
 
-
-
+      // FeWo
       $fewo_dates = $fewo_events->filter(function ($appointment, $key) use($the_date)
       {
         return ($appointment->date_from >= $the_date && $appointment->date_to <= $the_date);
@@ -93,6 +85,7 @@ class AppointmentApiRepository
       }
 
 
+      // Geburtstage
       $birthday_kids = $users->filter(function ($user, $key) use($the_date)
       {
         return ( substr($user->birthdate, 5, 5) ) == substr($the_date, 5, 5) ;
@@ -104,6 +97,7 @@ class AppointmentApiRepository
       }
 
 
+      // Normale Arbeit
       if ( $appointments = Appointment::work()->dateFrom($the_date)->orderBy("date_from", "ASC")->orderBy("location_id", "ASC")->get() )
       {
         $data[$the_date] = $data[$the_date]->merge($appointments);
