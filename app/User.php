@@ -52,6 +52,11 @@ class User extends Model
     }
 
 
+    public function scopeBirthdate( $query, $from, $to=null )
+    {
+        return $query->whereRaw( 'extract(month from birthdate) >= ? AND extract(month from birthdate) <= ?  ', [$from, $to] );
+    }
+
 
 
     /**
