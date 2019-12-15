@@ -26,3 +26,12 @@
     {{ Form::label("city", "Ort", ["class" => ""])}}
     {{Form::text("city", $object->city, ["class" => "form-control"] )}}
 </div>
+
+
+<div class="form-group">
+    {{ Form::label("color", "Farbe", ["class" => ""])}}
+    {{Form::text("color", $object->color, ["class" => "form-control", "id"=>"color" ] )}}
+
+</div>
+
+<div class="wheel" id="colorWheelDemo"></div>

@@ -15,5 +15,7 @@ class Location extends Model
         'phone',
 
         'street', 'zipcode', 'city',
+
+        'color',
     ];
 }

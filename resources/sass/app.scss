@@ -8,9 +8,9 @@
 @import '~bootstrap/scss/bootstrap';
 
 
-$color_green : rgb(186, 218, 85) !default;
-$color_blue: #3490dc;
-$color_red: #cc0000;
+$color_green : #bada55 !default;
+$color_blue: #3490dc !default;
+$color_red: #cc0000 !default;
 
 .bg-black
 {
@@ -47,8 +47,7 @@ $color_red: #cc0000;
 html, body
 {
     background-color: #fff;
-
-    font-family: 'Nunito', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
     font-weight: 200;
     height: 100vh;
     margin: 0;
@@ -57,16 +56,24 @@ html, body
 
 .ev-header
 {
-    a
+    .nav-item
     {
-        color: white;
-        padding: 0.5rem 1rem;
-        display: block;
+        border-right:1px solid #9F9C99;
 
-        &:hover,
-        &:focus
+        a,
+        .nav-link
         {
-            color: $color_green;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            display: block;
+
+            &:hover,
+            &:focus
+            {
+                // color: $color_green;
+                // color: #FF6F61;
+                color: #F0EAD6;
+            }
         }
     }
 }
@@ -88,7 +95,21 @@ button
     &:hover,
     &:focus
     {
-            color: darken($color_blue, 20);
+        color: darken($color_blue, 20);
     }
+}
+
+.ev-color-square
+{
+   width:20px;
+   height:20px;
+   display: inline-block;
+   position: relative;
+   margin-top: 5px;
+}
+
+.wheel
+{
+    text-align: center;
 }
 

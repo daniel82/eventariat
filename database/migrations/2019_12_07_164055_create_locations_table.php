@@ -14,7 +14,7 @@ class CreateLocationsTable extends Migration
     public function up()
     {
         Schema::create('locations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
 
@@ -23,6 +23,7 @@ class CreateLocationsTable extends Migration
             $table->string('street')->nullable();
             $table->integer('zipcode')->nullable();
             $table->string('city')->nullable();
+            $table->string('color')->nullable();
         });
     }
 

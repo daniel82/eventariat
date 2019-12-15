@@ -11382,21 +11382,28 @@ a.text-dark:focus {
 html,
 body {
   background-color: #fff;
-  font-family: "Nunito", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
   font-weight: 200;
   height: 100vh;
   margin: 0;
 }
 
-.ev-header a {
+.ev-header .nav-item {
+  border-right: 1px solid #9F9C99;
+}
+
+.ev-header .nav-item a,
+.ev-header .nav-item .nav-link {
   color: white;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.5rem;
   display: block;
 }
 
-.ev-header a:hover,
-.ev-header a:focus {
-  color: #bada55;
+.ev-header .nav-item a:hover,
+.ev-header .nav-item a:focus,
+.ev-header .nav-item .nav-link:hover,
+.ev-header .nav-item .nav-link:focus {
+  color: #F0EAD6;
 }
 
 button {
@@ -11413,5 +11420,17 @@ button {
 .ev-add-btn:hover,
 .ev-add-btn:focus {
   color: #195b91;
+}
+
+.ev-color-square {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+  margin-top: 5px;
+}
+
+.wheel {
+  text-align: center;
 }
 
