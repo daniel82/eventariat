@@ -20,6 +20,8 @@ class AppointmentApiRepository
     $location_ids   = $request->get("locations");
     $nav            = $request->get("nav", null);
 
+    $user = User::find(1);
+
     if ( $nav )
     {
       if ( $nav === "next" && $date_to )
@@ -78,18 +80,37 @@ class AppointmentApiRepository
 
     // dd($from_month);
     // birthdays
-    $users          = User::birthdate($from_month, $to_month)->get();
-//
-    // dd($users);
+    $users = collect();
+    if ( $user->canSee("events") )
+    {
+      $users = User::birthdate($from_month, $to_month)->get();
+    }
+
 
     // events without location
-    $top_events     = Appointment::events()->noLocation()->dateFromBetween($date_from, $date_to)->orderBy("date_from")->get();
+    $top_events = collect();
+    if ( $user->canSee("events") )
+    {
+      $top_events = Appointment::events()->noLocation()->dateFromBetween($date_from, $date_to)->orderBy("date_from")->get();
+    }
+
 
     // FeWo
-    $fewo_events    = Appointment::holidayFlat()->dateFromBetween($date_from, $date_to)->orderBy("date_from", "ASC")->orderBy("location_id", "ASC")->get();
+    $fewo_events = collect();
+    if ( $user->canSee("fewo_dates") )
+    {
+      $fewo_events = Appointment::holidayFlat()->dateFromBetween($date_from, $date_to)->orderBy("date_from", "ASC")->orderBy("location_id", "ASC")->get();
+    }
 
+
+    $fewo_dates = collect();
     // the users leave days
-    $leaveDays      = Appointment::leaveDays()->userIds($user_ids)->dateFromBetween($date_from, $date_to)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get();
+    if ( $user->canSee("leave_days") )
+    {
+      $leaveDays = Appointment::leaveDays()->userIds($user_ids)->dateFromBetween($date_from, $date_to)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get();
+
+    }
+
 
     // // work
     $items=[];
@@ -146,6 +167,11 @@ class AppointmentApiRepository
       }
 
 
+
+      if ( !$user->can_see_other_appointments )
+      {
+        $user_ids  = [$user->id];
+      }
       // Normale Arbeit
       if ( $appointments = Appointment::work()->userIds($user_ids)->locationIds($location_ids)->dateFrom($the_date)->orderBy("date_from", "ASC")->orderBy("location_id", "ASC")->get() )
       {

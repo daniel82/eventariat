@@ -43,8 +43,8 @@ class UserController extends Controller
      */
     public function create( User $user )
     {
-        #$data = $this->userRepository->getFormData($user);
-        $data["object"] = $user;
+        $data = $this->userRepository->getFormData($user);
+        // $data["object"] = $user;
 
         return view("users.create", $data );
     }
@@ -58,6 +58,7 @@ class UserController extends Controller
     public function store(Requests\CreateUser $request, User $user)
     {
         $request["password"] = $request->get("password", uniqid() );
+        $request["appointment_types"] = serialize( $request->get("appointment_types", []) );
         $user = User::create($request->all());
         $message = "Mitarbeiter wurde gespeichert";
 
@@ -83,7 +84,7 @@ class UserController extends Controller
      */
     public function edit( Request $request, User $user )
     {
-        $data["object"] = $user;
+        $data = $this->userRepository->getFormData($user);
 
         return view("users.edit", $data );
     }
@@ -97,6 +98,10 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user )
     {
+
+        // dd($request->all());
+        $request["can_see_other_appointments"] = $request->get("can_see_other_appointments", 0);
+        $request["appointment_types"] = serialize( $request->get("appointment_types", []) );
         $user->update( $request->all() );
 
         $message = "Mitarbeiter wurde aktualisiert";

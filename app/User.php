@@ -16,6 +16,11 @@ class User extends Model
 
     use Notifiable;
 
+    protected $casts = [
+      // 'appointment_types' => 'array', //TODO JSON
+      'email_verified_at' => 'datetime',
+    ];
+
 
     public function __construct()
     {
@@ -39,6 +44,9 @@ class User extends Model
         'leave_days', 'hours_of_work',
 
         'role', 'employment',
+
+        'can_see_other_appointments',
+        'appointment_types',
     ];
 
 
@@ -91,6 +99,15 @@ class User extends Model
     }
 
 
+    public function canSee( $appointment_type )
+    {
+      // dd($this->appointment_types);
+      $appointment_types = ($this->appointment_types) ? unserialize($this->appointment_types) : [];
+
+      return in_array($appointment_type, $appointment_types);
+    }
+
+
 
 
 
@@ -104,12 +121,4 @@ class User extends Model
         'password', 'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
 }

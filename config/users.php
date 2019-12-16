@@ -26,5 +26,15 @@ return [
     ],
 
 
+    'appointment_types' =>
+    [
+        'birthdates' => 'Geburtstage',
+        'events'     => 'Ereignisse',
+        'fewo_dates' => 'FeWo',
+        'leave_days' => 'Urlaub',
+        'work'       => 'Arbeit',
+    ],
+
+
 
 ];

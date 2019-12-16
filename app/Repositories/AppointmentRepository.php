@@ -25,9 +25,6 @@ class AppointmentRepository
     $date_from = "2019-12-30";
     $date_to = "2020-02-02";
 
-
-
-
     $data["ev_app_data"] =
     [
       "date_from"    => $date_from,
@@ -39,7 +36,9 @@ class AppointmentRepository
       "busy"         => "",
     ];
 
-    $data["users"]      = User::all();
+    // TODO
+    $user = User::find(1);
+    $data["users"]      = ( $user->can_see_other_appointments ) ? User::all() : collect([$user]);
     $data["locations"]   = Location::all();
 
 
