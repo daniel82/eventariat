@@ -9,8 +9,8 @@
 </div>
 
 <div class="form-group">
-    {{ Form::label("birthday", "Geburtstag", ["class" => ""])}}
-    {{Form::date("birthday", $object->birthday, ["class" => "form-control"] )}}
+    {{ Form::label("birthdate", "Geburtstag", ["class" => ""])}}
+    {{Form::date("birthdate", $object->birthdate, ["class" => "form-control"] )}}
 </div>
 
 <hr class="my-5" />

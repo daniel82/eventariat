@@ -10,6 +10,12 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+function _log( message ){
+  console.log(message);
+}
+
+
+
 function docReady(fn) {
     // see if DOM is already available
     if (document.readyState === "complete" || document.readyState === "interactive") {
@@ -41,16 +47,98 @@ function docReady(fn) {
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-// const app = new Vue({
-//     el: '#app',
-// });
 
-
-
-docReady(function() {
-    // DOM is loaded and ready for manipulation here
+docReady(function()
+ {
+  startCalendarApp();
   startColorPicker();
 });
+
+function startCalendarApp()
+{
+  if ( !document.getElementById("ev-calendar-app") )
+  {
+    return false;
+  }
+
+
+  const app = new Vue(
+  {
+    el: '#ev-calendar-app',
+    data: ev_app_data,
+
+    methods:
+    {
+      getItems : function()
+      {
+        let request_data =
+        {
+          "date_from" : this.date_from,
+          "date_to"   : this.date_to,
+          "users"     : this.user_ids,
+          "locations" : this.location_ids
+        };
+
+        _log(request_data);
+
+        this.ajaxRequest(request_data);
+      },
+
+
+      updateItems : function()
+      {
+        this.getItems();
+      },
+
+      ajaxRequest : function(request_data)
+      {
+        this.busy = "busy";
+        $.ajax(
+        {
+          url: "/api/appointments",
+          type: 'GET',
+          data: request_data,
+          dataType: 'JSON',
+          success: this.updateItems_ajaxCallback,
+          error: this.updateItems_ajaxCallback
+          }
+        );
+      },
+
+
+      updateItems_ajaxCallback : function( response )
+      {
+        _log(response);
+        if ( typeof response === "object" )
+        {
+          this.items = response;
+        }
+
+        this.busy = "";
+      },
+
+      locationClass : function( location_id )
+      {
+        return "location-"+location_id
+      },
+
+      isBirthday : function (type)
+      {
+        return (type === "birthday" );
+      }
+
+
+
+    },
+
+    created : function()
+    {
+      _log("created");
+      this.getItems();
+    },
+  });
+
+}
 
 
 

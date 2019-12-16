@@ -1,0 +1,23 @@
+$color_green : #bada55 !default;
+$color_blue: #3490dc !default;
+$color_red: #cc0000 !default;
+
+.bg-black
+{
+  background: rgba(34, 34, 34, 0.98);
+}
+
+.color-green
+{
+    color: $color_green;
+}
+
+.color-blue
+{
+    color: $color_blue;
+}
+
+.color-red
+{
+    color: $color_red;
+}

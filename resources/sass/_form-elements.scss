@@ -1,0 +1,32 @@
+.is-required
+{
+    &:after
+    {
+        content: "*";
+        color: $color_red;
+        margin-left: 5px;
+        font-weight: bold;
+    }
+}
+
+
+
+button
+{
+    background: transparent;
+}
+
+
+.ev-add-btn
+{
+    padding: 0;
+    border: 0;
+    font-size: 3rem;
+    color: $color_blue;
+
+    &:hover,
+    &:focus
+    {
+        color: darken($color_blue, 20);
+    }
+}

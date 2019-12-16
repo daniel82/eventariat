@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/appointments', "AppointmentController@index" );
+
 
 Route::prefix('admin')->group(function () {
   Route::resource('users', "UserController");

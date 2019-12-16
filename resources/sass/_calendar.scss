@@ -1,0 +1,84 @@
+.busy
+{
+  opacity: 0.6;
+}
+
+.appointment-row
+{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.appointment-col
+{
+  width: 14%;
+
+}
+
+.appointment-col__items
+{
+  min-height: 300px;
+  padding: 0.1rem 0.1rem;
+
+  border:1px solid #999;
+  margin-bottom: 2rem;
+}
+
+.appointment-col__items
+{
+
+  .event
+  {
+    background: #9B1B30;
+  }
+
+  .birthday
+  {
+    background: #E08119;
+  }
+
+  .event,
+  .birthday
+  {
+    border-radius: 2px;
+
+    a,
+    span
+    {
+      color: white;
+    }
+  }
+
+}
+
+.ev-appointment
+{
+  padding: 0rem 0.3rem;
+  font-size: 0.75rem;
+
+  a,
+  span
+  {
+    display: block;
+  }
+
+  &.work,
+  &.event
+  {
+    &:hover,
+    &:focus
+    {
+      // background: #F3E0BE;
+      background: #f1f1f1;
+      a
+      {
+        text-decoration: none;
+        color: black;
+      }
+    }
+  }
+
+
+
+}

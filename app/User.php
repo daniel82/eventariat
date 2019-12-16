@@ -28,7 +28,7 @@ class User extends Model
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'birthday',
+        'first_name', 'last_name', 'birthdate',
 
         'email', 'phone', 'mobile',
 
@@ -57,10 +57,41 @@ class User extends Model
     }
 
 
+    public function getCalendarName()
+    {
+      return $this->first_name." ".$this->last_name[0].".";
+    }
+
+
     public function scopeBirthdate( $query, $from, $to=null )
     {
-        return $query->whereRaw( 'extract(month from birthdate) >= ? AND extract(month from birthdate) <= ?  ', [$from, $to] );
+
+      $from = ( $from > 12 ) ? $from : 1;
+      return $query->whereRaw( 'extract(month from birthdate) >= ? AND extract(month from birthdate) <= ?  ', [$from, $to] );
+        // dd($from);
+     // return $query->whereRaw( 'extract(month from birthdate) >= ?  ', [$from] );
     }
+
+
+    public static function getAllAsJson()
+    {
+        $users = User::all();
+
+        $json = [];
+        foreach ($users as $key => $user)
+        {
+          $json[] =
+          [
+            "label"    => $user->first_name." ".$user->last_name,
+            "id"       => $user->id
+          ];
+        }
+
+        return $json;
+    }
+
+
+
 
 
 

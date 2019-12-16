@@ -1,0 +1,23 @@
+.ev-header
+{
+    .nav-item
+    {
+        border-right:1px solid #9F9C99;
+
+        a,
+        .nav-link
+        {
+            color: white;
+            padding: 0.5rem 1.5rem;
+            display: block;
+
+            &:hover,
+            &:focus
+            {
+                // color: $color_green;
+                // color: #FF6F61;
+                color: #F0EAD6;
+            }
+        }
+    }
+}

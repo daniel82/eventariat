@@ -51113,6 +51113,8 @@ module.exports = function(module) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _jaames_iro__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @jaames/iro */ "./node_modules/@jaames/iro/dist/iro.es.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -51123,6 +51125,10 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+
+function _log(message) {
+  console.log(message);
+}
 
 function docReady(fn) {
   // see if DOM is already available
@@ -51149,15 +51155,71 @@ function docReady(fn) {
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-// const app = new Vue({
-//     el: '#app',
-// });
 
 
 docReady(function () {
-  // DOM is loaded and ready for manipulation here
+  startCalendarApp();
   startColorPicker();
 });
+
+function startCalendarApp() {
+  if (!document.getElementById("ev-calendar-app")) {
+    return false;
+  }
+
+  var app = new Vue({
+    el: '#ev-calendar-app',
+    data: ev_app_data,
+    methods: {
+      getItems: function getItems() {
+        var request_data = {
+          "date_from": this.date_from,
+          "date_to": this.date_to,
+          "users": this.user_ids,
+          "locations": this.location_ids
+        };
+
+        _log(request_data);
+
+        this.ajaxRequest(request_data);
+      },
+      updateItems: function updateItems() {
+        this.getItems();
+      },
+      ajaxRequest: function ajaxRequest(request_data) {
+        this.busy = "busy";
+        $.ajax({
+          url: "/api/appointments",
+          type: 'GET',
+          data: request_data,
+          dataType: 'JSON',
+          success: this.updateItems_ajaxCallback,
+          error: this.updateItems_ajaxCallback
+        });
+      },
+      updateItems_ajaxCallback: function updateItems_ajaxCallback(response) {
+        _log(response);
+
+        if (_typeof(response) === "object") {
+          this.items = response;
+        }
+
+        this.busy = "";
+      },
+      locationClass: function locationClass(location_id) {
+        return "location-" + location_id;
+      },
+      isBirthday: function isBirthday(type) {
+        return type === "birthday";
+      }
+    },
+    created: function created() {
+      _log("created");
+
+      this.getItems();
+    }
+  });
+}
 
 function startColorPicker() {
   if (!document.getElementById("colorWheelDemo")) {

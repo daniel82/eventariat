@@ -14,6 +14,7 @@ class AppointmentApiController extends Controller
 {
   public function __construct( AppointmentApiRepository  $appointmentApiRepository )
   {
+    setlocale(LC_TIME, 'German');
     $this->appointmentApiRepository = $appointmentApiRepository;
   }
 

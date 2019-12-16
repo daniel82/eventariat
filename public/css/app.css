@@ -11372,13 +11372,6 @@ a.text-dark:focus {
   color: #cc0000;
 }
 
-.is-required:after {
-  content: "*";
-  color: #cc0000;
-  margin-left: 5px;
-  font-weight: bold;
-}
-
 html,
 body {
   background-color: #fff;
@@ -11406,6 +11399,13 @@ body {
   color: #F0EAD6;
 }
 
+.is-required:after {
+  content: "*";
+  color: #cc0000;
+  margin-left: 5px;
+  font-weight: bold;
+}
+
 button {
   background: transparent;
 }
@@ -11420,6 +11420,74 @@ button {
 .ev-add-btn:hover,
 .ev-add-btn:focus {
   color: #195b91;
+}
+
+.busy {
+  opacity: 0.6;
+}
+
+.appointment-row {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: justify;
+          justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.appointment-col {
+  width: 14%;
+}
+
+.appointment-col__items {
+  min-height: 300px;
+  padding: 0.1rem 0.1rem;
+  border: 1px solid #999;
+  margin-bottom: 2rem;
+}
+
+.appointment-col__items .event {
+  background: #9B1B30;
+}
+
+.appointment-col__items .birthday {
+  background: #E08119;
+}
+
+.appointment-col__items .event,
+.appointment-col__items .birthday {
+  border-radius: 2px;
+}
+
+.appointment-col__items .event a,
+.appointment-col__items .event span,
+.appointment-col__items .birthday a,
+.appointment-col__items .birthday span {
+  color: white;
+}
+
+.ev-appointment {
+  padding: 0rem 0.3rem;
+  font-size: 0.75rem;
+}
+
+.ev-appointment a,
+.ev-appointment span {
+  display: block;
+}
+
+.ev-appointment.work:hover,
+.ev-appointment.work:focus,
+.ev-appointment.event:hover,
+.ev-appointment.event:focus {
+  background: #f1f1f1;
+}
+
+.ev-appointment.work:hover a,
+.ev-appointment.work:focus a,
+.ev-appointment.event:hover a,
+.ev-appointment.event:focus a {
+  text-decoration: none;
+  color: black;
 }
 
 .ev-color-square {
