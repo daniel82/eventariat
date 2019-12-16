@@ -11381,6 +11381,10 @@ body {
   margin: 0;
 }
 
+.container {
+  max-width: 1200px;
+}
+
 .ev-header .nav-item {
   border-right: 1px solid #9F9C99;
 }
@@ -11424,6 +11428,17 @@ button {
 
 .busy {
   opacity: 0.6;
+}
+
+.ev-calendar-nav {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: end;
+          justify-content: flex-end;
+}
+
+.ev-calendar-nav button.btn-today {
+  margin: 0px 2px;
 }
 
 .appointment-row {

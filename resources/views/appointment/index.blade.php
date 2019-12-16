@@ -11,9 +11,7 @@
       {
         color: {{ $location->color }};
       }
-
     @endforeach
-
   </style>
 
   <script>ev_app_data = {!! json_encode($ev_app_data) !!}</script>

@@ -51171,16 +51171,31 @@ function startCalendarApp() {
     el: '#ev-calendar-app',
     data: ev_app_data,
     methods: {
-      getItems: function getItems() {
-        var request_data = {
+      getRequestData: function getRequestData() {
+        var rd = {
           "date_from": this.date_from,
           "date_to": this.date_to,
           "users": this.user_ids,
           "locations": this.location_ids
         };
-
-        _log(request_data);
-
+        return rd;
+      },
+      getItems: function getItems() {
+        this.ajaxRequest(this.getRequestData());
+      },
+      nextMonth: function nextMonth() {
+        var request_data = this.getRequestData();
+        request_data.nav = "next";
+        this.ajaxRequest(request_data);
+      },
+      prevMonth: function prevMonth() {
+        var request_data = this.getRequestData();
+        request_data.nav = "prev";
+        this.ajaxRequest(request_data);
+      },
+      thisWeek: function thisWeek() {
+        var request_data = this.getRequestData();
+        request_data.nav = "today";
         this.ajaxRequest(request_data);
       },
       updateItems: function updateItems() {
@@ -51201,7 +51216,9 @@ function startCalendarApp() {
         _log(response);
 
         if (_typeof(response) === "object") {
-          this.items = response;
+          this.items = response.items;
+          this.date_from = response.date_from;
+          this.date_to = response.date_to;
         }
 
         this.busy = "";

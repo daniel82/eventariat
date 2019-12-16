@@ -28,7 +28,6 @@ class AppointmentApiController extends Controller
     $data = $this->appointmentApiRepository->index($request);
 
     return response()->json( $data );
-
   }
 
     /**

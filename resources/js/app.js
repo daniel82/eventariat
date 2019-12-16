@@ -69,9 +69,10 @@ function startCalendarApp()
 
     methods:
     {
-      getItems : function()
+
+      getRequestData : function()
       {
-        let request_data =
+        let rd =
         {
           "date_from" : this.date_from,
           "date_to"   : this.date_to,
@@ -79,8 +80,35 @@ function startCalendarApp()
           "locations" : this.location_ids
         };
 
-        _log(request_data);
+        return rd;
+      },
 
+      getItems : function()
+      {
+        this.ajaxRequest(this.getRequestData());
+      },
+
+
+      nextMonth : function()
+      {
+        let request_data = this.getRequestData();
+        request_data.nav = "next";
+        this.ajaxRequest(request_data);
+      },
+
+
+      prevMonth : function()
+      {
+        let request_data = this.getRequestData();
+        request_data.nav = "prev";
+        this.ajaxRequest(request_data);
+      },
+
+
+      thisWeek : function()
+      {
+        let request_data = this.getRequestData();
+        request_data.nav = "today";
         this.ajaxRequest(request_data);
       },
 
@@ -111,7 +139,9 @@ function startCalendarApp()
         _log(response);
         if ( typeof response === "object" )
         {
-          this.items = response;
+          this.items     = response.items;
+          this.date_from = response.date_from;
+          this.date_to   = response.date_to;
         }
 
         this.busy = "";

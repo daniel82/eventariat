@@ -18,6 +18,41 @@ class AppointmentApiRepository
     $date_to        = $request->get("date_to");
     $user_ids       = $request->get("users");
     $location_ids   = $request->get("locations");
+    $nav            = $request->get("nav", null);
+
+    if ( $nav )
+    {
+      if ( $nav === "next" && $date_to )
+      {
+        $df = Carbon::create($date_to);
+        $date_from = date("Y-m-d", strtotime('monday this week', $df->timestamp ) );
+        $next_day = $df->add(1, "day");
+        // dd($next_day);
+        // $dt = new Carbon('last day of this month', $next_day->timestamp );
+        // $last_day = date("Y-m-d", strtotime('last day of this month', $next_day->timestamp ) );
+        $last_day_time = strtotime('last day of this month', $next_day->timestamp );
+        $date_to = date("Y-m-d", strtotime('sunday this week', $last_day_time ) );
+        // dd($date_to);
+      }
+      elseif ( $nav === "prev" && $date_from )
+      {
+        $df = Carbon::create($date_from);
+        $prev_day = $df->sub(1, "day");
+
+        $first_day_time = strtotime('first day of this month', $prev_day->timestamp );
+        $date_from = date("Y-m-d", strtotime('monday this week', $first_day_time ) );
+
+        $last_day_time = strtotime('last day of this month', $first_day_time );
+        $date_to = date("Y-m-d", strtotime('sunday this week', $last_day_time ) );
+      }
+      elseif ( $nav === "today"  )
+      {
+        $df = Carbon::now();
+        $date_from = date("Y-m-d", strtotime('monday this week', $df->timestamp ) );
+        $last_day_time = strtotime('last day of this month', $df->timestamp );
+        $date_to = date("Y-m-d", strtotime('sunday this week', $last_day_time ) );
+      }
+    }
 
     if ( !$date_from )
     {
@@ -34,7 +69,12 @@ class AppointmentApiRepository
     $to_month        = Carbon::create($date_to)->month;
     $period          = new CarbonPeriod($date_from, '1 day', $date_to);
 
-    $data = [];
+    $data =
+    [
+      "date_from" => $date_from,
+      "date_to"   => $date_to,
+      "items"     => []
+    ];
 
     // dd($from_month);
     // birthdays
@@ -52,7 +92,7 @@ class AppointmentApiRepository
     $leaveDays      = Appointment::leaveDays()->userIds($user_ids)->dateFromBetween($date_from, $date_to)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get();
 
     // // work
-    $data=[];
+    $items=[];
     foreach ($period as $key => $date)
     {
 
@@ -61,9 +101,9 @@ class AppointmentApiRepository
       $the_date_end           = $date->format("Y-m-d")." 24:00:00";
 
       // $data[$the_date]["day"] = $date->formatLocalized("% %d.%m");
-      $data[$the_date]["date"]  = $date->isoFormat('dd. D.M');
+      $items[$the_date]["date"]  = $date->isoFormat('dd. D.M');
       // $data[$the_date]["date"]  = $date->shortLocaleDayOfWeek; //$date->isoFormat('dd. D.M');
-      $data[$the_date]["appointments"] = collect();
+      $items[$the_date]["appointments"] = collect();
 
 
       // Urlaub
@@ -73,14 +113,14 @@ class AppointmentApiRepository
       });
       if ( $leave_dates )
       {
-       $data[$the_date]["appointments"] = $data[$the_date]["appointments"]->merge( $leave_dates );
+       $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $leave_dates );
       }
 
 
       // Ereignisse ohne Lokalitaet
       if ( $events = $top_events->whereBetween("date_from", [$the_date_start, $the_date_end] ) )
       {
-        $data[$the_date]["appointments"] = $data[$the_date]["appointments"]->merge( $this->eventAppointmentsToJson($events) );
+        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->eventAppointmentsToJson($events) );
       }
 
       // FeWo
@@ -90,7 +130,7 @@ class AppointmentApiRepository
       });
       if ( $fewo_dates )
       {
-       $data[$the_date]["appointments"] = $data[$the_date]["appointments"]->merge( $fewo_dates );
+       $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $fewo_dates );
       }
 
 
@@ -102,18 +142,20 @@ class AppointmentApiRepository
 
       if ( $birthday_kids )
       {
-        $data[$the_date]["appointments"] = $data[$the_date]["appointments"]->merge( $this->brithdayKidsToJson($birthday_kids, $the_date) );
+        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->brithdayKidsToJson($birthday_kids, $the_date) );
       }
 
 
       // Normale Arbeit
       if ( $appointments = Appointment::work()->userIds($user_ids)->locationIds($location_ids)->dateFrom($the_date)->orderBy("date_from", "ASC")->orderBy("location_id", "ASC")->get() )
       {
-        $data[$the_date]["appointments"] = $data[$the_date]["appointments"]->merge( $this->workAppointmentsToJson($appointments) );
+        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->workAppointmentsToJson($appointments) );
       }
 
       # code...
     }
+
+    $data["items"] = $items;
 
     return $data;
   }

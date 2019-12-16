@@ -3,6 +3,20 @@
   opacity: 0.6;
 }
 
+.ev-calendar-nav
+{
+  display: flex;
+  justify-content: flex-end;
+
+  button
+  {
+    &.btn-today
+    {
+      margin:0px 2px;
+    }
+  }
+}
+
 .appointment-row
 {
   display: flex;
