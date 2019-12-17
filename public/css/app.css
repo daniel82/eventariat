@@ -11385,6 +11385,10 @@ body {
   max-width: 1200px;
 }
 
+.container--slim {
+  max-width: 600px;
+}
+
 .ev-header .nav-item {
   border-right: 1px solid #9F9C99;
 }
@@ -11424,6 +11428,71 @@ button {
 .ev-add-btn:hover,
 .ev-add-btn:focus {
   color: #195b91;
+}
+
+.ev-actions.toggled .sub-li {
+  display: inline-block !important;
+}
+
+.ev-actions.toggled .toggle-actions .closed {
+  display: none;
+}
+
+.ev-actions.toggled .toggle-actions .opened {
+  display: inline-block;
+}
+
+.ev-btn-group {
+  width: 200px;
+  display: inline-block;
+}
+
+.ev-btn-group li.default .ev-btn {
+  width: 80%;
+}
+
+.ev-btn-group li.default .ev-btn.toggle-actions {
+  background: green;
+  width: 18%;
+}
+
+.ev-btn-group li.sub-li {
+  width: 100%;
+  display: none;
+}
+
+.ev-btn-group .toggle-actions .opened {
+  display: none;
+}
+
+.ev-btn-group .ev-btn {
+  width: 100%;
+  padding: 0.4rem;
+  border: 0;
+  color: white;
+}
+
+.ev-btn-group .ev-btn:not(.toggle-actions) {
+  text-align: left;
+}
+
+.ev-btn-group .ev-btn.save {
+  background: #28a745;
+  border-bottom: 1px solid #acd8ac;
+}
+
+.ev-btn-group .ev-btn.save:hover,
+.ev-btn-group .ev-btn.save:focus {
+  background: #1e7e34;
+}
+
+.ev-btn-group .ev-btn.delete {
+  background: #cc0000;
+}
+
+.ev-btn-group .ev-btn.delete:hover,
+.ev-btn-group .ev-btn.delete:focus {
+  background: red;
 }
 
 .busy {
@@ -11486,8 +11555,14 @@ button {
 }
 
 .ev-appointment a,
-.ev-appointment span {
+.ev-appointment span,
+.ev-appointment button {
   display: block;
+  border: 0;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  text-align: left;
 }
 
 .ev-appointment.work:hover,
@@ -11505,6 +11580,30 @@ button {
   color: black;
 }
 
+.ev-layer {
+  background: rgba(0, 0, 0, 0.8);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.ev-appointment-form {
+  background: white;
+  width: 100%;
+  min-height: 300px;
+  margin-top: 5rem;
+}
+
+.ev-layer {
+  z-index: 9999;
+}
+
+.ev-layer.show {
+  display: block;
+}
+
 .ev-color-square {
   width: 20px;
   height: 20px;
@@ -11515,5 +11614,9 @@ button {
 
 .wheel {
   text-align: center;
+}
+
+.w-30 {
+  width: 30%;
 }
 

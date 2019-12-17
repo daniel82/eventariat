@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use App\Repositories\AppointmentApiRepository;
 use App\Appointment;
 use App\User;
@@ -48,7 +49,12 @@ class AppointmentApiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Log::debug("AppointmentApiController@store");
+        $data = $this->appointmentApiRepository->store($request);
+        Log::debug($data);
+
+        return response()->json($data);
+
     }
 
     /**
@@ -82,7 +88,9 @@ class AppointmentApiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Log::debug("AppointmentApiController@update");
+        $data = $this->appointmentApiRepository->update( $request, $id );
+        return response()->json($data);
     }
 
     /**
@@ -93,6 +101,8 @@ class AppointmentApiController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Log::debug("AppointmentApiController@delete");
+        $data = $this->appointmentApiRepository->destroy( $id );
+        return response()->json($data);
     }
 }

@@ -30,3 +30,115 @@ button
         color: darken($color_blue, 20);
     }
 }
+
+.ev-actions
+{
+    &.toggled
+    {
+        .sub-li
+        {
+            display: inline-block !important;
+        }
+
+        .toggle-actions
+        {
+            .closed
+            {
+                display: none;
+            }
+
+            .opened
+            {
+                display: inline-block;
+            }
+        }
+    }
+}
+
+
+.ev-btn-group
+{
+    width: 200px;
+    display: inline-block;
+
+    li
+    {
+        &.default
+        {
+            .ev-btn
+            {
+                width: 80%;
+
+                &.toggle-actions
+                {
+                    background: green;
+                    width: 18%;
+                }
+            }
+        }
+
+
+        &.sub-li
+        {
+            width: 100%;
+            display: none;
+        }
+    }
+
+
+    .toggle-actions
+    {
+        .opened
+        {
+            display: none;
+        }
+    }
+
+
+
+
+
+    .ev-btn
+    {
+        width: 100%;
+        padding: 0.4rem;
+        border: 0;
+        color: white;
+
+        &:not(.toggle-actions)
+        {
+            text-align: left;
+        }
+
+
+
+
+        &.save
+        {
+            // background: #92B558;
+            background: #28a745;
+            border-bottom: 1px solid #acd8ac;
+
+            &:hover,
+            &:focus
+            {
+                background: darken(#28a745, 10);
+            }
+        }
+
+        &.delete
+        {
+            background: $color_red;
+            // border-bottom: 1px solid #acd8ac;
+
+            &:hover,
+            &:focus
+            {
+                background: lighten($color_red, 10);
+            }
+        }
+
+    }
+
+}
+

@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use Illuminate\Support\Facades\Log;
+
 use App\Appointment;
 use App\User;
 use Illuminate\Http\Request;
@@ -11,9 +13,78 @@ use Carbon\CarbonPeriod;
 class AppointmentApiRepository
 {
 
-  public function index( Request $request )
+  public function store( Request $request )
+  {
+    Log::debug($request->all());
+    // TODO check if user is free
+    $appointment = new Appointment();
+
+    $appointment->location_id    = $request->get("location_id");
+    $appointment->user_id        = $request->get("user_id");
+    $appointment->type           = $request->get("type");
+    $appointment->description    = $request->get("description");
+    $appointment->date_from      = $request->get("date_from")." ".$request->get("time_from");
+    $appointment->date_to        = $request->get("date_to")." ".$request->get("time_to");
+    $appointment->note           = $request->get("note");
+
+    $appointment->save();
+
+
+    if ( $appointment->id && is_numeric($appointment->id) )
+    {
+      return ["status"=> "ok", "message"=>"Termin wurde gespeichert", "id"=> $appointment->id ];
+    }
+    else
+    {
+      return ["status"=> "error", "message"=>"Termin wurde nicht gespeichert", "item"=> null ];
+    }
+  }
+
+
+
+  public function update( Request $request, $appointment_id )
+  {
+    Log::debug($request->all());
+    // TODO check if user is free
+    $appointment = Appointment::findOrFail($appointment_id);
+    Log::debug($appointment);
+
+    $appointment->location_id    = $request->get("location_id");
+    $appointment->user_id        = $request->get("user_id");
+    $appointment->type           = $request->get("type");
+    $appointment->description    = $request->get("description");
+    $appointment->date_from      = $request->get("date_from")." ".$request->get("time_from");
+    $appointment->date_to        = $request->get("date_to")." ".$request->get("time_to");
+    $appointment->note           = $request->get("note");
+
+    $appointment->save();
+
+    if ( $appointment->id && is_numeric($appointment->id) )
+    {
+      Log::debug("updated...");
+      return ["status"=> "ok", "message"=>"Termin wurde aktualisiert", "id"=> $appointment->id ];
+    }
+    else
+    {
+      Log::debug("eror ...");
+      return ["status"=> "error", "message"=>"Termin wurde nicht aktualisiert", "item"=> null ];
+    }
+  }
+
+
+  public function destroy( $appointment_id )
   {
 
+    // TODO check if user is free
+    $appointment = Appointment::findOrFail($appointment_id);
+    $appointment->delete();
+
+    return ["status"=> "ok", "message"=>"Termin wurde entfernt", "id"=> $appointment->id ];
+  }
+
+
+  public function index( Request $request )
+  {
     $date_from      = $request->get("date_from" );
     $date_to        = $request->get("date_to");
     $user_ids       = $request->get("users");
@@ -197,11 +268,11 @@ class AppointmentApiRepository
 
       $birthdates[] =
       [
-        "type"           => "birthday",
+        "type_class"     => "birthday",
         "date_from"      => $date,
         "date_to"        => $date,
         "time"           => null,
-        "description"    => $user->getCalendarName(),
+        "title"          => $user->getCalendarName(),
         "age"            => Carbon::parse($user->birthdate)->diffInYears($date)
       ];
     }
@@ -221,11 +292,11 @@ class AppointmentApiRepository
    {
       $items[] =
       [
-        "type"           => "event",
+        "type_class"     => "event",
         "date_from"      => $appointment->date_from,
         "date_to"        => $appointment->date_to,
         "time"           => date("H:i", strtotime($appointment->date_from) ),
-        "description"    => $appointment->description,
+        "title"          => $appointment->description,
       ];
    }
 
@@ -241,12 +312,18 @@ class AppointmentApiRepository
    {
       $items[] =
       [
-        "type"           => "work",
-        "date_from"      => $appointment->date_from,
-        "date_to"        => $appointment->date_to,
-        "time"           => date("H:i", strtotime($appointment->date_from) ),
-        "description"    => $appointment->user->getCalendarName(),
+        "id" => $appointment->id,
+        "type_class"     => "work",
+        "date_from"      => date("Y-m-d", strtotime($appointment->date_from) ),
+        "time_from"      => date("H:i", strtotime($appointment->date_from) ),
+        "date_to"        => date("Y-m-d", strtotime($appointment->date_to) ),
+        "time_to"        => date("H:i", strtotime($appointment->date_to) ),
+        "title"          => ($appointment->user ) ? $appointment->user->getCalendarName() : null,
+        "description"    => $appointment->description,
         "location_id"    => $appointment->location_id,
+        "user_id"        => $appointment->user_id,
+        "type"           => $appointment->type,
+        "note"           => $appointment->note,
       ];
    }
 

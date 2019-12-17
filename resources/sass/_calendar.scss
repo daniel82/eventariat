@@ -72,9 +72,15 @@
   font-size: 0.75rem;
 
   a,
-  span
+  span,
+  button
   {
     display: block;
+    border: 0;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    text-align: left;
   }
 
   &.work,
@@ -92,7 +98,34 @@
       }
     }
   }
+}
+
+.ev-layer
+{
+  background: rgba(0,0,0, 0.8);
+  position: fixed;
+  top:0px;
+  left:0px;
+  height: 100%;
+  width: 100%;
+}
+
+.ev-appointment-form
+{
+  background: white;
+  width: 100%;
+  min-height: 300px;
+  margin-top: 5rem;
+}
 
 
+.ev-layer
+{
+  // display: none;
+  z-index: 9999;
 
+  &.show
+  {
+    display: block;
+  }
 }

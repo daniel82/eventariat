@@ -67,6 +67,14 @@ function startCalendarApp()
     el: '#ev-calendar-app',
     data: ev_app_data,
 
+    computed :
+    {
+      actionsToggled : function()
+      {
+        return ( this.actions_toggled ) ? "toggled" : "";
+      }
+    },
+
     methods:
     {
 
@@ -112,6 +120,11 @@ function startCalendarApp()
         this.ajaxRequest(request_data);
       },
 
+      buildEntry: function( appointment )
+      {
+        return appointment.time_from+"-"+appointment.time_to+": "+appointment.title;
+      },
+
 
       updateItems : function()
       {
@@ -155,8 +168,159 @@ function startCalendarApp()
       isBirthday : function (type)
       {
         return (type === "birthday" );
-      }
+      },
 
+      toggleActions : function()
+      {
+        this.actions_toggled = (this.actions_toggled) ? false : true;
+      },
+
+
+      createAppointment : function()
+      {
+        this.resetForm();
+        this.toggleLayer();
+      },
+
+
+      resetForm : function()
+      {
+        this.message         = null;
+        this.appointment_id  =null;
+        this.location_id     =  "";
+        this.user_id         = "";
+        this.type            = "4";
+        this.description     = "";
+        this.apt_date_from   = null
+        this.apt_date_to     = null;
+        this.time_from       = "08:00";
+        this.time_to         = "16:30";
+        this.note            = "";
+      },
+
+      editAppointment : function(date, key)
+      {
+        // set appointment details before showing layer
+        if ( typeof this.items[date].appointments[key] !== "undefined" )
+        {
+          _log(this.items[date].appointments[key]);
+          this.appointment_id     = this.items[date].appointments[key].id;
+          this.location_id     = this.items[date].appointments[key].location_id;
+          this.user_id         = this.items[date].appointments[key].user_id;
+          this.type            = this.items[date].appointments[key].type;
+          this.description     = this.items[date].appointments[key].description;
+          this.apt_date_from   = this.items[date].appointments[key].date_from;
+          this.apt_date_to     = this.items[date].appointments[key].date_to;
+          this.time_from       = this.items[date].appointments[key].time_from;
+          this.time_to         = this.items[date].appointments[key].time_to;
+          this.note            = this.items[date].appointments[key].note;
+        }
+
+        this.toggleLayer();
+      },
+
+      saveAppointment : function ( action )
+      {
+        _log("saveAppointment");
+
+        action = ( typeof action !== "undefined" ) ? action : null;
+
+        let request_data =
+        {
+          _token      : csrf_token,
+          location_id : this.location_id,
+          user_id     : this.user_id,
+          type        : this.type,
+          description : this.description,
+          date_from   : this.apt_date_from,
+          time_from   : this.time_from,
+          time_to     : this.time_to,
+          date_to     : this.apt_date_to,
+          note        : this.note,
+          action      : action
+        };
+
+
+        let url = "/api/appointments";
+        let method = "POST";
+        if ( this.appointment_id )
+        {
+           url += "/"+this.appointment_id;
+           method = "PATCH";
+        }
+
+
+        _log(url);
+        _log(method);
+        _log(request_data);
+
+        $.ajax(
+        {
+          url:       url,
+          type:      method,
+          data:      request_data,
+          dataType:  'JSON',
+          success:   this.saveAppointment_ajaxCallback,
+          error:     this.saveAppointment_ajaxCallback
+          }
+        );
+
+      },
+
+
+
+
+      saveAppointment_ajaxCallback : function( response)
+      {
+        _log("saveAppointment_ajaxCallback");
+        _log(response);
+        this.updateItems();
+
+      },
+
+      deleteAppointment : function (  )
+      {
+        _log("deleteAppointment...");
+        _log( this.getApiUrl() );
+        $.ajax(
+        {
+          url:       this.getApiUrl(),
+          type:      "DELETE",
+          data:      {},
+          dataType:  'JSON',
+          success:   this.saveAppointment_ajaxCallback,
+          error:     this.saveAppointment_ajaxCallback
+          }
+        );
+
+        this.resetForm();
+      },
+
+
+      getApiUrl : function()
+      {
+        let url = "/api/appointments";
+        if ( this.appointment_id )
+        {
+          url += "/"+this.appointment_id;
+        }
+
+        return url;
+      },
+
+
+      toggleLayer : function()
+      {
+        this.showLayer = (this.showLayer) ? false : true;
+      },
+
+      hideLayer : function( event )
+      {
+        if ( typeof event.target.id !== "undefined" && event.target.id === "ev-layer")
+        {
+          this.toggleLayer();
+        }
+      },
 
 
     },

@@ -18,3 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get("appointments", "AppointmentApiController@index");
+Route::post("appointments", "AppointmentApiController@store");
+Route::patch("appointments/{id}", "AppointmentApiController@update");
+Route::delete("appointments/{id}", "AppointmentApiController@destroy");
