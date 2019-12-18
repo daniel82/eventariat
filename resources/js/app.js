@@ -80,6 +80,21 @@ function startCalendarApp()
 
     methods:
     {
+      toggleDropdownMenu : function (type){
+        if ($("."+type).hasClass("show")){
+          $("."+type).removeClass("show");
+          // this.updateList();
+        }
+        else{
+          $(".advanced-search__fieldset").removeClass("show");
+          $("."+type).addClass("show");
+        }
+      },
+
+      closeAndUpdate : function ( event ){
+        $(".advanced-search__fieldset").removeClass("show");
+        // this.updateList();
+      },
 
       getRequestData : function()
       {

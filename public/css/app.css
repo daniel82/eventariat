@@ -11660,3 +11660,78 @@ button {
   width: 30%;
 }
 
+.wf-dropdown-item {
+  padding: 5px 10px;
+}
+
+.wf-dropdown-item:hover {
+  background: #f1f1f1;
+}
+
+.wf-dropdown-item input {
+  margin-right: 5px;
+}
+
+.wf-dropdown-item label {
+  font-size: 14px;
+  line-height: 18px;
+  margin-bottom: 0px;
+  width: 80%;
+}
+
+.wf-update-btn {
+  padding: 0px 10px;
+  margin-top: 10px;
+}
+
+.wf-update-btn .mgo-btn {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.wf-dropdown-toggle {
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid black;
+  width: 100%;
+  text-align: left;
+  color: #000;
+}
+
+.advanced-search__fieldset {
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.advanced-search__fieldset .wf-dropdown-menu {
+  width: 100%;
+  background: white;
+  border-radius: 0px;
+  box-shadow: 0px 0px 1px #ccc;
+}
+
+.advanced-search__fieldset .wf-dropdown-menu button {
+  width: 100%;
+}
+
+.advanced-search__fieldset.show .dropdown-menu {
+  display: block;
+}
+
+.advanced-search__fieldset.show .wf-toggle-icon {
+  display: none;
+}
+
+.advanced-search__fieldset .selected {
+  display: none;
+}
+
+.advanced-search__fieldset.is-selected .default {
+  display: none;
+}
+
+.advanced-search__fieldset.is-selected .selected {
+  display: inline-block;
+  color: #5AA180;
+}
+

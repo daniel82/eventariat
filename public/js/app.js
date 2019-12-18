@@ -51176,6 +51176,17 @@ function startCalendarApp() {
       }
     },
     methods: {
+      toggleDropdownMenu: function toggleDropdownMenu(type) {
+        if ($("." + type).hasClass("show")) {
+          $("." + type).removeClass("show"); // this.updateList();
+        } else {
+          $(".advanced-search__fieldset").removeClass("show");
+          $("." + type).addClass("show");
+        }
+      },
+      closeAndUpdate: function closeAndUpdate(event) {
+        $(".advanced-search__fieldset").removeClass("show"); // this.updateList();
+      },
       getRequestData: function getRequestData() {
         var rd = {
           "date_from": this.date_from,
