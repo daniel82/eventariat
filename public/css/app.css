@@ -11638,6 +11638,12 @@ button {
   color: #cc0000;
 }
 
+.ev-appointment__note-info {
+  color: black !important;
+  float: right;
+  margin-top: 4px;
+}
+
 .ev-color-square {
   width: 20px;
   height: 20px;
