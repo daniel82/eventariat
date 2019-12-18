@@ -51376,6 +51376,7 @@ function startCalendarApp() {
       },
       toggleLayer: function toggleLayer() {
         this.showLayer = this.showLayer ? false : true;
+        this.actions_toggled = false;
       },
       hideLayer: function hideLayer(event) {
         if (typeof event.target.id !== "undefined" && event.target.id === "ev-layer") {

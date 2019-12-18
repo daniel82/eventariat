@@ -12,7 +12,7 @@
           <li class="nav-item active">
             <a class="nav-link" href="#">Start</a>
           </li>
-          <li class="nav-item"><a class="nav-link" href="#">Kalender</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ action("AppointmentController@index") }}">Kalender</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ action("UserController@index") }}">Mitarbeiter</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ action("LocationController@index") }}">Lokalit&auml;t</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Antr&auml;ge</a></li>

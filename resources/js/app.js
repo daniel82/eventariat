@@ -362,6 +362,7 @@ function startCalendarApp()
       toggleLayer : function()
       {
         this.showLayer = (this.showLayer) ? false : true;
+        this.actions_toggled=false;
       },
 
       hideLayer : function( event )

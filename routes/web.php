@@ -15,7 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/appointments', "AppointmentController@index" );
+Route::middleware(["locale"])->group(function ()
+{
+  Route::get('/appointments', "AppointmentController@index" );
+});
 
 
 Route::prefix('admin')->group(function () {
