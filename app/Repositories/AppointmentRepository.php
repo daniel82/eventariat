@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Api\Yr;
 use App\Appointment;
 use App\Location;
 use App\User;
@@ -23,6 +24,10 @@ class AppointmentRepository
     $date_to = date("Y-m-d", strtotime('sunday this week', $dt->timestamp ) );
 
     $data["today"]  = date("Y-m-d");
+
+    $yr = new Yr();
+    $yr->getForecast($data["today"]);
+
     $data["ev_app_data"] =
     [
       "date_from"       => $date_from,

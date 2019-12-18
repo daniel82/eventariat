@@ -51393,6 +51393,9 @@ function startCalendarApp() {
         if (typeof event.target.id !== "undefined" && event.target.id === "ev-layer") {
           this.toggleLayer();
         }
+      },
+      buildWeatherIcon: function buildWeatherIcon(icon) {
+        return "/images/icons/" + icon;
       }
     },
     created: function created() {

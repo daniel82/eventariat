@@ -197,6 +197,8 @@ class AppointmentApiRepository
       // $data[$the_date]["date"]  = $date->shortLocaleDayOfWeek; //$date->isoFormat('dd. D.M');
       $items[$the_date]["appointments"] = collect();
 
+      $items[$the_date]["forecast"] = \App\WeatherForecast::getAsJsonByDate( $the_date );
+
 
       // Urlaub
       $leave_dates = $leaveDays->filter(function ($appointment, $key) use($the_date)

@@ -1,7 +1,8 @@
 <div class="appointments" :class="busy">
   <div class="appointment-row">
     <div v-for="(col, date) in items" class="appointment-col">
-      <h4>@{{ col.date }}</h4>
+      <h4>@{{ col.date }} <span class="weater-forecast" v-if="col.forecast">
+        @{{ col.forecast.temperature }}° <img class="weater-forecast__icon" :src="buildWeatherIcon(col.forecast.icon)" /></span></h4>
 
       <div class="appointment-col__items ">
         <div v-for="(appointment, key) in col.appointments" class="ev-appointment" :class="appointment.type_class" >

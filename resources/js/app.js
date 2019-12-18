@@ -388,6 +388,11 @@ function startCalendarApp()
         }
       },
 
+      buildWeatherIcon : function(icon)
+      {
+        return "/images/icons/"+icon;
+      }
+
 
     },
 
