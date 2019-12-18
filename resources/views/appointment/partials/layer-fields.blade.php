@@ -99,7 +99,7 @@
     Form::textarea("note", null,
     [
       "class"=> "d-block form-control",
-      "rows"=>5,
+      "rows"=>3,
       "v-model" =>"note"
     ])
    }}

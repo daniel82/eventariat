@@ -27,6 +27,25 @@
 .appointment-col
 {
   width: 14.2%;
+
+  @media(max-width: $screen-md )
+  {
+    width: 100%;
+  }
+}
+
+.appointment-col__title
+{
+  font-size: 1rem;
+}
+
+.is-today
+{
+  .appointment-col__items
+  {
+    background: #F0EAD6;
+  }
+
 }
 
 
@@ -37,6 +56,11 @@
   position: relative;
   border:1px solid #999;
   margin-bottom: 2rem;
+
+  @media(max-width: $screen-md )
+  {
+    min-height: 0px;
+  }
 
   .event
   {
@@ -66,6 +90,11 @@
 {
   position: absolute;
   bottom: 0px;
+
+  @media(max-width: $screen-md )
+  {
+    position: static;
+  }
 }
 
 .ev-appointment
@@ -149,7 +178,7 @@
 .ev-inline-add-btn
 {
   border: 0;
-  color: grey;
+  color: #615550;
 
   &:hover,
   &:focus
@@ -170,12 +199,14 @@
 {
   float: right;
   padding-right: 10px;
-  color: #999;
+  font-size: 1rem;
+  line-height: 1.2rem;
+  color: #666;
 }
 
 .weater-forecast__icon
 {
 
   display: inline-block;
-  width: 20px;
+  width: 26px;
 }

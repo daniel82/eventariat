@@ -391,6 +391,11 @@ function startCalendarApp()
       buildWeatherIcon : function(icon)
       {
         return "/images/icons/"+icon;
+      },
+
+      isToday : function(date)
+      {
+        return ( date === this.today ) ? "is-today" : "";
       }
 
 

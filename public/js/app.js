@@ -51396,6 +51396,9 @@ function startCalendarApp() {
       },
       buildWeatherIcon: function buildWeatherIcon(icon) {
         return "/images/icons/" + icon;
+      },
+      isToday: function isToday(date) {
+        return date === this.today ? "is-today" : "";
       }
     },
     created: function created() {

@@ -1,20 +1,25 @@
 <div class="appointments" :class="busy">
   <div class="appointment-row">
-    <div v-for="(col, date) in items" class="appointment-col">
-      <h4>@{{ col.date }} <span class="weater-forecast" v-if="col.forecast">
+    <div v-for="(col, date) in items" class="appointment-col" :class="isToday(date)">
+      <h4 class="appointment-col__title">@{{ col.date }} <span class="weater-forecast" v-if="col.forecast">
         @{{ col.forecast.temperature }}° <img class="weater-forecast__icon" :src="buildWeatherIcon(col.forecast.icon)" /></span></h4>
 
       <div class="appointment-col__items ">
-        <div v-for="(appointment, key) in col.appointments" class="ev-appointment" :class="appointment.type_class" >
 
-          <span v-if="isBirthday(appointment.type_class)">
-            <i class="fa fa-birthday-cake" aria-hidden="true"></i> @{{ appointment.title }} (@{{ appointment.age}})
-          </span>
+        <div v-if="col.appointments.length">
+          <div  v-for="(appointment, key) in col.appointments" class="ev-appointment" :class="appointment.type_class" >
+            <span v-if="isBirthday(appointment.type_class)">
+              <i class="fa fa-birthday-cake" aria-hidden="true"></i> @{{ appointment.title }} (@{{ appointment.age}})
+            </span>
 
-          <button v-else @click="editAppointment(date,key)" :class="locationClass(appointment.location_id)">
-            <span class="mr-1 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span> @{{ appointment.title }}
-            <i class="fa fa-info-circle ev-appointment__note-info" aria-hidden="true"  v-if="appointment.note"></i>
-          </button>
+            <button v-else @click="editAppointment(date,key)" :class="locationClass(appointment.location_id)">
+              <span class="mr-1 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span> @{{ appointment.title }}
+              <i class="fa fa-info-circle ev-appointment__note-info" aria-hidden="true"  v-if="appointment.note"></i>
+            </button>
+          </div>
+        </div>
+        <div v-else>
+          <span class="px-1">keine Termine</span>
         </div>
 
 

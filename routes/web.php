@@ -20,6 +20,8 @@ Route::get('/', function () {
 Route::middleware(["locale"])->group(function ()
 {
   Route::get('/appointments', "AppointmentController@index" );
+  Route::get('/calendar', "AppointmentController@index" );
+  Route::get('/kalender', "AppointmentController@index" );
 });
 
 
