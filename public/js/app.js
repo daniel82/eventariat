@@ -51203,8 +51203,10 @@ function startCalendarApp() {
         request_data.nav = "today";
         this.ajaxRequest(request_data);
       },
-      buildEntry: function buildEntry(appointment) {
-        return appointment.time_from + "-" + appointment.time_to + ": " + appointment.title;
+      getItemDuration: function getItemDuration(appointment) {
+        if (appointment.time_from && appointment.time_to) {
+          return appointment.time_from + "-" + appointment.time_to;
+        }
       },
       updateItems: function updateItems() {
         this.getItems();
@@ -51221,8 +51223,7 @@ function startCalendarApp() {
         });
       },
       updateItems_ajaxCallback: function updateItems_ajaxCallback(response) {
-        _log(response);
-
+        // _log(response);
         if (_typeof(response) === "object") {
           this.items = response.items;
           this.date_from = response.date_from;
@@ -51232,6 +51233,7 @@ function startCalendarApp() {
         this.busy = "";
       },
       locationClass: function locationClass(location_id) {
+        location_id = !isNaN(location_id) ? location_id : "none";
         return "location-" + location_id;
       },
       isBirthday: function isBirthday(type) {
@@ -51240,26 +51242,50 @@ function startCalendarApp() {
       toggleActions: function toggleActions() {
         this.actions_toggled = this.actions_toggled ? false : true;
       },
-      createAppointment: function createAppointment() {
+      validateDates: function validateDates() {
+        if (this.apt_date_from && !this.apt_date_to || this.apt_date_from && this.apt_date_to && this.apt_date_from > this.apt_date_to) {
+          this.apt_date_to = this.apt_date_from;
+        }
+      },
+      validateTimes: function validateTimes() {
+        if (this.time_from && !this.time_to || this.time_from && this.time_to && this.time_from > this.time_to) {
+          this.time_to = this.time_from;
+        }
+      },
+      isFutureDate: function isFutureDate(date) {
+        return date >= this.today;
+      },
+      createAppointment: function createAppointment(date) {
         this.resetForm();
+        this.apt_date_from = this.apt_date_to = date;
         this.toggleLayer();
       },
       resetForm: function resetForm() {
-        this.message = null;
+        this.resetMessage();
         this.appointment_id = null;
         this.location_id = "";
         this.user_id = "";
         this.type = "4";
         this.description = "";
-        this.apt_date_from = null;
-        this.apt_date_to = null;
+        this.apt_date_from = this.today;
+        this.apt_date_to = this.today;
         this.time_from = "08:00";
         this.time_to = "16:30";
         this.note = "";
       },
+      resetMessage: function resetMessage() {
+        this.message = null;
+        this.message_type = null;
+      },
       editAppointment: function editAppointment(date, key) {
-        // set appointment details before showing layer
+        _log(date);
+
+        _log(key); // set appointment details before showing layer
+
+
         if (typeof this.items[date].appointments[key] !== "undefined") {
+          this.resetMessage();
+
           _log(this.items[date].appointments[key]);
 
           this.appointment_id = this.items[date].appointments[key].id;
@@ -51277,8 +51303,7 @@ function startCalendarApp() {
         this.toggleLayer();
       },
       saveAppointment: function saveAppointment(action) {
-        _log("saveAppointment");
-
+        // _log("saveAppointment");
         action = typeof action !== "undefined" ? action : null;
         var request_data = {
           _token: csrf_token,
@@ -51299,13 +51324,10 @@ function startCalendarApp() {
         if (this.appointment_id) {
           url += "/" + this.appointment_id;
           method = "PATCH";
-        }
+        } // _log(url);
+        // _log(method);
+        // _log(request_data);
 
-        _log(url);
-
-        _log(method);
-
-        _log(request_data);
 
         $.ajax({
           url: url,
@@ -51317,9 +51339,14 @@ function startCalendarApp() {
         });
       },
       saveAppointment_ajaxCallback: function saveAppointment_ajaxCallback(response) {
-        _log("saveAppointment_ajaxCallback");
-
-        _log(response);
+        // _log("saveAppointment_ajaxCallback");
+        // _log(response);
+        if (_typeof(response) === "object") {
+          if (response.status && response.message) {
+            this.message_type = response.status === "ok" ? "alert-success" : "alert-danger";
+            this.message = response.message;
+          }
+        }
 
         this.updateItems();
       },

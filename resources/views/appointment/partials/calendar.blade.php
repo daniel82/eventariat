@@ -10,8 +10,17 @@
             <i class="fa fa-birthday-cake" aria-hidden="true"></i> @{{ appointment.title }} (@{{ appointment.age}})
           </span>
 
-          <button v-else @click="editAppointment(date,key)" :class="locationClass(appointment.location_id)">@{{ buildEntry(appointment) }}</button>
+          <button v-else @click="editAppointment(date,key)" :class="locationClass(appointment.location_id)">
+            <span class="mr-1 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span> @{{ appointment.title }}</button>
         </div>
+
+
+        <div class="appointment-col__new-item" v-if="isFutureDate(date)">
+          <button class="ev-inline-add-btn" type="button" @click=createAppointment(date)><i class="fa fa-plus-circle" aria-hidden="true"></i>
+           <span>Neuer Termin</span>
+         </button>
+       </div>
+
       </div>
     </div>
   </div>

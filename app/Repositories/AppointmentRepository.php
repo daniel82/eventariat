@@ -35,6 +35,7 @@ class AppointmentRepository
       "actions_toggled" => false,
       "showLayer"       => false,
       "message"         => null,
+      "message_type"    => null,
 
       "appointment_id"  => "",
       "location_id"     => "",

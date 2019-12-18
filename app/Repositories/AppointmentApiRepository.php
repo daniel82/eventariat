@@ -15,28 +15,23 @@ class AppointmentApiRepository
 
   public function store( Request $request )
   {
-    Log::debug($request->all());
-    // TODO check if user is free
     $appointment = new Appointment();
+    $saved = $appointment->saveEntry( $request );
 
-    $appointment->location_id    = $request->get("location_id");
-    $appointment->user_id        = $request->get("user_id");
-    $appointment->type           = $request->get("type");
-    $appointment->description    = $request->get("description");
-    $appointment->date_from      = $request->get("date_from")." ".$request->get("time_from");
-    $appointment->date_to        = $request->get("date_to")." ".$request->get("time_to");
-    $appointment->note           = $request->get("note");
-
-    $appointment->save();
-
-
-    if ( $appointment->id && is_numeric($appointment->id) )
+    if ( $saved && $appointment->id && is_numeric($appointment->id) )
     {
-      return ["status"=> "ok", "message"=>"Termin wurde gespeichert", "id"=> $appointment->id ];
+      $message = "Termin wurde aktualisiert.";
+
+      if ( $this->maybeTriggerEvent($request, $appointment) && is_object($appointment->user) )
+      {
+        $message .=  sprintf( " Benachrichtiung an: %s", $appointment->user->email );
+      }
+
+      return ["status"=> "ok", "message"=>$message, "id"=> $appointment->id ];
     }
     else
     {
-      return ["status"=> "error", "message"=>"Termin wurde nicht gespeichert", "item"=> null ];
+      return ["status"=> "error", "message"=>"Mitarbeiter nicht verfügbar", "item"=> null ];
     }
   }
 
@@ -44,38 +39,43 @@ class AppointmentApiRepository
 
   public function update( Request $request, $appointment_id )
   {
-    Log::debug($request->all());
-    // TODO check if user is free
     $appointment = Appointment::findOrFail($appointment_id);
-    Log::debug($appointment);
+    $saved = $appointment->saveEntry( $request );
 
-    $appointment->location_id    = $request->get("location_id");
-    $appointment->user_id        = $request->get("user_id");
-    $appointment->type           = $request->get("type");
-    $appointment->description    = $request->get("description");
-    $appointment->date_from      = $request->get("date_from")." ".$request->get("time_from");
-    $appointment->date_to        = $request->get("date_to")." ".$request->get("time_to");
-    $appointment->note           = $request->get("note");
-
-    $appointment->save();
-
-    if ( $appointment->id && is_numeric($appointment->id) )
+    if ( $saved && $appointment->id && is_numeric($appointment->id) )
     {
-      Log::debug("updated...");
-      return ["status"=> "ok", "message"=>"Termin wurde aktualisiert", "id"=> $appointment->id ];
+      $message = "Termin wurde aktualisiert.";
+      if ( $this->maybeTriggerEvent($request, $appointment) && is_object($appointment->user) )
+      {
+        $message .=  sprintf(" Benachrichtiung an: %s", $appointment->user->email);
+      }
+
+      return ["status"=> "ok", "message"=>$message, "id"=> $appointment->id ];
     }
     else
     {
-      Log::debug("eror ...");
-      return ["status"=> "error", "message"=>"Termin wurde nicht aktualisiert", "item"=> null ];
+      return ["status"=> "error", "message"=>"Mitarbeiter nicht verfügbar", "item"=> null ];
+    }
+  }
+
+
+  public function maybeTriggerEvent( Request $request, Appointment $appointment )
+  {
+    $type = $request->get("action");
+    if ( $type === "email" or $type === "sms" )
+    {
+      event( new \App\Events\AppointmentSavedEvent($appointment, $type ) );
+      return true;
+    }
+    else
+    {
+      return false;
     }
   }
 
 
   public function destroy( $appointment_id )
   {
-
-    // TODO check if user is free
     $appointment = Appointment::findOrFail($appointment_id);
     $appointment->delete();
 
@@ -179,15 +179,15 @@ class AppointmentApiRepository
     if ( $user->canSee("leave_days") )
     {
       $leaveDays = Appointment::leaveDays()->userIds($user_ids)->dateFromBetween($date_from, $date_to)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get();
-
     }
+
+    $various_events = Appointment::various()->userIds($user_ids)->dateFromBetween($date_from, $date_to)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get();
 
 
     // // work
     $items=[];
     foreach ($period as $key => $date)
     {
-
       $the_date               = $date->format("Y-m-d");
       $the_date_start         = $date->format("Y-m-d")." 00:00:00";
       $the_date_end           = $date->format("Y-m-d")." 24:00:00";
@@ -223,6 +223,15 @@ class AppointmentApiRepository
       if ( $fewo_dates )
       {
        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $fewo_dates );
+      }
+
+
+      // Various
+
+      $various_dates = $various_events->whereBetween("date_from", [$the_date_start, $the_date_end] );
+      if ( $various_dates )
+      {
+       $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->workAppointmentsToJson($various_dates) );
       }
 
 
@@ -292,11 +301,18 @@ class AppointmentApiRepository
    {
       $items[] =
       [
+        "id"             => $appointment->id,
         "type_class"     => "event",
-        "date_from"      => $appointment->date_from,
-        "date_to"        => $appointment->date_to,
-        "time"           => date("H:i", strtotime($appointment->date_from) ),
+        "date_from"      => date("Y-m-d", strtotime($appointment->date_from) ),
+        "time_from"      => date("H:i", strtotime($appointment->date_from) ),
+        "date_to"        => date("Y-m-d", strtotime($appointment->date_to) ),
+        "time_to"        => date("H:i", strtotime($appointment->date_to) ),
         "title"          => $appointment->description,
+        "description"    => $appointment->description,
+        "location_id"    => $appointment->location_id,
+        "user_id"        => $appointment->user_id,
+        "type"           => $appointment->type,
+        "note"           => $appointment->note,
       ];
    }
 
@@ -312,7 +328,7 @@ class AppointmentApiRepository
    {
       $items[] =
       [
-        "id" => $appointment->id,
+        "id"             => $appointment->id,
         "type_class"     => "work",
         "date_from"      => date("Y-m-d", strtotime($appointment->date_from) ),
         "time_from"      => date("H:i", strtotime($appointment->date_from) ),
@@ -329,6 +345,34 @@ class AppointmentApiRepository
 
    return $items;
   }
+
+
+  // public function variousAppointmentsToJson( $appointments )
+  // {
+
+  //  $items = [];
+
+  //  foreach ($appointments as $key => $appointment)
+  //  {
+  //     $items[] =
+  //     [
+  //       "id" => $appointment->id,
+  //       "type_class"     => "work",
+  //       "date_from"      => date("Y-m-d", strtotime($appointment->date_from) ),
+  //       "time_from"      => date("H:i", strtotime($appointment->date_from) ),
+  //       "date_to"        => date("Y-m-d", strtotime($appointment->date_to) ),
+  //       "time_to"        => date("H:i", strtotime($appointment->date_to) ),
+  //       "title"          => ($appointment->user ) ? $appointment->user->getCalendarName() : null,
+  //       "description"    => $appointment->description,
+  //       "location_id"    => $appointment->location_id,
+  //       "user_id"        => $appointment->user_id,
+  //       "type"           => $appointment->type,
+  //       "note"           => $appointment->note,
+  //     ];
+  //  }
+
+  //  return $items;
+  // }
 
 
 }

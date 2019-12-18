@@ -11382,7 +11382,7 @@ body {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1600px;
 }
 
 .container--slim {
@@ -11519,12 +11519,13 @@ button {
 }
 
 .appointment-col {
-  width: 14%;
+  width: 14.2%;
 }
 
 .appointment-col__items {
   min-height: 300px;
   padding: 0.1rem 0.1rem;
+  position: relative;
   border: 1px solid #999;
   margin-bottom: 2rem;
 }
@@ -11543,15 +11544,23 @@ button {
 }
 
 .appointment-col__items .event a,
+.appointment-col__items .event button,
 .appointment-col__items .event span,
 .appointment-col__items .birthday a,
+.appointment-col__items .birthday button,
 .appointment-col__items .birthday span {
   color: white;
+}
+
+.appointment-col__new-item {
+  position: absolute;
+  bottom: 0px;
 }
 
 .ev-appointment {
   padding: 0rem 0.3rem;
   font-size: 0.75rem;
+  white-space: nowrap;
 }
 
 .ev-appointment a,
@@ -11563,6 +11572,7 @@ button {
   padding: 0px;
   margin: 0px;
   text-align: left;
+  white-space: nowrap;
 }
 
 .ev-appointment.work:hover,
@@ -11570,14 +11580,23 @@ button {
 .ev-appointment.event:hover,
 .ev-appointment.event:focus {
   background: #f1f1f1;
+  white-space: nowrap;
 }
 
 .ev-appointment.work:hover a,
+.ev-appointment.work:hover button,
+.ev-appointment.work:hover span,
 .ev-appointment.work:focus a,
+.ev-appointment.work:focus button,
+.ev-appointment.work:focus span,
 .ev-appointment.event:hover a,
-.ev-appointment.event:focus a {
+.ev-appointment.event:hover button,
+.ev-appointment.event:hover span,
+.ev-appointment.event:focus a,
+.ev-appointment.event:focus button,
+.ev-appointment.event:focus span {
   text-decoration: none;
-  color: black;
+  color: black !important;
 }
 
 .ev-layer {
@@ -11602,6 +11621,21 @@ button {
 
 .ev-layer.show {
   display: block;
+}
+
+.ev-appointment__duration {
+  font-family: courier;
+  width: 76px !important;
+}
+
+.ev-inline-add-btn {
+  border: 0;
+  color: grey;
+}
+
+.ev-inline-add-btn:hover,
+.ev-inline-add-btn:focus {
+  color: #cc0000;
 }
 
 .ev-color-square {

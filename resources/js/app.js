@@ -17,13 +17,16 @@ function _log( message ){
 
 
 function docReady(fn) {
-    // see if DOM is already available
-    if (document.readyState === "complete" || document.readyState === "interactive") {
-        // call on next available tick
-        setTimeout(fn, 1);
-    } else {
-        document.addEventListener("DOMContentLoaded", fn);
-    }
+  // see if DOM is already available
+  if (document.readyState === "complete" || document.readyState === "interactive")
+  {
+    // call on next available tick
+    setTimeout(fn, 1);
+  }
+  else
+  {
+    document.addEventListener("DOMContentLoaded", fn);
+  }
 }
 
 /**
@@ -120,10 +123,16 @@ function startCalendarApp()
         this.ajaxRequest(request_data);
       },
 
-      buildEntry: function( appointment )
+
+      getItemDuration: function( appointment )
       {
-        return appointment.time_from+"-"+appointment.time_to+": "+appointment.title;
+        if ( appointment.time_from && appointment.time_to )
+        {
+          return appointment.time_from+"-"+appointment.time_to;
+        }
       },
+
+
 
 
       updateItems : function()
@@ -149,7 +158,7 @@ function startCalendarApp()
 
       updateItems_ajaxCallback : function( response )
       {
-        _log(response);
+        // _log(response);
         if ( typeof response === "object" )
         {
           this.items     = response.items;
@@ -162,6 +171,7 @@ function startCalendarApp()
 
       locationClass : function( location_id )
       {
+        location_id =( !isNaN(location_id) ) ? location_id : "none";
         return "location-"+location_id
       },
 
@@ -175,36 +185,71 @@ function startCalendarApp()
         this.actions_toggled = (this.actions_toggled) ? false : true;
       },
 
+      validateDates : function ()
+      {
+        if ( this.apt_date_from && !this.apt_date_to || this.apt_date_from && this.apt_date_to &&  this.apt_date_from  > this.apt_date_to )
+        {
+          this.apt_date_to = this.apt_date_from;
+        }
+      },
 
-      createAppointment : function()
+      validateTimes : function ()
+      {
+        if ( this.time_from && !this.time_to || this.time_from && this.time_to &&  this.time_from  > this.time_to )
+        {
+          this.time_to = this.time_from;
+        }
+      },
+
+
+      isFutureDate : function( date )
+      {
+        return ( date >= this.today );
+
+      },
+
+      createAppointment : function( date )
       {
         this.resetForm();
+        this.apt_date_from = this.apt_date_to = date;
         this.toggleLayer();
       },
 
 
       resetForm : function()
       {
-        this.message         = null;
-        this.appointment_id  =null;
-        this.location_id     =  "";
+        this.resetMessage();
+
+        this.appointment_id  = null;
+        this.location_id     = "";
         this.user_id         = "";
         this.type            = "4";
         this.description     = "";
-        this.apt_date_from   = null
-        this.apt_date_to     = null;
+        this.apt_date_from   = this.today
+        this.apt_date_to     = this.today;
         this.time_from       = "08:00";
         this.time_to         = "16:30";
         this.note            = "";
       },
 
+      resetMessage : function()
+      {
+        this.message         = null;
+        this.message_type    = null;
+      },
+
       editAppointment : function(date, key)
       {
+        _log(date);
+        _log(key);
         // set appointment details before showing layer
         if ( typeof this.items[date].appointments[key] !== "undefined" )
         {
+          this.resetMessage();
+
           _log(this.items[date].appointments[key]);
-          this.appointment_id     = this.items[date].appointments[key].id;
+
+          this.appointment_id  = this.items[date].appointments[key].id;
           this.location_id     = this.items[date].appointments[key].location_id;
           this.user_id         = this.items[date].appointments[key].user_id;
           this.type            = this.items[date].appointments[key].type;
@@ -221,7 +266,7 @@ function startCalendarApp()
 
       saveAppointment : function ( action )
       {
-        _log("saveAppointment");
+        // _log("saveAppointment");
 
         action = ( typeof action !== "undefined" ) ? action : null;
 
@@ -249,11 +294,9 @@ function startCalendarApp()
            method = "PATCH";
         }
 
-
-        _log(url);
-        _log(method);
-        _log(request_data);
-
+        // _log(url);
+        // _log(method);
+        // _log(request_data);
         $.ajax(
         {
           url:       url,
@@ -267,16 +310,23 @@ function startCalendarApp()
 
       },
 
-
-
-
       saveAppointment_ajaxCallback : function( response)
       {
-        _log("saveAppointment_ajaxCallback");
-        _log(response);
-        this.updateItems();
+        // _log("saveAppointment_ajaxCallback");
+        // _log(response);
+        if ( typeof response === "object" )
+        {
+          if ( response.status && response.message )
+          {
+            this.message_type = (response.status === "ok" ) ? "alert-success" : "alert-danger";
+            this.message = response.message;
+          }
 
+
+        }
+        this.updateItems();
       },
+
 
       deleteAppointment : function (  )
       {

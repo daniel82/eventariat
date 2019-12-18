@@ -2,10 +2,14 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Log;
+
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 
 class Appointment extends Model
 {
+  // relationships
 
   public function user()
   {
@@ -16,6 +20,90 @@ class Appointment extends Model
   public function location()
   {
     return $this->belongsTo("App\Location");
+  }
+
+
+  // common update method
+  public function saveEntry( $request )
+  {
+    $this->location_id    = $request->get("location_id");
+    $this->user_id        = $request->get("user_id");
+    $this->type           = $request->get("type");
+    $this->description    = $request->get("description");
+    $this->date_from      = $request->get("date_from")." ".$request->get("time_from");
+    $this->date_to        = $request->get("date_to")." ".$request->get("time_to");
+    $this->note           = $request->get("note");
+
+    if ( !$this->isUserBooked($this->user_id, $this->date_from, $this->date_to, $this->id) )
+    {
+      $this->save();
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+
+  public function isUserBooked( $user_id, $date_from, $date_to, $appointment_id )
+  {
+    // Log::info("is user booked?");
+    // Log::info($user_id);
+    // Log::info($date_from);
+    // Log::info($date_to);
+    // Log::info($appointment_id);
+    $is_booked = false;
+    if ( $user_id )
+    {
+      $appointments = Appointment::idNotIn( $appointment_id )->userId($user_id)->period($date_from, $date_to)->get();
+      // $appointments = Appointment::userId($user_id)->period($date_from, $date_to)->get();
+
+      if ( $appointments && $appointments->count() )
+      {
+        // Log::debug("appointment");
+        // Log::debug($appointments);
+        $is_booked = true;
+      }
+    }
+
+    return $is_booked;
+  }
+
+
+
+  // scopes
+  //
+  //
+  public function scopeIdNotIn( $query, $appointment_id )
+  {
+    if ( $appointment_id )
+    {
+      return $query->whereNotIn("id", [$appointment_id] );
+    }
+    else
+    {
+      return $query;
+    }
+
+
+  }
+
+  // public function scopePeriod( $query, $date_from, $date_to )
+  // {
+  //   return $query->whereBetween('date_from', [$date_from, $date_to])
+  //           ->orWhereBetween('date_to', [$date_from, $date_to]);
+  // }
+
+  public function scopePeriod( $query, $date_from, $date_to )
+  {
+    return $query->whereRaw('(date_from <= ? AND date_to >= ? OR date_from <= ? AND date_to >= ?)', [$date_from, $date_from, $date_to, $date_to]);
+  }
+
+
+  public function scopeUserId( $query, $user_id )
+  {
+    return $query->whereUserId( $user_id );
   }
 
 
@@ -67,6 +155,11 @@ class Appointment extends Model
   public function scopeWork( $query )
   {
     return $query->whereType(4);
+  }
+
+  public function scopeVarious( $query )
+  {
+    return $query->whereType(5);
   }
 
 

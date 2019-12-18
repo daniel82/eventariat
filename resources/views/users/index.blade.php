@@ -14,23 +14,25 @@
           <th>Vorname</th>
           <th>Nachname</th>
           <th>Mobilnr</th>
+          <th>E-Mail</th>
           <th></th>
         </tr>
       </thead>
 
       <tbody>
         @foreach ($items as $key => $item )
-            <tr>
-                <td>
-                    @include("admin.common.edit-button", ["resource" => "users", "object" => $item])
-                </td>
-                <td>{{$item->first_name}}</td>
-                <td>{{$item->last_name}}</td>
-                <td><a href="tel:{{$item->mobile}}">{{$item->mobile}}</a></td>
-                <td class="text-right">
-                    @include("admin.common.delete-button", ["controller" => "UserController", "object" => $item])
-                </td>
-            </tr>
+          <tr>
+            <td>
+                @include("admin.common.edit-button", ["resource" => "users", "object" => $item])
+            </td>
+            <td>{{$item->first_name}}</td>
+            <td>{{$item->last_name}}</td>
+            <td><a href="tel:{{$item->mobile}}">{{$item->mobile}}</a></td>
+            <td>{{$item->email}}</td>
+            <td class="text-right">
+                @include("admin.common.delete-button", ["controller" => "UserController", "object" => $item])
+            </td>
+          </tr>
         @endforeach
       </tbody>
 

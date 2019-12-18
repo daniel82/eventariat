@@ -26,21 +26,17 @@
 
 .appointment-col
 {
-  width: 14%;
-
+  width: 14.2%;
 }
+
 
 .appointment-col__items
 {
   min-height: 300px;
   padding: 0.1rem 0.1rem;
-
+  position: relative;
   border:1px solid #999;
   margin-bottom: 2rem;
-}
-
-.appointment-col__items
-{
 
   .event
   {
@@ -58,18 +54,25 @@
     border-radius: 2px;
 
     a,
+    button,
     span
     {
       color: white;
     }
   }
+}
 
+.appointment-col__new-item
+{
+  position: absolute;
+  bottom: 0px;
 }
 
 .ev-appointment
 {
   padding: 0rem 0.3rem;
   font-size: 0.75rem;
+  white-space: nowrap;
 
   a,
   span,
@@ -81,6 +84,8 @@
     padding: 0px;
     margin: 0px;
     text-align: left;
+    white-space: nowrap;
+
   }
 
   &.work,
@@ -89,12 +94,16 @@
     &:hover,
     &:focus
     {
-      // background: #F3E0BE;
+
       background: #f1f1f1;
-      a
+      white-space: nowrap;
+
+      a,
+      button,
+      span
       {
         text-decoration: none;
-        color: black;
+        color: black !important;
       }
     }
   }
@@ -127,5 +136,24 @@
   &.show
   {
     display: block;
+  }
+}
+
+.ev-appointment__duration
+{
+  font-family: courier;
+  width: 76px !important;
+}
+
+
+.ev-inline-add-btn
+{
+  border: 0;
+  color: grey;
+
+  &:hover,
+  &:focus
+  {
+    color: $color_red;
   }
 }
