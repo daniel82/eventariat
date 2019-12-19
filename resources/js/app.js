@@ -235,12 +235,13 @@ function startCalendarApp()
       {
         this.resetMessage();
 
+        _log(this.today);
         this.appointment_id  = null;
         this.location_id     = "";
         this.user_id         = "";
         this.type            = "4";
         this.description     = "";
-        this.apt_date_from   = this.today
+        this.apt_date_from   = this.today;
         this.apt_date_to     = this.today;
         this.time_from       = "08:00";
         this.time_to         = "16:30";

@@ -29,6 +29,7 @@ class AppointmentSavedListener
      */
     public function handle(AppointmentSavedEvent $event)
     {
+        // Log::info("send notification to: ".$event->appointment->user->email);
         Mail::to($event->appointment->user->email)->send( new \App\Mail\AppointmentSaved($event->appointment) );
     }
 }

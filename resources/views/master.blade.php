@@ -17,6 +17,13 @@
 
             <div class="container">
                 <div class="content py-5">
+                    <div class="row">
+                        <div class="col-md-8">
+                            @include("admin.messages.errors")
+                            @include("admin.messages.flash")
+                        </div>
+                    </div>
+
                     @yield('content')
                 </div>
             </div>

@@ -13,14 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::middleware(["locale"])->group(function ()
-{
-  Route::get("appointments", "AppointmentApiController@index");
-  Route::post("appointments", "AppointmentApiController@store");
-  Route::patch("appointments/{id}", "AppointmentApiController@update");
-  Route::delete("appointments/{id}", "AppointmentApiController@destroy");
-});

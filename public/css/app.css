@@ -11372,6 +11372,10 @@ a.text-dark:focus {
   color: #cc0000;
 }
 
+.color-white {
+  color: white;
+}
+
 html,
 body {
   background-color: #fff;
@@ -11404,7 +11408,46 @@ body {
 .ev-header .nav-item a:focus,
 .ev-header .nav-item .nav-link:hover,
 .ev-header .nav-item .nav-link:focus {
-  color: #F0EAD6;
+  text-decoration: underline;
+}
+
+.ev-header .nav-item.active span {
+  background: white;
+  color: black;
+  padding: 0.4rem;
+  border-radius: 3px;
+}
+
+.ev-header .navbar-toggler {
+  background: white;
+}
+
+.ev-logged-as {
+  color: white;
+  padding: 0.5rem 0rem;
+  display: inline-block;
+}
+
+@media (max-width: 991px) {
+  .ev-logged-as {
+    display: block;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+  }
+}
+
+.ev-header__title {
+  text-align: center;
+  color: white;
+  font-size: 1.6rem;
+  padding: 1rem 1rem 0.2rem 1rem;
+  font-family: nunito;
+}
+
+@media (max-width: 991px) {
+  .ev-header__title {
+    padding: 0.5rem 1rem 0px 1rem;
+    margin-bottom: 0px;
+  }
 }
 
 .is-required:after {
@@ -11566,9 +11609,11 @@ button {
 .appointment-col__items .event a,
 .appointment-col__items .event button,
 .appointment-col__items .event span,
+.appointment-col__items .event .readonly-entry,
 .appointment-col__items .birthday a,
 .appointment-col__items .birthday button,
-.appointment-col__items .birthday span {
+.appointment-col__items .birthday span,
+.appointment-col__items .birthday .readonly-entry {
   color: white;
 }
 
@@ -11591,7 +11636,8 @@ button {
 
 .ev-appointment a,
 .ev-appointment span,
-.ev-appointment button {
+.ev-appointment button,
+.ev-appointment .readonly-entry {
   display: block;
   border: 0;
   width: 100%;
@@ -11612,15 +11658,19 @@ button {
 .ev-appointment.work:hover a,
 .ev-appointment.work:hover button,
 .ev-appointment.work:hover span,
+.ev-appointment.work:hover .readonly-entry,
 .ev-appointment.work:focus a,
 .ev-appointment.work:focus button,
 .ev-appointment.work:focus span,
+.ev-appointment.work:focus .readonly-entry,
 .ev-appointment.event:hover a,
 .ev-appointment.event:hover button,
 .ev-appointment.event:hover span,
+.ev-appointment.event:hover .readonly-entry,
 .ev-appointment.event:focus a,
 .ev-appointment.event:focus button,
-.ev-appointment.event:focus span {
+.ev-appointment.event:focus span,
+.ev-appointment.event:focus .readonly-entry {
   text-decoration: none;
   color: black !important;
 }
@@ -11672,7 +11722,7 @@ button {
 
 .weater-forecast {
   float: right;
-  padding-right: 10px;
+  padding-right: 0px;
   font-size: 1rem;
   line-height: 1.2rem;
   color: #666;
@@ -11680,7 +11730,7 @@ button {
 
 .weater-forecast__icon {
   display: inline-block;
-  width: 26px;
+  width: 28px;
 }
 
 .ev-color-square {

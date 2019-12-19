@@ -12,16 +12,17 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+  return redirect( "/dienstplan" );
+
 });
 
 
-
-Route::middleware(["locale"])->group(function ()
+Route::middleware([ "auth", "locale"])->group(function ()
 {
   Route::get('/appointments', "AppointmentController@index" );
   Route::get('/calendar', "AppointmentController@index" );
   Route::get('/kalender', "AppointmentController@index" );
+  Route::get('/dienstplan', "AppointmentController@index" );
 });
 
 
@@ -31,3 +32,24 @@ Route::prefix('admin')->group(function () {
 });
 
 
+Route::get('/account', "UserFrontendController@edit");
+Route::post('/account', "UserFrontendController@update");
+
+
+
+Auth::routes(["register"=>false]);
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+
+
+Route::middleware(["locale"])->group(function ()
+{
+  Route::prefix('api')->group(function ()
+  {
+    Route::get("appointments", "AppointmentApiController@index");
+    Route::post("appointments", "AppointmentApiController@store");
+    Route::patch("appointments/{id}", "AppointmentApiController@update");
+    Route::delete("appointments/{id}", "AppointmentApiController@destroy");
+  });
+});

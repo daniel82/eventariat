@@ -15,18 +15,18 @@ class AppointmentRepository
 
   public function index( Request $request )
   {
-
-    $df = new Carbon('first day of this month');
-    $date_from = date("Y-m-d", strtotime('monday this week', $df->timestamp ) );
-
-
-    $dt = new Carbon('last day of this month');
-    $date_to = date("Y-m-d", strtotime('sunday this week', $dt->timestamp ) );
-
+    $df             = new Carbon('first day of this month');
+    $date_from      = date("Y-m-d", strtotime('monday this week', $df->timestamp ) );
+    $dt             = new Carbon('last day of this month');
+    $date_to        = date("Y-m-d", strtotime('sunday this week', $dt->timestamp ) );
     $data["today"]  = date("Y-m-d");
 
+    // TODO find logic when update forecast
     $yr = new Yr();
     $yr->getForecast($data["today"]);
+
+    $data["user"]       = \Auth::user();
+    $data["users"]      = ( $data["user"]->can_see_other_appointments ) ? User::all() : collect([$data["user"]]);
 
     $data["ev_app_data"] =
     [
@@ -34,13 +34,14 @@ class AppointmentRepository
       "date_to"         => $date_to,
       "today"           => $data["today"],
       "location_ids"    => [],
-      "user_ids"        => [],
+      "user_ids"        => ($data["users"]->count() === 1) ? [$data["users"]->first()->id] : [],
       "items"           => [],
       "busy"            => "",
       "actions_toggled" => false,
       "showLayer"       => false,
       "message"         => null,
       "message_type"    => null,
+      "is_admin"        => $data["user"]->isAdmin(),
 
       "appointment_id"  => "",
       "location_id"     => "",
@@ -56,9 +57,6 @@ class AppointmentRepository
 
     $data["locations"]   = Location::all();
 
-    // TODO
-    $user = User::find(1);
-    $data["users"]      = ( $user->can_see_other_appointments ) ? User::all() : collect([$user]);
 
     // TODO if is admin
     $data["hours"]   = $this->getHours();

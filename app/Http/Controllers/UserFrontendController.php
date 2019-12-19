@@ -2,36 +2,19 @@
 
 namespace App\Http\Controllers;
 
-
-
-use Illuminate\Support\Facades\Log;
-use App\Repositories\AppointmentApiRepository;
-use App\Appointment;
-use App\User;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 
-
-class AppointmentApiController extends Controller
+class UserFrontendController extends Controller
 {
-  public function __construct( AppointmentApiRepository $appointmentApiRepository )
-  {
-    $this->appointmentApiRepository = $appointmentApiRepository;
-
-  }
-
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function index( Request $request )
-  {
-    $data = $this->appointmentApiRepository->index($request);
-
-    return response()->json( $data );
-  }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -51,9 +34,7 @@ class AppointmentApiController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->appointmentApiRepository->store($request);
-
-        return response()->json($data);
+        //
     }
 
     /**
@@ -87,9 +68,7 @@ class AppointmentApiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Log::debug("AppointmentApiController@update");
-        $data = $this->appointmentApiRepository->update( $request, $id );
-        return response()->json($data);
+        //
     }
 
     /**
@@ -100,8 +79,6 @@ class AppointmentApiController extends Controller
      */
     public function destroy($id)
     {
-        Log::debug("AppointmentApiController@delete");
-        $data = $this->appointmentApiRepository->destroy( $id );
-        return response()->json($data);
+        //
     }
 }

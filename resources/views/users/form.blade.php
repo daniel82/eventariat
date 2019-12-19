@@ -86,13 +86,29 @@
 
 <div class="form-group">
     <div class="d-flex justify-content-start">
-    @foreach( config("users.appointment_types") as $key  => $label )
-        <div class="d-flex-item w-25">
-            {{ Form::checkbox("appointment_types[]", $key, in_array($key, $appointment_types), ["id" => $key ] ) }}
-            {{ Form::label($key, $label) }}
-        </div>
-    @endforeach
-
+        @foreach( config("users.appointment_types") as $key  => $label )
+            <div class="d-flex-item w-25">
+                {{ Form::checkbox("appointment_types[]", $key, in_array($key, $appointment_types), ["id" => $key ] ) }}
+                {{ Form::label($key, $label) }}
+            </div>
+        @endforeach
     </div>
 </div>
 
+
+<hr class="my-5" />
+<h4>Passwort</h4>
+<div class="form-group">
+    {{ Form::label("new_password", "Neues Passwort" ) }}
+    {{ Form::password("new_password",
+        [
+            "class" => "form-control",
+            "required" => ($action==="create") ? true : false
+        ])
+    }}
+</div>
+
+<div class="form-group">
+    {{ Form::label("confirm_password", "Neues Passwort wiederholen" ) }}
+    {{ Form::password("confirm_password",["class" => "form-control"]) }}
+</div>

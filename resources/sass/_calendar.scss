@@ -79,7 +79,8 @@
 
     a,
     button,
-    span
+    span,
+    .readonly-entry
     {
       color: white;
     }
@@ -105,7 +106,8 @@
 
   a,
   span,
-  button
+  button,
+  .readonly-entry
   {
     display: block;
     border: 0;
@@ -129,7 +131,8 @@
 
       a,
       button,
-      span
+      span,
+      .readonly-entry
       {
         text-decoration: none;
         color: black !important;
@@ -198,7 +201,7 @@
 .weater-forecast
 {
   float: right;
-  padding-right: 10px;
+  padding-right: 0px;
   font-size: 1rem;
   line-height: 1.2rem;
   color: #666;
@@ -208,5 +211,5 @@
 {
 
   display: inline-block;
-  width: 26px;
+  width: 28px;
 }

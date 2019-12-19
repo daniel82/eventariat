@@ -6,4 +6,13 @@ if ( !function_exists("formatDate") )
   {
     return ( $date ) ? date( $format, strtotime($date) ) : null;
   }
+
+}
+
+if ( !function_exists("activeHeaderItem") )
+{
+  function activeHeaderItem( $route )
+  {
+    return ( (\Request::is($route)) ) ? "active" : null;
+  }
 }

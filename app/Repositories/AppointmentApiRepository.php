@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 use App\Appointment;
@@ -16,6 +17,7 @@ class AppointmentApiRepository
   public function store( Request $request )
   {
     $appointment = new Appointment();
+
     $saved = $appointment->saveEntry( $request );
 
     if ( $saved && $appointment->id && is_numeric($appointment->id) )
@@ -45,10 +47,19 @@ class AppointmentApiRepository
     if ( $saved && $appointment->id && is_numeric($appointment->id) )
     {
       $message = "Termin wurde aktualisiert.";
-      if ( $this->maybeTriggerEvent($request, $appointment) && is_object($appointment->user) )
+
+      if ( $appointment->user->email )
       {
-        $message .=  sprintf(" Benachrichtiung an: %s", $appointment->user->email);
+        if ( $this->maybeTriggerEvent($request, $appointment) && is_object($appointment->user) )
+        {
+          $message .=  sprintf(" Benachrichtiung an: %s", $appointment->user->email);
+        }
       }
+      else
+      {
+        $message .=  sprintf(" Noch keine E-Mail hinterlegt.");
+      }
+
 
       return ["status"=> "ok", "message"=>$message, "id"=> $appointment->id ];
     }
@@ -91,7 +102,7 @@ class AppointmentApiRepository
     $location_ids   = $request->get("locations");
     $nav            = $request->get("nav", null);
 
-    $user = User::find(1);
+    $user = \Auth::user();
 
     if ( $nav )
     {

@@ -10,11 +10,11 @@ use Illuminate\Notifications\Notifiable;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable
 {
     use SoftDeletes;
-
     use Notifiable;
+
 
     protected $casts = [
       // 'appointment_types' => 'array', //TODO JSON
@@ -22,10 +22,6 @@ class User extends Model
     ];
 
 
-    public function __construct()
-    {
-        // dump($this);
-    }
 
     /**
      * The attributes that are mass assignable.
@@ -70,6 +66,11 @@ class User extends Model
       return $this->first_name." ".$this->last_name[0].".";
     }
 
+    public function getFullName()
+    {
+      return $this->first_name." ".$this->last_name;
+    }
+
 
     public function scopeBirthdate( $query, $from, $to=null )
     {
@@ -108,6 +109,16 @@ class User extends Model
     }
 
 
+    public function isAdmin()
+    {
+      return ($this->role === "admin");
+    }
+
+
+    public static function current()
+    {
+      return \Auth::user();
+    }
 
 
 

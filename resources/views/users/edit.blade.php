@@ -7,7 +7,7 @@
 
         <div class="row">
             @component('admin.slots.form-col-left')
-                @include("users.form")
+                @include("users.form", ["action"=>"edit"])
             @endcomponent
 
             @component('admin.slots.form-col-right')

@@ -26,6 +26,9 @@ class Appointment extends Model
   // common update method
   public function saveEntry( $request )
   {
+    Log::debug("save entry");
+    $user = \Auth::user();
+    Log::debug($user);
     $this->location_id    = $request->get("location_id");
     $this->user_id        = $request->get("user_id");
     $this->type           = $request->get("type");
@@ -33,6 +36,9 @@ class Appointment extends Model
     $this->date_from      = $request->get("date_from")." ".$request->get("time_from");
     $this->date_to        = $request->get("date_to")." ".$request->get("time_to");
     $this->note           = $request->get("note");
+    $this->edited_by      = $user->id;
+    $this->created_by     = ($this->id) ? $this->created_by : $user->id;
+
 
     if ( !$this->isUserBooked($this->user_id, $this->date_from, $this->date_to, $this->id) )
     {

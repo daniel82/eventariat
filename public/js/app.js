@@ -51273,6 +51273,9 @@ function startCalendarApp() {
       },
       resetForm: function resetForm() {
         this.resetMessage();
+
+        _log(this.today);
+
         this.appointment_id = null;
         this.location_id = "";
         this.user_id = "";
