@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use \App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+
 
 class UserFrontendController extends Controller
 {
+    public function __construct( UserRepository $userRepository )
+    {
+        $this->userRepository = $userRepository;
+    }
 
 
     /**
@@ -17,7 +23,11 @@ class UserFrontendController extends Controller
     public function edit()
     {
         $user = \Auth::user();
+        $data = $this->userRepository->getFormData($user);
+
+        return view("users.account", $data );
     }
+
 
     /**
      * Update the specified resource in storage.

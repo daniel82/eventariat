@@ -11473,6 +11473,29 @@ button {
   color: #195b91;
 }
 
+.ev-save-btn {
+  padding: 0;
+  border: 0;
+  font-size: 2rem;
+  background: #3490dc;
+  color: white;
+  border-radius: 50%;
+  padding: 0.5rem 1.4rem;
+}
+
+.ev-save-btn:hover,
+.ev-save-btn:focus {
+  background: #195b91;
+}
+
+@media (max-width: 991px) {
+  .ev-save-btn {
+    width: 100%;
+    border-radius: 2px;
+    margin-top: 2rem;
+  }
+}
+
 .ev-actions.toggled .sub-li {
   display: inline-block !important;
 }
@@ -11757,8 +11780,13 @@ button {
 
 .widget {
   width: 100%;
-  min-height: 100px;
-  padding: 2rem 1rem;
+  padding: 0rem 2rem;
+}
+
+@media (max-width: 991px) {
+  .widget {
+    padding: 0px;
+  }
 }
 
 .ev-shift-request__status {

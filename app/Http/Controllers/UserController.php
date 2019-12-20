@@ -23,8 +23,8 @@ class UserController extends Controller
     public function __construct( UserRepository $userRepository )
     {
         $this->userRepository = $userRepository;
-
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -120,4 +120,29 @@ class UserController extends Controller
         $message = "Mitarbeiter wurde gelöscht";
         return redirect()->action('UserController@index')->with( "flash_message", $message );
     }
+
+    public function loginAs( Request $request )
+    {
+        $current_user = \Auth::user();
+        $user_id = $request->get("user_id");
+
+        $login_user = false;
+        if ( is_numeric($user_id) && $current_user->isAdmin() )
+        {
+          $user = User::find($user_id);
+          $login_user = true;
+        }
+
+        if ( $login_user )
+        {
+          \Auth::loginUsingId($user_id, true);
+
+          return redirect( "/dienstplan" );
+        }
+        else{
+          $message = sprintf("Benutzer nicht vorhanden oder keine Adminrechte" );
+          return redirect()->action('UserController@index')->with( "flash_message", $message );
+        }
+      }
+
 }

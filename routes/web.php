@@ -30,6 +30,8 @@ Route::prefix('admin')->group(function () {
   Route::resource('users', "UserController");
   Route::resource('locations', "LocationController");
   Route::resource('shift-requests', "ShiftRequestController" );
+  Route::get('login-as/', "UserController@loginAs");
+
 });
 
 

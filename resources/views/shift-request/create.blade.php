@@ -2,7 +2,7 @@
 
 @section("content")
     <div class="form-inner">
-        <h2>Antrage speichern</h2>
+        <h2>Antrag speichern</h2>
         <script>ev_app_data = {!! json_encode($ev_app_data) !!}</script>
         <div id="ev-shift-request-app">
             {{  Form::open (['action' => ['ShiftRequestController@store' ], 'method' => 'POST' ]) }}

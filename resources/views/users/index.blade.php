@@ -29,8 +29,9 @@
             <td>{{$item->last_name}}</td>
             <td><a href="tel:{{$item->mobile}}">{{$item->mobile}}</a></td>
             <td>{{$item->email}}</td>
-            <td class="text-right">
+            <td class="text-right" style="width: 200px">
                 @include("admin.common.delete-button", ["controller" => "UserController", "object" => $item])
+                <a href="/admin/login-as/?user_id={{$item->id}}" class="btn btn-warning" title="Anmelden als {{ $item->first_name }} {{ $item->last_name }}"><i class="fa fa-sign-in" aria-hidden="true"></i></a>
             </td>
           </tr>
         @endforeach

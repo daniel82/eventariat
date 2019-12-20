@@ -18,18 +18,15 @@
                 <a class="nav-link" href="/home">Start</a>
               </li>
 
-              {{-- {{ Route::has('dienstplan') }} --}}
-
-
               <li class="nav-item {{ activeHeaderItem("dienstplan") }}">
                 <a class="nav-link" href="{{ action("AppointmentController@index") }}"><span>Kalender</span></a>
               </li>
 
-              <li class="nav-item {{ activeHeaderItem("admin/shift-requests") }}" >
-                <a class="nav-link" href="{{ action("ShiftRequestController@index") }}"><span>Antr&auml;ge</span></a>
-              </li>
-
               @if($head["user"]->isAdmin())
+                <li class="nav-item {{ activeHeaderItem("admin/shift-requests") }}" >
+                  <a class="nav-link" href="{{ action("ShiftRequestController@index") }}"><span>Antr&auml;ge</span></a>
+                </li>
+
                 <li class="nav-item {{ activeHeaderItem("admin/users") }}">
                   <a class="nav-link" href="{{ action("UserController@index") }}"><span>Mitarbeiter</span></a>
                 </li>

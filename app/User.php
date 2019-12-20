@@ -61,6 +61,13 @@ class User extends Authenticatable
     }
 
 
+    public function shiftRequests()
+    {
+      return $this->hasMany("App\ShiftRequest");
+    }
+
+
+
     public function getCalendarName()
     {
       return $this->first_name." ".$this->last_name[0].".";

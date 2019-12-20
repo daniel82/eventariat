@@ -3,8 +3,6 @@
 
 @section('content')
 
-  @include("admin.common.add-new-button", ["href"=> action("ShiftRequestController@create"), "label"=> "Neuer Antrag" ])
-
   @if (  $items->count() )
     <table class="table table-striped">
       <thead>

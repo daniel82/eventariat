@@ -8,11 +8,11 @@
             {{ Form::open (['action' => ['ShiftRequestController@update', $object->id ], 'method' => 'PATCH']) }}
                 <div class="row">
                     @component('admin.slots.form-col-left')
+                        @include("shift-request.status")
                         @include("shift-request.form", ["action"=>"edit"])
                     @endcomponent
 
                     @component('admin.slots.form-col-right')
-                        @include("shift-request.status")
                         @include("admin.common.save-button")
                     @endcomponent
                 </div>

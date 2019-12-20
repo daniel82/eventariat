@@ -2,7 +2,12 @@
 {
   // background: #f1f1f1;
   width: 100%;
-  min-height: 100px;
-  padding: 2rem 1rem;
+  // min-height: 100px;
+  padding: 0rem 2rem;
+
+  @media(max-width: $screen-md)
+  {
+    padding: 0px;
+  }
 
 }

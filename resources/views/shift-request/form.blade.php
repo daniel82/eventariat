@@ -11,7 +11,7 @@
 
 <div class="form-group">
   {{ Form::label("type", "Antragsart", ["class"=> "d-block is-required"]) }}
-  <select name="type" id="type" class="form-control d-block" v-model="type">
+  <select name="type" id="type" class="form-control d-block" v-model="type" required="required">
     @foreach( config("shift-request.type") as $item )
       <option value="{{ $item["id"] }}" >{{ $item["text"] }}</option>
     @endforeach
@@ -21,20 +21,21 @@
 
 
 <div class="form-group">
-  <span>Von</span>
+  <label for="date_from" class="is-required">Von</label>
   <div class="d-flex ">
   {{ Form::date("date_from", null,
     [
       "class"    => "d-block form-control",
       "v-model"  =>"date_from",
       "min"      => $today,
-      "@change"  => "validateDates"
+      "@change"  => "validateDates",
+      "required"  => "required",
     ])
   }}
   </div>
 
 
-  <span>Bis</span>
+  <label for="date_to" class="is-required">Bis</label>
   <div class="d-flex">
     {{
       Form::date("date_to", null,
@@ -42,7 +43,8 @@
         "class"    => "d-block form-control",
         "v-model"  =>"date_to",
         "min"      => $today,
-        "@change"  => "validateDates"
+        "@change"  => "validateDates",
+        "required"  => "required",
       ])
     }}
   </div>

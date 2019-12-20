@@ -15,6 +15,19 @@ class ShiftRequest extends Model
   }
 
 
+  public function scopeUserIds( $query, $user_ids )
+  {
+    if ( is_array($user_ids) && !empty($user_ids) )
+    {
+      return $query->whereIn( "user_id", $user_ids );
+    }
+    else
+    {
+      return $query;
+    }
+  }
+
+
   public function saveEntry( $request )
   {
     $user = \Auth::user();

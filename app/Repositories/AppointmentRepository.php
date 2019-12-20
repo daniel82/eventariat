@@ -17,10 +17,10 @@ class AppointmentRepository
   {
     $df             = new Carbon('first day of this month');
     $date_from      = date("Y-m-d", strtotime('monday this week', $df->timestamp ) );
-    $date_from      = "2019-12-30";
+    // $date_from      = "2019-12-30";
     $dt             = new Carbon('last day of this month');
     $date_to        = date("Y-m-d", strtotime('sunday this week', $dt->timestamp ) );
-    $date_to        = "2020-02-02";
+    // $date_to        = "2020-02-02";
     $data["today"]  = date("Y-m-d");
 
     // TODO find logic when update forecast

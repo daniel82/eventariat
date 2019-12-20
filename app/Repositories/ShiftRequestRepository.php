@@ -15,20 +15,13 @@ class ShiftRequestRepository
 
     $user_ids = ( $user->isAdmin() ) ? [] : [$user->id];
 
-    if ( $user_ids);
-
-    // $data["items"] = ShiftRequest::whereIn("user_id", $user_ids)->paginate(50);
-    $data["items"] = ShiftRequest::paginate(50);
-
+    $data["items"] = ShiftRequest::userIds($user_ids)->orderBy("created_at")->paginate(50);
 
     $types =  config("shift-request.type");
-
     foreach ($data["items"] as $key => &$item)
     {
-
       $item->type_hr = ( isset($types[$item->type]) ) ? $types[$item->type]["text"] : null;
     }
-
 
     return $data;
   }
@@ -78,8 +71,8 @@ class ShiftRequestRepository
       "date_from"  => $shiftRequest->date_from,
       "date_to"    => $shiftRequest->date_to,
       "note"       => $shiftRequest->note,
-      "type"       => $shiftRequest->type,
-      "status"     => $shiftRequest->status,
+      "type"       => ($shiftRequest->type) ? $shiftRequest->type : 1,
+      "status"     => ($shiftRequest->status) ? $shiftRequest->status : 0,
       "is_admin"   => $data["user"]->isAdmin(),
     ];
 
