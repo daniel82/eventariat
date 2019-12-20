@@ -72,8 +72,21 @@
     background: #E08119;
   }
 
+
+  .leave-day
+  {
+    background: #d4a903;
+  }
+
+  .free-day
+  {
+    background: $color_green;
+  }
+
   .event,
-  .birthday
+  .birthday,
+  .leave-day,
+  .free-day
   {
     border-radius: 2px;
 
@@ -175,6 +188,11 @@
 {
   font-family: courier;
   width: 76px !important;
+
+  &:empty
+  {
+    display: none !important;
+  }
 }
 
 

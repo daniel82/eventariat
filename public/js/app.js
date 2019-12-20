@@ -51159,8 +51159,32 @@ function docReady(fn) {
 
 docReady(function () {
   startCalendarApp();
+  startShiftRequestApp();
   startColorPicker();
 });
+
+function startShiftRequestApp() {
+  if (!document.getElementById("ev-shift-request-app")) {
+    return false;
+  }
+
+  var app = new Vue({
+    el: '#ev-shift-request-app',
+    data: ev_app_data,
+    methods: {
+      validateDates: function validateDates() {
+        if (this.date_from && !this.date_to || this.date_from && this.date_to && this.date_from > this.date_to) {
+          this.date_to = this.date_from;
+        }
+      }
+    },
+    created: function created() {
+      if (this.status != 0 && !this.is_admin) {
+        $("input, select, textarea").attr("disabled", true);
+      }
+    }
+  });
+}
 
 function startCalendarApp() {
   if (!document.getElementById("ev-calendar-app")) {
@@ -51215,7 +51239,7 @@ function startCalendarApp() {
         this.ajaxRequest(request_data);
       },
       getItemDuration: function getItemDuration(appointment) {
-        if (appointment.time_from && appointment.time_to) {
+        if (appointment.type_class !== "event" && appointment.time_from && appointment.time_to) {
           return appointment.time_from + "-" + appointment.time_to;
         }
       },
@@ -51249,6 +51273,12 @@ function startCalendarApp() {
       },
       isBirthday: function isBirthday(type) {
         return type === "birthday";
+      },
+      isLeaveDay: function isLeaveDay(type) {
+        return type === "leave-day";
+      },
+      isFreeDay: function isFreeDay(type) {
+        return type === "free-day";
       },
       toggleActions: function toggleActions() {
         this.actions_toggled = this.actions_toggled ? false : true;
@@ -51353,8 +51383,10 @@ function startCalendarApp() {
         });
       },
       saveAppointment_ajaxCallback: function saveAppointment_ajaxCallback(response) {
-        // _log("saveAppointment_ajaxCallback");
-        // _log(response);
+        _log("saveAppointment_ajaxCallback");
+
+        _log(response);
+
         if (_typeof(response) === "object") {
           if (response.status && response.message) {
             this.message_type = response.status === "ok" ? "alert-success" : "alert-danger";
@@ -51367,12 +51399,16 @@ function startCalendarApp() {
       deleteAppointment: function deleteAppointment() {
         _log("deleteAppointment...");
 
+        _log(this.appointment_id);
+
         _log(this.getApiUrl());
 
         $.ajax({
           url: this.getApiUrl(),
           type: "DELETE",
-          data: {},
+          data: {
+            _token: csrf_token
+          },
           dataType: 'JSON',
           success: this.saveAppointment_ajaxCallback,
           error: this.saveAppointment_ajaxCallback

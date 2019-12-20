@@ -25,7 +25,9 @@
                 <a class="nav-link" href="{{ action("AppointmentController@index") }}"><span>Kalender</span></a>
               </li>
 
-              <li class="nav-item {{ activeHeaderItem("admin/requests") }}" ><a class="nav-link" href="#"><span>Antr&auml;ge</span></a></li>
+              <li class="nav-item {{ activeHeaderItem("admin/shift-requests") }}" >
+                <a class="nav-link" href="{{ action("ShiftRequestController@index") }}"><span>Antr&auml;ge</span></a>
+              </li>
 
               @if($head["user"]->isAdmin())
                 <li class="nav-item {{ activeHeaderItem("admin/users") }}">

@@ -17,8 +17,10 @@ class AppointmentRepository
   {
     $df             = new Carbon('first day of this month');
     $date_from      = date("Y-m-d", strtotime('monday this week', $df->timestamp ) );
+    $date_from      = "2019-12-30";
     $dt             = new Carbon('last day of this month');
     $date_to        = date("Y-m-d", strtotime('sunday this week', $dt->timestamp ) );
+    $date_to        = "2020-02-02";
     $data["today"]  = date("Y-m-d");
 
     // TODO find logic when update forecast
@@ -70,7 +72,7 @@ class AppointmentRepository
   {
     $hours = collect();
     $minutes = ["00", "15", "30", "45"];
-    foreach ( range(0,24) as $key => $hour)
+    foreach ( range(0,23) as $key => $hour)
     {
       $hour = ($hour<10) ? "0".$hour : $hour;
 

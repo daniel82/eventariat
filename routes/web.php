@@ -29,6 +29,7 @@ Route::middleware([ "auth", "locale"])->group(function ()
 Route::prefix('admin')->group(function () {
   Route::resource('users', "UserController");
   Route::resource('locations', "LocationController");
+  Route::resource('shift-requests', "ShiftRequestController" );
 });
 
 

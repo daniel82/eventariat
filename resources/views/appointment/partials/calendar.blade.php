@@ -7,20 +7,38 @@
       <div class="appointment-col__items ">
 
         <div v-if="col.appointments.length">
-          <div  v-for="(appointment, key) in col.appointments" class="ev-appointment" :class="appointment.type_class" >
-            <span v-if="isBirthday(appointment.type_class)">
+          <div  v-for="(appointment, key) in col.appointments" class="ev-appointment mb-1" :class="appointment.type_class" >
+
+            <div v-if="isLeaveDay(appointment.type_class)">
+              <button v-if="is_admin" @click="editAppointment(date,key)" >
+                <i class="fa fa-sun-o" aria-hidden="true"></i> @{{ appointment.title }}
+              </button>
+              <span v-else >
+                <i class="fa fa-sun-o" aria-hidden="true"></i> @{{ appointment.title }}
+              </span>
+            </div>
+
+
+            <div v-else-if="isFreeDay(appointment.type_class)">
+              <button v-if="is_admin" @click="editAppointment(date,key)" >
+                <i class="fa fa-sun-o" aria-hidden="true"></i> @{{ appointment.title }}
+              </button>
+              <span v-else >
+                <i class="fa fa-sun-o" aria-hidden="true"></i> @{{ appointment.title }}
+              </span>
+            </div>
+
+            <span v-else-if="isBirthday(appointment.type_class)">
               <i class="fa fa-birthday-cake" aria-hidden="true"></i> @{{ appointment.title }} (@{{ appointment.age}})
             </span>
 
-            {{-- TODO check if is_admin --}}
-
             <button v-else-if="is_admin" @click="editAppointment(date,key)" :class="locationClass(appointment.location_id)">
-              <span class="mr-1 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span> @{{ appointment.title }}
+              <span class="mr-1 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span>@{{ appointment.title }}
               <i class="fa fa-info-circle ev-appointment__note-info" aria-hidden="true"  v-if="appointment.note"></i>
             </button>
 
             <div v-else :class="locationClass(appointment.location_id)" class="readonly-entry">
-              <span class="mr-1 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span> @{{ appointment.title }}
+              <span class="mr-2 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span>@{{ appointment.title }}
               <i class="fa fa-info-circle ev-appointment__note-info" aria-hidden="true"  v-if="appointment.note"></i>
             </div>
 

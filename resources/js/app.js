@@ -54,8 +54,41 @@ function docReady(fn) {
 docReady(function()
  {
   startCalendarApp();
+  startShiftRequestApp();
   startColorPicker();
 });
+
+function startShiftRequestApp()
+{
+  if ( !document.getElementById("ev-shift-request-app") )
+  {
+    return false;
+  }
+
+
+  const app = new Vue(
+  {
+    el: '#ev-shift-request-app',
+    data: ev_app_data,
+    methods:
+    {
+      validateDates : function ()
+      {
+        if ( this.date_from && !this.date_to || this.date_from && this.date_to &&  this.date_from  > this.date_to )
+        {
+          this.date_to = this.date_from;
+        }
+      },
+    },
+    created : function()
+    {
+      if ( this.status != 0 && !this.is_admin )
+      {
+        $("input, select, textarea").attr("disabled", true);
+      }
+    }
+  });
+}
 
 function startCalendarApp()
 {
@@ -141,13 +174,11 @@ function startCalendarApp()
 
       getItemDuration: function( appointment )
       {
-        if ( appointment.time_from && appointment.time_to )
+        if ( appointment.type_class !== "event" && appointment.time_from && appointment.time_to )
         {
           return appointment.time_from+"-"+appointment.time_to;
         }
       },
-
-
 
 
       updateItems : function()
@@ -195,6 +226,17 @@ function startCalendarApp()
         return (type === "birthday" );
       },
 
+
+      isLeaveDay : function (type)
+      {
+        return (type === "leave-day" );
+      },
+
+      isFreeDay : function (type)
+      {
+        return (type === "free-day" );
+      },
+
       toggleActions : function()
       {
         this.actions_toggled = (this.actions_toggled) ? false : true;
@@ -220,7 +262,6 @@ function startCalendarApp()
       isFutureDate : function( date )
       {
         return ( date >= this.today );
-
       },
 
       createAppointment : function( date )
@@ -328,8 +369,8 @@ function startCalendarApp()
 
       saveAppointment_ajaxCallback : function( response)
       {
-        // _log("saveAppointment_ajaxCallback");
-        // _log(response);
+        _log("saveAppointment_ajaxCallback");
+        _log(response);
         if ( typeof response === "object" )
         {
           if ( response.status && response.message )
@@ -347,12 +388,13 @@ function startCalendarApp()
       deleteAppointment : function (  )
       {
         _log("deleteAppointment...");
+        _log(this.appointment_id);
         _log( this.getApiUrl() );
         $.ajax(
         {
           url:       this.getApiUrl(),
           type:      "DELETE",
-          data:      {},
+          data:      {_token : csrf_token },
           dataType:  'JSON',
           success:   this.saveAppointment_ajaxCallback,
           error:     this.saveAppointment_ajaxCallback

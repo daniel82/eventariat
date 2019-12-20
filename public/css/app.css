@@ -11361,7 +11361,7 @@ a.text-dark:focus {
 }
 
 .color-green {
-  color: #bada55;
+  color: #28a745;
 }
 
 .color-blue {
@@ -11601,8 +11601,18 @@ button {
   background: #E08119;
 }
 
+.appointment-col__items .leave-day {
+  background: #d4a903;
+}
+
+.appointment-col__items .free-day {
+  background: #28a745;
+}
+
 .appointment-col__items .event,
-.appointment-col__items .birthday {
+.appointment-col__items .birthday,
+.appointment-col__items .leave-day,
+.appointment-col__items .free-day {
   border-radius: 2px;
 }
 
@@ -11613,7 +11623,15 @@ button {
 .appointment-col__items .birthday a,
 .appointment-col__items .birthday button,
 .appointment-col__items .birthday span,
-.appointment-col__items .birthday .readonly-entry {
+.appointment-col__items .birthday .readonly-entry,
+.appointment-col__items .leave-day a,
+.appointment-col__items .leave-day button,
+.appointment-col__items .leave-day span,
+.appointment-col__items .leave-day .readonly-entry,
+.appointment-col__items .free-day a,
+.appointment-col__items .free-day button,
+.appointment-col__items .free-day span,
+.appointment-col__items .free-day .readonly-entry {
   color: white;
 }
 
@@ -11704,6 +11722,10 @@ button {
   width: 76px !important;
 }
 
+.ev-appointment__duration:empty {
+  display: none !important;
+}
+
 .ev-inline-add-btn {
   border: 0;
   color: #615550;
@@ -11731,6 +11753,26 @@ button {
 .weater-forecast__icon {
   display: inline-block;
   width: 28px;
+}
+
+.widget {
+  width: 100%;
+  min-height: 100px;
+  padding: 2rem 1rem;
+}
+
+.ev-shift-request__status {
+  color: #F6D155;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.ev-shift-request__status.status-1 {
+  color: #58ab00;
+}
+
+.ev-shift-request__status.status-2 {
+  color: #cc0000;
 }
 
 .ev-color-square {

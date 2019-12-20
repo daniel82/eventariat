@@ -3,13 +3,15 @@
 namespace App;
 
 use Illuminate\Support\Facades\Log;
-
+use App\ShiftRequest;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 
 class Appointment extends Model
 {
   // relationships
+  //
+  protected $fillable = ["shift_request_id"];
 
   public function user()
   {
@@ -26,7 +28,7 @@ class Appointment extends Model
   // common update method
   public function saveEntry( $request )
   {
-    Log::debug("save entry");
+    Log::debug("Appointment@saveEntry");
     $user = \Auth::user();
     Log::debug($user);
     $this->location_id    = $request->get("location_id");
@@ -49,6 +51,23 @@ class Appointment extends Model
     {
       return false;
     }
+  }
+
+
+  public function assumeShiftRequest( ShiftRequest $shiftRequest )
+  {
+    Log::debug("Appointment@assumeShiftRequest");
+    $user = \Auth::user();
+    $this->shift_request_id   = $shiftRequest->id;
+    $this->type               = $shiftRequest->type;
+    $this->date_from          = $shiftRequest->date_from." 00:00:00";
+    $this->date_to            = $shiftRequest->date_to." 23:59:00";
+    $this->edited_by          = $user->id;
+    $this->created_by         = ($this->id) ? $this->created_by : $user->id;
+    $this->user_id            = $shiftRequest->user_id;
+
+
+    $this->save();
   }
 
 
@@ -166,6 +185,11 @@ class Appointment extends Model
   public function scopeVarious( $query )
   {
     return $query->whereType(5);
+  }
+
+  public function scopeFree( $query )
+  {
+    return $query->whereType(6);
   }
 
 

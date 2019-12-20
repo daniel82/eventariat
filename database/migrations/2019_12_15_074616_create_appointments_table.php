@@ -36,6 +36,8 @@ class CreateAppointmentsTable extends Migration
 
             $table->integer("edited_by")->unsigned()->nullable();
             $table->foreign("edited_by")->references('id')->on('users');
+
+            $table->integer("shift_request_id")->unsigned()->nullable();
         });
     }
 
