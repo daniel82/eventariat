@@ -28,6 +28,44 @@ class ShiftRequest extends Model
   }
 
 
+  public function scopeUserId( $query, $user_id )
+  {
+    if ( $user_id && is_numeric($user_id) )
+    {
+      return $query->where( "user_id", $user_id );
+    }
+    else
+    {
+      return $query;
+    }
+  }
+
+
+  public function scopeType( $query, $type )
+  {
+    if ( $type && is_numeric($type) )
+    {
+      return $query->where( "type", $type );
+    }
+    else
+    {
+      return $query;
+    }
+  }
+
+  public function scopeStatus( $query, $status )
+  {
+    if ( is_numeric($status) )
+    {
+      return $query->where( "status", $status );
+    }
+    else
+    {
+      return $query;
+    }
+  }
+
+
   public function saveEntry( $request )
   {
     $user = \Auth::user();

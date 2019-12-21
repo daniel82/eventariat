@@ -1,8 +1,12 @@
 <div class="appointments" :class="busy">
   <div class="appointment-row">
     <div v-for="(col, date) in items" class="appointment-col" :class="isToday(date)">
-      <h4 class="appointment-col__title px-1">@{{ col.date }} <span class="weater-forecast" v-if="col.forecast">
-        @{{ col.forecast.temperature }}° <img class="weater-forecast__icon" :src="buildWeatherIcon(col.forecast.icon)" /></span></h4>
+      <h4 class="appointment-col__title px-1 ">
+        <span>@{{ col.date }}</span>
+        <div class="weater-forecast" v-if="col.forecast">
+          @{{ col.forecast.temperature }}° <span class="xxx"><img class="weater-forecast__icon" :src="buildWeatherIcon(col.forecast.icon)" /></span>
+        </div>
+      </h4>
 
       <div class="appointment-col__items ">
 

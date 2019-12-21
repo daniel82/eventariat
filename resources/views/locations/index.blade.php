@@ -6,10 +6,10 @@
 </a></div>
 
   @if ( $items )
-    <table class="table table-striped">
+    <table class="table table-striped ev-admin-table">
       <thead>
         <tr>
-          <th></th>
+          <th class="ev-edit-col"></th>
           <th>Farbe</th>
           <th>Name</th>
           <th>Straße</th>
@@ -21,14 +21,14 @@
       <tbody>
         @foreach ($items as $key => $item )
             <tr>
-                <td>
+                <td class="ev-edit-col">
                   @include("admin.common.edit-button", ["resource" => "locations", "object" => $item])
                 </td>
                 <td><span class="ev-color-square" style="background:{{$item->color}};"></span></td>
                 <td>{{$item->name}}</td>
                 <td>{{$item->street}}</td>
                 <td><a href="tel:{{$item->phone}}">{{$item->phone}}</a></td>
-                <td class="text-right">
+                <td class="ev-action-col">
                     @include("admin.common.delete-button", ["controller" => "LocationController", "object" => $item])
                 </td>
             </tr>

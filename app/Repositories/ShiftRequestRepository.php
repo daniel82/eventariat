@@ -5,19 +5,23 @@ namespace App\Repositories;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\ShiftRequest;
+use App\User;
 
 class ShiftRequestRepository
 {
 
   public function index( Request $request )
   {
-    $data["user"] = $user = \Auth::user();
+    $user = \Auth::user();
+    $data["users"] = User::orderBy("first_name", "asc")->orderBy("last_name", "asc")->get();
+    $data["types"] = $types =  config("shift-request.type");
+    $data["statuses"] = $statuses =  config("shift-request.status");
 
-    $user_ids = ( $user->isAdmin() ) ? [] : [$user->id];
+    $data["status"]   = $request->get("status");
+    $data["type"]     = $request->get("type");
+    $data["user_id"]  = (int) $request->get("user_id");
+    $data["items"] = ShiftRequest::userId($data["user_id"])->type($data["type"])->status($data["status"])->orderBy("created_at")->paginate(50);
 
-    $data["items"] = ShiftRequest::userIds($user_ids)->orderBy("created_at")->paginate(50);
-
-    $types =  config("shift-request.type");
     foreach ($data["items"] as $key => &$item)
     {
       $item->type_hr = ( isset($types[$item->type]) ) ? $types[$item->type]["text"] : null;

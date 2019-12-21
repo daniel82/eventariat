@@ -36,9 +36,30 @@ class UserFrontendController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request )
     {
-        //
+        $user = \Auth::user();
+        $request                 = $this->userRepository->valildatePasswords( $request );
+        $user->first_name        = $request->get("first_name", $user->first_name );
+        $user->last_name         = $request->get("last_name", $user->last_name );
+        $user->birthdate         = $request->get("birthdate");
+        $user->email             = $request->get("email", $user->email );
+        $user->mobile            = $request->get("mobile", $user->mobile );
+        $user->phone             = $request->get("phone" );
+        $user->street            = $request->get("street" );
+        $user->zipcode           = $request->get("zipcode" );
+        $user->city              = $request->get("city" );
+
+        if ( $pw = $request->get("password" ) )
+        {
+            $user->password = $pw;
+        }
+
+        $user->save();
+
+        $message = "Daten wurde aktualisiert";
+
+        return redirect()->action('UserFrontendController@edit')->with( "flash_message", $message );
     }
 
 

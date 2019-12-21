@@ -42,8 +42,15 @@ class UserRepository
     $request["appointment_types"] = serialize( $request->get("appointment_types", []) );
     $request["can_see_other_appointments"] = $request->get("can_see_other_appointments", 0);
 
+    return $request;
+  }
+
+
+  public function valildatePasswords( Request $request )
+  {
     $new_password = $request->get("new_password");
     $confirm_password = $request->get("confirm_password");
+
     if ( $new_password && $confirm_password && $new_password === $confirm_password )
     {
       $request["password"] = bcrypt($new_password);

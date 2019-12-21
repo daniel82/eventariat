@@ -37,6 +37,7 @@ Route::prefix('admin')->group(function () {
 
 Route::get('/account', "UserFrontendController@edit");
 Route::post('/account', "UserFrontendController@update");
+Route::patch('/account', "UserFrontendController@update");
 
 
 

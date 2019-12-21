@@ -7,10 +7,10 @@
 </a></div>
 
   @if ( $items )
-    <table class="table table-striped">
+    <table class="table table-striped ev-admin-table">
       <thead>
         <tr>
-          <th></th>
+          <th class="ev-edit-col"></th>
           <th>Vorname</th>
           <th>Nachname</th>
           <th>Mobilnr</th>
@@ -22,14 +22,28 @@
       <tbody>
         @foreach ($items as $key => $item )
           <tr>
-            <td>
-                @include("admin.common.edit-button", ["resource" => "users", "object" => $item])
+            <td class="ev-edit-col">
+              @include("admin.common.edit-button", ["resource" => "users", "object" => $item])
             </td>
             <td>{{$item->first_name}}</td>
             <td>{{$item->last_name}}</td>
-            <td><a href="tel:{{$item->mobile}}">{{$item->mobile}}</a></td>
-            <td>{{$item->email}}</td>
-            <td class="text-right" style="width: 200px">
+            <td>
+              @if ( $item->mobile )
+                <a href="tel:{{$item->mobile}}">{{$item->mobile}}</a>
+              @else
+                <span>Keine Mobilnummer eingetragen</span>
+              @endif
+
+            </td>
+            <td>
+              @if ( $item->email )
+                <a href="mailto:{{$item->email}}">{{$item->email}}</a>
+              @else
+                <span>Keine E-Mail eingetragen</span>
+              @endif
+            </td>
+
+            <td class="ev-action-col">
                 @include("admin.common.delete-button", ["controller" => "UserController", "object" => $item])
                 <a href="/admin/login-as/?user_id={{$item->id}}" class="btn btn-warning" title="Anmelden als {{ $item->first_name }} {{ $item->last_name }}"><i class="fa fa-sign-in" aria-hidden="true"></i></a>
             </td>

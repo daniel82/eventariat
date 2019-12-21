@@ -59,6 +59,7 @@ class UserController extends Controller
     public function store(Requests\CreateUser $request, User $user)
     {
         $request = $this->userRepository->sanitizeRequest($request);
+        $request = $this->userRepository->valildatePasswords($request);
         $user = User::create( $request->all() );
         // dd( $request->all() );
         $message = "Mitarbeiter wurde gespeichert";
@@ -100,6 +101,8 @@ class UserController extends Controller
     public function update(Request $request, User $user )
     {
         $request = $this->userRepository->sanitizeRequest($request);
+        $request = $this->userRepository->valildatePasswords($request);
+
         $user->update( $request->all() );
 
         $message = "Mitarbeiter wurde aktualisiert";

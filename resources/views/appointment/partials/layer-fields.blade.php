@@ -51,7 +51,7 @@
   <div class="d-flex ">
     {{ Form::date("apt_date_from", null,
       [
-        "class"    => "d-block form-control w-30",
+        "class"    => "d-block form-control ev-date-field ",
         "v-model"  =>"apt_date_from",
         "min"      => $today,
         "@change"  => "validateDates"
@@ -60,7 +60,7 @@
 
     {{ Form::select("time_from", $hours, null,
       [
-        "class"    => "form-control w-30 ml-3",
+        "class"    => "form-control ev-date-field ml-3",
         "v-model"  => "time_from",
         "@change"  => "validateTimes"
       ])
@@ -73,7 +73,7 @@
       {{
         Form::date("apt_date_to", null,
         [
-          "class"    => "d-block form-control w-30",
+          "class"    => "d-block form-control ev-date-field ",
           "v-model"  =>"apt_date_to",
           "min"      => $today,
           "@change"  => "validateDates"
@@ -83,7 +83,7 @@
       {{
         Form::select("time2_to", $hours, null,
           [
-            "class"    =>"form-control w-30  ml-3",
+            "class"    =>"form-control ev-date-field  ml-3",
             "v-model"  =>"time_to",
             "@change"  => "validateTimes"
           ]
@@ -107,24 +107,21 @@
 
 
 <div class="form-group text-right">
-  <div class="btn-group ev-btn-group">
-    <ul class="list-unstyled ev-actions" :class="actionsToggled">
-      <li class="default">
-        <button type="button" class="ev-btn save" @click="saveAppointment()">Speichern</button>
-        <button type="button" class="ev-btn toggle-actions" @click="toggleActions">
-          <span class="closed"><i class="fa fa-chevron-right" aria-hidden="true"></i></span>
-          <span class="opened"><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
-        </button>
-      </li>
-      <li class="sub-li">
-        <button type="button" class="ev-btn save save-and-email" @click="saveAppointment('email')">Speichern & Email</button>
-      </li>
-      {{-- <li class="sub-li">
-        <button  type="button" class="ev-btn save save-and-sms" @click="saveAppointment('sms')">Speichern & SMS</button>
-      </li> --}}
-      <li class="sub-li">
-        <button  type="button" class="ev-btn delete" @click="deleteAppointment()">L&ouml;schen</button>
-      </li>
-    </ul>
+  <div class="btn-group ev-btn-group ">
+  <button type="button" class="btn btn-success" @click="saveAppointment()">Speichern</button>
+  <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span class="sr-only">Weitere Aktionen</span>
+  </button>
+  <div class="dropdown-menu">
+    <a class="dropdown-item color-green" href="#" @click="saveAppointment('email')">
+      <i class="fa fa-envelope" aria-hidden="true"></i>
+      Speichern & Email
+    </a>
+    {{-- <a class="dropdown-item" href="#" @click="saveAppointment('sms')">Speichern & SMS</a>  --}}
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item color-red" href="#" @click="deleteAppointment()" v-if="appointment_id">
+      <i class="fa fa-trash" aria-hidden="true"></i> L&ouml;schen
+    </a>
   </div>
+</div>
 </div>

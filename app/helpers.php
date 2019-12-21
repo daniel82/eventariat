@@ -16,3 +16,12 @@ if ( !function_exists("activeHeaderItem") )
     return ( (\Request::is($route)) ) ? "active" : null;
   }
 }
+
+if ( !function_exists("isSelected") )
+{
+  function isSelected( $is, $required )
+  {
+
+    return ( $is === $required) ? ' selected="selected" ' : null;
+  }
+}

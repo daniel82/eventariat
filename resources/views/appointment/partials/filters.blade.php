@@ -17,7 +17,7 @@
 
 
     <div class="col-md-3">
-      <button @click="updateItems" class="btn btn-primary"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+      <button @click="updateItems" class="btn btn-primary ev-refresh-btn"><i class="fa fa-refresh" aria-hidden="true"></i></button>
     </div>
 
 

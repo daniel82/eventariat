@@ -11473,6 +11473,13 @@ button {
   color: #195b91;
 }
 
+@media (max-width: 1024px) {
+  .ev-refresh-btn {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+}
+
 .ev-save-btn {
   padding: 0;
   border: 0;
@@ -11508,61 +11515,33 @@ button {
   display: inline-block;
 }
 
-.ev-btn-group {
-  width: 200px;
-  display: inline-block;
+.ev-checkboxes {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: justify;
+          justify-content: space-between;
 }
 
-.ev-btn-group li.default .ev-btn {
-  width: 80%;
-}
-
-.ev-btn-group li.default .ev-btn.toggle-actions {
-  background: green;
-  width: 18%;
-}
-
-.ev-btn-group li.sub-li {
-  width: 100%;
-  display: none;
-}
-
-.ev-btn-group .toggle-actions .opened {
-  display: none;
-}
-
-.ev-btn-group .ev-btn {
-  width: 100%;
-  padding: 0.4rem;
-  border: 0;
-  color: white;
-}
-
-.ev-btn-group .ev-btn:not(.toggle-actions) {
-  text-align: left;
-}
-
-.ev-btn-group .ev-btn.save {
-  background: #28a745;
-  border-bottom: 1px solid #acd8ac;
-}
-
-.ev-btn-group .ev-btn.save:hover,
-.ev-btn-group .ev-btn.save:focus {
-  background: #1e7e34;
-}
-
-.ev-btn-group .ev-btn.delete {
-  background: #cc0000;
-}
-
-.ev-btn-group .ev-btn.delete:hover,
-.ev-btn-group .ev-btn.delete:focus {
-  background: red;
+@media (max-width: 991px) {
+  .ev-checkboxes {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+            flex-direction: column;
+  }
 }
 
 .busy {
   opacity: 0.6;
+}
+
+@media (max-width: 1024px) {
+  #ev-calendar-app .ev-add-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 1rem;
+    z-index: 100;
+    background: white;
+  }
 }
 
 .ev-calendar-nav {
@@ -11588,7 +11567,7 @@ button {
   width: 14.2%;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1024px) {
   .appointment-col {
     width: 100%;
   }
@@ -11596,6 +11575,8 @@ button {
 
 .appointment-col__title {
   font-size: 1rem;
+  line-height: 1.2rem;
+  margin-bottom: 1rem;
 }
 
 .is-today .appointment-col__items {
@@ -11610,7 +11591,7 @@ button {
   margin-bottom: 2rem;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1024px) {
   .appointment-col__items {
     min-height: 0px;
   }
@@ -11663,7 +11644,7 @@ button {
   bottom: 0px;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1024px) {
   .appointment-col__new-item {
     position: static;
   }
@@ -11732,6 +11713,40 @@ button {
   margin-top: 5rem;
 }
 
+@media (max-width: 1024px) {
+  .ev-appointment-form {
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .ev-appointment-form .modal-header {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .ev-appointment-form .form-group {
+    margin-bottom: 0.3rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .ev-appointment-form .form-control {
+    padding: 0.1rem 0.3rem;
+  }
+}
+
+.ev-appointment-form .ev-date-field {
+  width: 30%;
+}
+
+@media (max-width: 1024px) {
+  .ev-appointment-form .ev-date-field {
+    width: 48%;
+  }
+}
+
 .ev-layer {
   z-index: 9999;
 }
@@ -11768,14 +11783,31 @@ button {
 .weater-forecast {
   float: right;
   padding-right: 0px;
+  margin-top: -5px;
   font-size: 1rem;
   line-height: 1.2rem;
-  color: #666;
+  color: #000;
+  background: #f1f1f1;
+  border-radius: 5px;
+  padding: 0px 5px;
+  border: 1px solid #ccc;
 }
 
 .weater-forecast__icon {
   display: inline-block;
-  width: 28px;
+  max-width: 100%;
+  padding: 2px;
+  position: relative;
+  top: -2px;
+}
+
+.xxx {
+  display: inline-block;
+  width: 30px;
+  height: 26px;
+  background: #f1f1f1;
+  border-radius: 50%;
+  padding: 4px;
 }
 
 .widget {
@@ -11801,6 +11833,38 @@ button {
 
 .ev-shift-request__status.status-2 {
   color: #cc0000;
+}
+
+@media (max-width: 991px) {
+  .ev-admin-table thead {
+    display: none;
+  }
+}
+
+@media (max-width: 991px) {
+  .ev-admin-table td {
+    display: block;
+    width: 100%;
+  }
+}
+
+.ev-action-col {
+  text-align: right;
+  min-width: 200px;
+}
+
+@media (max-width: 991px) {
+  .ev-action-col {
+    min-width: 0px;
+    width: 100%;
+    padding-bottom: 30px !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .ev-edit-col {
+    text-align: right;
+  }
 }
 
 .ev-color-square {

@@ -82,7 +82,7 @@ function startShiftRequestApp()
     },
     created : function()
     {
-      if ( this.status != 0 && !this.is_admin )
+      if ( this.status != 0 )
       {
         $("input, select, textarea").attr("disabled", true);
       }
@@ -113,12 +113,15 @@ function startCalendarApp()
 
     methods:
     {
-      toggleDropdownMenu : function (type){
-        if ($("."+type).hasClass("show")){
+      toggleDropdownMenu : function (type)
+      {
+        if ($("."+type).hasClass("show"))
+        {
           $("."+type).removeClass("show");
-          // this.updateList();
+          this.updateItems();
         }
-        else{
+        else
+        {
           $(".advanced-search__fieldset").removeClass("show");
           $("."+type).addClass("show");
         }
@@ -126,7 +129,7 @@ function startCalendarApp()
 
       closeAndUpdate : function ( event ){
         $(".advanced-search__fieldset").removeClass("show");
-        // this.updateList();
+        this.updateItems();
       },
 
       getRequestData : function()
@@ -183,6 +186,7 @@ function startCalendarApp()
 
       updateItems : function()
       {
+        $(".advanced-search__fieldset").removeClass("show");
         this.getItems();
       },
 

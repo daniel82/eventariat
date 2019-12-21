@@ -51179,7 +51179,7 @@ function startShiftRequestApp() {
       }
     },
     created: function created() {
-      if (this.status != 0 && !this.is_admin) {
+      if (this.status != 0) {
         $("input, select, textarea").attr("disabled", true);
       }
     }
@@ -51202,14 +51202,16 @@ function startCalendarApp() {
     methods: {
       toggleDropdownMenu: function toggleDropdownMenu(type) {
         if ($("." + type).hasClass("show")) {
-          $("." + type).removeClass("show"); // this.updateList();
+          $("." + type).removeClass("show");
+          this.updateItems();
         } else {
           $(".advanced-search__fieldset").removeClass("show");
           $("." + type).addClass("show");
         }
       },
       closeAndUpdate: function closeAndUpdate(event) {
-        $(".advanced-search__fieldset").removeClass("show"); // this.updateList();
+        $(".advanced-search__fieldset").removeClass("show");
+        this.updateItems();
       },
       getRequestData: function getRequestData() {
         var rd = {
@@ -51244,6 +51246,7 @@ function startCalendarApp() {
         }
       },
       updateItems: function updateItems() {
+        $(".advanced-search__fieldset").removeClass("show");
         this.getItems();
       },
       ajaxRequest: function ajaxRequest(request_data) {

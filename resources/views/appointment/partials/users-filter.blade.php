@@ -21,5 +21,9 @@
         }}
       </div>
     @endforeach
+
+    @include("appointment.partials.update-btn")
   </div>
+
+
 </div>

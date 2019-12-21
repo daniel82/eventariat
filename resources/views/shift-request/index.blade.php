@@ -3,11 +3,15 @@
 
 @section('content')
 
+  @include("shift-request.partials.filters")
+
+
+
   @if (  $items->count() )
-    <table class="table table-striped">
+    <table class="table table-striped ev-admin-table">
       <thead>
         <tr>
-          <th></th>
+          <th class="ev-edit-col"></th>
           <th>Status</th>
           <th>Mitarbeiter</th>
           <th>Type</th>
@@ -19,8 +23,8 @@
       <tbody>
         @foreach ($items as $key => $item )
           <tr>
-            <td>
-                @if ( $user->isAdmin() or !$user->isAdmin() && $item->status == 0 )
+            <td class="ev-edit-col">
+                @if ( $item->status == 0 )
                   @include("admin.common.edit-button", ["resource" => "shift-requests", "object" => $item])
                 @else
                   @include("admin.common.show-button", ["resource" => "shift-requests", "object" => $item])
@@ -30,7 +34,7 @@
             <td>{{ $item->user->first_name }} {{ $item->user->last_name }}</td>
             <td>{{ $item->type_hr}}</td>
             <td>{{ formatDate($item->date_from, "d.m.Y")  }} - {{ formatDate($item->date_to, "d.m.Y") }}</td>
-            <td class="text-right">
+            <td class="ev-action-col">
               @if ($item->status == 0)
                 @include("admin.common.delete-button", ["controller" => "ShiftRequestController", "object" => $item])
               @endif
