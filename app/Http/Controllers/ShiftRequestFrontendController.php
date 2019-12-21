@@ -2,29 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\ShiftRequest;
+use App\Repositories\ShiftRequestRepository;
 use Illuminate\Http\Request;
+
 
 class ShiftRequestFrontendController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function __construct( ShiftRequestRepository $shiftRequestRepository )
     {
-        //
+        $this->shiftRequestRepository = $shiftRequestRepository;
     }
+
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create( Request $request, ShiftRequest $shiftRequest)
     {
-        //
+        // $data["object"] = $shiftRequest;
+        $data = $this->shiftRequestRepository->getFormData( $shiftRequest );
+        return view("shift-request.create", $data );
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -32,9 +35,14 @@ class ShiftRequestFrontendController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, ShiftRequest $shiftRequest )
     {
-        //
+        $shiftRequest = $this->shiftRequestRepository->store($request, $shiftRequest);
+
+        // TODO trigger ShiftRequestStoredEvent
+        $message = "Antrag wurde gespeichert";
+
+        return redirect()->action('ShiftRequestFrontendController@edit', ['id' => $shiftRequest->id ])->with( "flash_message", $message );
     }
 
     /**
@@ -43,9 +51,11 @@ class ShiftRequestFrontendController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show( $id )
     {
-        //
+        $shiftRequest = ShiftRequest::findOrFail($id);
+        $data = $this->shiftRequestRepository->getFormData( $shiftRequest );
+        return view("shift-request.show", $data );
     }
 
     /**
@@ -54,9 +64,12 @@ class ShiftRequestFrontendController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(  $id )
     {
-        //
+        $shiftRequest = ShiftRequest::findOrFail($id);
+        $data = $this->shiftRequestRepository->getFormData( $shiftRequest );
+
+        return view("shift-request.edit", $data );
     }
 
     /**
@@ -66,9 +79,12 @@ class ShiftRequestFrontendController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ShiftRequest $shiftRequest )
     {
-        //
+        $shiftRequest    = $this->shiftRequestRepository->update($request, $shiftRequest);
+        $message         = "Antrag wurde gespeichert";
+
+        return redirect()->action('ShiftRequestFrontendController@edit', ['id' => $shiftRequest->id ])->with( "flash_message", $message );
     }
 
     /**
@@ -77,8 +93,12 @@ class ShiftRequestFrontendController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy( Request $request, $id )
     {
-        //
+        $shiftRequest = ShiftRequest::findOrFail($id);
+        $shiftRequest->delete();
+        $message         = "Antrag wurde gelöscht";
+
+        return redirect()->action('ShiftRequestFrontendController@create')->with( "flash_message", $message );
     }
 }

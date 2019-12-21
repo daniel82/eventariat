@@ -5,7 +5,7 @@
         <h2>Antrag speichern</h2>
         <script>ev_app_data = {!! json_encode($ev_app_data) !!}</script>
         <div id="ev-shift-request-app">
-            {{  Form::open (['action' => ['ShiftRequestController@store' ], 'method' => 'POST' ]) }}
+            {{  Form::open (['action' => ['ShiftRequestFrontendController@store' ], 'method' => 'POST' ]) }}
                 <div class="row">
                     @component('admin.slots.form-col-left')
                         @include("shift-request.form", ["action"=>"create"])

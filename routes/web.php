@@ -23,21 +23,29 @@ Route::middleware([ "auth", "locale"])->group(function ()
   Route::get('/calendar', "AppointmentController@index" );
   Route::get('/kalender', "AppointmentController@index" );
   Route::get('/dienstplan', "AppointmentController@index" );
+  Route::get('/account', "UserFrontendController@edit");
+  Route::post('/account', "UserFrontendController@update");
+  Route::patch('/account', "UserFrontendController@update");
+
+  Route::get('/shift-requests/create', "ShiftRequestFrontendController@create" );
+  Route::post('/shift-requests', "ShiftRequestFrontendController@store" );
+  Route::patch('/shift-requests/{id}', "ShiftRequestFrontendController@update" );
+  Route::get('/shift-requests/{id}', "ShiftRequestFrontendController@edit" );
+  Route::delete('/shift-requests/{id}', "ShiftRequestFrontendController@destroy" );
 });
 
 
-Route::prefix('admin')->group(function () {
-  Route::resource('users', "UserController");
-  Route::resource('locations', "LocationController");
-  Route::resource('shift-requests', "ShiftRequestController" );
-  Route::get('login-as/', "UserController@loginAs");
 
+Route::middleware([ "admin"])->group(function ()
+{
+  Route::prefix('admin')->group(function ()
+  {
+    Route::resource('users', "UserController");
+    Route::resource('locations', "LocationController");
+    Route::resource('shift-requests', "ShiftRequestController");
+    Route::get('login-as/', "UserController@loginAs");
+  });
 });
-
-
-Route::get('/account', "UserFrontendController@edit");
-Route::post('/account', "UserFrontendController@update");
-Route::patch('/account', "UserFrontendController@update");
 
 
 

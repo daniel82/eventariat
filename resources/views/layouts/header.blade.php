@@ -15,9 +15,11 @@
 
             <div class="collapse navbar-collapse ev-nav" id="navbarSupportedContent">
               <ul class="navbar-nav mr-auto">
-                <li class="nav-item {{ activeHeaderItem("admin/home") }}" >
-                  <a class="nav-link" href="/home">Start</a>
-                </li>
+                @if($head["user"]->isAdmin())
+                  <li class="nav-item {{ activeHeaderItem("admin/home") }}" >
+                    <a class="nav-link" href="/home">Start</a>
+                  </li>
+                @endif
 
                 <li class="nav-item {{ activeHeaderItem("dienstplan") }}">
                   <a class="nav-link" href="{{ action("AppointmentController@index") }}"><span>Kalender</span></a>

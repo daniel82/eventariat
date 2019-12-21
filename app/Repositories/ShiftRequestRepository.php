@@ -70,6 +70,8 @@ class ShiftRequestRepository
     $data["object"] = $shiftRequest;
     $data["today"] = date("Y-m-d");
     $data["user"] = \Auth::user();
+
+
     $data["ev_app_data"] =
     [
       "date_from"  => $shiftRequest->date_from,
