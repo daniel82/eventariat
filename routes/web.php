@@ -38,7 +38,7 @@ Route::middleware([ "auth", "locale"])->group(function ()
 
 
 
-Route::middleware([ "admin"])->group(function ()
+Route::middleware([ "admin", "locale"])->group(function ()
 {
   Route::prefix('admin')->group(function ()
   {
