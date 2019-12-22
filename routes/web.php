@@ -55,7 +55,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 
-Route::middleware(["locale"])->group(function ()
+Route::middleware(["auth", "locale"])->group(function ()
 {
   Route::prefix('api')->group(function ()
   {
