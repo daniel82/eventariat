@@ -39,7 +39,7 @@
             </span>
 
             <button v-else-if="is_admin" :id="buildAppointmentId(appointment)" @click="editAppointment(date,key)" :class="locationClass(appointment.location_id)" @mouseover="showTooltip(appointment)" @mouseout="hideTooltip()">
-              <span class="mr-1 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span>@{{ appointment.title }}
+              <span class="mr-2 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span>@{{ appointment.title }}
               <i class="fa fa-info-circle ev-appointment__note-info" aria-hidden="true"  v-if="appointment.note"></i>
             </button>
 

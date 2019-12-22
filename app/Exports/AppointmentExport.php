@@ -114,6 +114,7 @@ class AppointmentExport
     }
 
 
+
     $various_events = Appointment::various()->userIds($user_ids)->dateFromBetween($date_from, $date_to)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get();
 
     // Log::debug($various_events);
@@ -138,10 +139,16 @@ class AppointmentExport
       // Urlaub
       //
       // $leave_dates = $leave_days->filter(function ($appointment, $key) use($the_date_start, $the_date_end)
-      $leave_dates = $leave_days->filter(function ($appointment, $key) use( $the_date, $the_date_start)
+      //
+      // dump($the_date_start);
+      $leave_dates = $leave_days->filter(function ($appointment, $key) use($the_date, $the_date_start)
       {
         return ($appointment->date_from <= $the_date_start && $appointment->date_to >= $the_date);
       });
+
+      // dump($leave_dates);
+
+
 
       if ( $leave_dates && $leave_dates->count() )
       {

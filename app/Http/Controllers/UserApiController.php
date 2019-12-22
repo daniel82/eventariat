@@ -53,13 +53,23 @@ class UserApiController extends Controller
 
             if ( $holidays = Appointment::leaveDays()->userId($user->id)->periodBetween($year_start, $year_end)->get() )
             {
+
                 foreach ( $holidays as $key => $holiday)
                 {
                     $date_from = Carbon::create($holiday->date_from);
                     $date_to = Carbon::create($holiday->date_to);
-                    $diff = $date_from->diffInDays($date_to);
-                    $data["leave_days_intended"] += $diff;
+                    // $diff = $date_from->diffInDays($date_to);
+
+                    $diff = $date_from->diffInDaysFiltered(function(Carbon $date) use($year)
+                    {
+                       return ($date->year == $year);
+                    }, $date_to);
+
+
+                    $data["leave_days_intended"] += ($diff);
                 }
+
+                // TODO remove days from last year
             }
 
 
