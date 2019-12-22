@@ -11810,6 +11810,34 @@ button {
   padding: 4px;
 }
 
+.appointment-tooltip {
+  width: 260px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px 10px 0px 10px;
+  position: absolute;
+  z-index: 500;
+  left: 100px;
+}
+
+.appointment-tooltip:before {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: 2px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-left: 10px solid #3490dc;
+  border-bottom: 10px solid transparent;
+}
+
+.appointment-tooltip__icon {
+  display: inline-block;
+  width: 26px;
+}
+
 .widget {
   width: 100%;
   padding: 0rem 2rem;

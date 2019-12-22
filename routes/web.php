@@ -63,5 +63,7 @@ Route::middleware(["locale"])->group(function ()
     Route::post("appointments", "AppointmentApiController@store");
     Route::patch("appointments/{id}", "AppointmentApiController@update");
     Route::delete("appointments/{id}", "AppointmentApiController@destroy");
+
+    Route::get("users/{id}", "UserApiController@show");
   });
 });

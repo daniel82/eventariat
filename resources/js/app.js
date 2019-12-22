@@ -108,6 +108,14 @@ function startCalendarApp()
       actionsToggled : function()
       {
         return ( this.actions_toggled ) ? "toggled" : "";
+      },
+
+      tooltipStyles: function()
+      {
+        return {
+          'left': (this.tooltip_x-270) + 'px',
+          'top': (this.tooltip_y-0) + 'px',
+        };
       }
     },
 
@@ -208,12 +216,16 @@ function startCalendarApp()
 
       updateItems_ajaxCallback : function( response )
       {
-        // _log(response);
+        _log("updateItems_ajaxCallback");
         if ( typeof response === "object" )
         {
           this.items     = response.items;
           this.date_from = response.date_from;
           this.date_to   = response.date_to;
+
+          $(function () {
+            $('[data-toggle="popover"]').popover()
+          })
         }
 
         this.busy = "";
@@ -299,16 +311,98 @@ function startCalendarApp()
         this.message_type    = null;
       },
 
+      buildAppointmentId: function( appointment )
+      {
+        return "appointment-"+appointment.id;
+
+      },
+
+
+      getUserData : function(appointment)
+      {
+        // _log("getUserData");
+
+
+        if ( this.ajax_active )
+        {
+          this.ajax_active.abort();
+        }
+
+        let request_data =
+        {
+          date : appointment.date_from,
+        };
+
+        this.ajax_active = $.ajax(
+        {
+          url:       "/api/users/"+appointment.user_id,
+          type:      "GET",
+          data:      request_data,
+          dataType:  'JSON',
+          success:   this.getUserData_ajaxCallback,
+          error:     this.getUserData_ajaxCallback
+          }
+        );
+      },
+
+
+      getUserData_ajaxCallback : function( response )
+      {
+        if (  typeof response === "object" )
+        {
+          this.tooltip_work_load = response.tooltip_work_load;
+          this.tooltip_leave_days = response.tooltip_leave_days;
+        }
+      },
+
+
+      getPosition : function offset(el)
+      {
+        var rect = el.getBoundingClientRect(),
+        scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+        scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
+      },
+
+
+      showTooltip : function(appointment)
+      {
+        let element = document.getElementById(this.buildAppointmentId(appointment));
+        let position          = this.getPosition(element);
+        this.tooltip_title    = appointment.tooltip_title;
+        this.tooltip_time     = this.getItemDuration(appointment);
+        this.tooltip_location = appointment.tooltip_location;
+        this.tooltip_info     = appointment.note;
+
+        //TODO set timeout
+        //kill ajax request
+        this.getUserData(appointment);
+
+        this.setToolTip(position.left,position.top);
+      },
+
+
+
+      hideTooltip : function(appointment)
+      {
+        this.setToolTip(0,0);
+      },
+
+
+      setToolTip : function(x, y)
+      {
+        this.tooltip_x = parseInt(x);
+        this.tooltip_y = parseInt(y);
+      },
+
+
       editAppointment : function(date, key)
       {
-        _log(date);
-        _log(key);
         // set appointment details before showing layer
         if ( typeof this.items[date].appointments[key] !== "undefined" )
         {
           this.resetMessage();
-
-          _log(this.items[date].appointments[key]);
 
           this.appointment_id  = this.items[date].appointments[key].id;
           this.location_id     = this.items[date].appointments[key].location_id;

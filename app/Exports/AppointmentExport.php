@@ -352,11 +352,16 @@ class AppointmentExport
         "date_to"        => date("Y-m-d", strtotime($appointment->date_to) ),
         "time_to"        => date("H:i", strtotime($appointment->date_to) ),
         "title"          => ($appointment->user ) ? $appointment->user->getCalendarName() : null,
+
         "description"    => $appointment->description,
         "location_id"    => $appointment->location_id,
+
         "user_id"        => $appointment->user_id,
         "type"           => $appointment->type,
         "note"           => $appointment->note,
+
+        "tooltip_title"    => ($appointment->user ) ? $appointment->user->getFullName() : null,
+        "tooltip_location" => $appointment->location->name,
       ];
    }
 

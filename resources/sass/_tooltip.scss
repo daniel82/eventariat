@@ -1,0 +1,56 @@
+.appointment-tooltip
+{
+  width: 260px;
+  background: white;
+  border:1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px 10px 0px 10px;
+  position: absolute;
+  z-index: 500;
+
+  left: 100px;
+
+  // &:before
+  // {
+    // position: absolute;
+    // left: 100%;
+    // top: 0px;
+    // width: 0;
+    // height: 0;
+    // border-top: 13px solid transparent;
+    // border-left: 26px solid $color_blue;
+    // border-bottom: 13px solid transparent;
+  // }
+
+
+  &:before
+  {
+    content: "";
+    position: absolute;
+    left: 100%;
+    top: 2px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-left: 10px solid $color_blue;
+    border-bottom: 10px solid transparent;
+  }
+  //
+  //
+  //// content: "";
+    // position: absolute;
+    // top: 100%;
+    // left: 50%;
+    // margin-left: -20px;
+    // border-width: 20px;
+    // border-style: solid;
+    // border-color: $color_blue transparent transparent transparent;
+    // content: "";
+
+}
+
+.appointment-tooltip__icon
+{
+  display: inline-block;
+  width: 26px;
+}

@@ -1,3 +1,5 @@
+@include("appointment.partials.tooltip")
+
 <div class="appointments" :class="busy">
   <div class="appointment-row">
     <div v-for="(col, date) in items" class="appointment-col" :class="isToday(date)">
@@ -36,12 +38,12 @@
               <i class="fa fa-birthday-cake" aria-hidden="true"></i> @{{ appointment.title }} (@{{ appointment.age}})
             </span>
 
-            <button v-else-if="is_admin" @click="editAppointment(date,key)" :class="locationClass(appointment.location_id)">
+            <button v-else-if="is_admin" :id="buildAppointmentId(appointment)" @click="editAppointment(date,key)" :class="locationClass(appointment.location_id)" @mouseover="showTooltip(appointment)" @mouseout="hideTooltip()">
               <span class="mr-1 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span>@{{ appointment.title }}
               <i class="fa fa-info-circle ev-appointment__note-info" aria-hidden="true"  v-if="appointment.note"></i>
             </button>
 
-            <div v-else :class="locationClass(appointment.location_id)" class="readonly-entry">
+            <div v-else :class="locationClass(appointment.location_id)" class="readonly-entry" @mouseover="showTooltip(appointment)" @mouseout="hideTooltip()">
               <span class="mr-2 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span>@{{ appointment.title }}
               <i class="fa fa-info-circle ev-appointment__note-info" aria-hidden="true"  v-if="appointment.note"></i>
             </div>

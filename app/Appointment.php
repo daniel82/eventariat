@@ -126,6 +126,19 @@ class Appointment extends Model
   }
 
 
+  public function scopeHours( $query, $date_from, $date_to )
+  {
+
+    return $query->whereRaw('(date_from >= ? AND date_to <= ?)', [$date_from, $date_to]);
+  }
+
+
+  public function scopePeriodBetween( $query, $date_from, $date_to )
+  {
+    return $query->whereRaw('(date_from >= ? AND date_to < ? OR date_to >= ? AND date_to < ?)', [$date_from, $date_to, $date_from, $date_to]);
+  }
+
+
   public function scopeUserId( $query, $user_id )
   {
     return $query->whereUserId( $user_id );

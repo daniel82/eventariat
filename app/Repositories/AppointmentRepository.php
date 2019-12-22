@@ -55,6 +55,16 @@ class AppointmentRepository
       "time_from"       => "08:00",
       "time_to"         => "16:30",
       "note"            => "",
+
+      "tooltip_x"         => 0,
+      "tooltip_y"         => 0,
+      "tooltip_title"     => '',
+      "tooltip_time"      => '',
+      "tooltip_location"  => '',
+      "tooltip_info"      => '',
+      "tooltip_leave_days"=> '',
+      "tooltip_work_load" => '',
+      "ajax_active"       => false,
     ];
 
     $data["locations"]   = Location::all();
