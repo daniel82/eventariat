@@ -13,7 +13,9 @@
                     @endcomponent
 
                     @component('admin.slots.form-col-right')
-                        @include("admin.common.save-button")
+                        @if ( !$object->status )
+                            @include("admin.common.save-button")
+                        @endif
                     @endcomponent
                 </div>
             {{ Form::close() }}

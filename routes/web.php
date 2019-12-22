@@ -28,9 +28,11 @@ Route::middleware([ "auth", "locale"])->group(function ()
   Route::patch('/account', "UserFrontendController@update");
 
   Route::get('/shift-requests/create', "ShiftRequestFrontendController@create" );
+  Route::get('/shift-requests/{id}', "ShiftRequestFrontendController@show" );
+  Route::get('/shift-requests/{id}/edit', "ShiftRequestFrontendController@edit" );
+
   Route::post('/shift-requests', "ShiftRequestFrontendController@store" );
   Route::patch('/shift-requests/{id}', "ShiftRequestFrontendController@update" );
-  Route::get('/shift-requests/{id}', "ShiftRequestFrontendController@edit" );
   Route::delete('/shift-requests/{id}', "ShiftRequestFrontendController@destroy" );
 });
 

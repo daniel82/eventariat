@@ -18,7 +18,7 @@
 
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane py-3 fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
-            {{ Form::open (['action' => ['UserFrontendController@update', $object->id ], 'method' => 'PATCH']) }}
+            {{ Form::open (['action' => ['UserFrontendController@update'], 'method' => 'PATCH']) }}
                 <div class="row">
                     @component('admin.slots.form-col-left')
                         @include("users.account-form", ["action"=>"edit"])

@@ -21,7 +21,7 @@ class UserRepository
     {
       $date1 = Carbon::create($period->date_from);
       $date2 = Carbon::create($period->date_to);
-      $period->diffInDays = $date1->diffInDays($date2);
+      $period->diffInDays = ($date1->diffInDays($date2)+1);
     }
 
     $data["shift_requests"] = $user->shiftRequests;
@@ -32,6 +32,7 @@ class UserRepository
       $item->type_hr = ( isset($types[$item->type]) ) ? $types[$item->type]["text"] : null;
     }
 
+    // dd($data["shift_requests"]);
 
     return $data;
   }
@@ -42,20 +43,25 @@ class UserRepository
     $request["appointment_types"] = serialize( $request->get("appointment_types", []) );
     $request["can_see_other_appointments"] = $request->get("can_see_other_appointments", 0);
 
+    if ( $pw = $request->get("password") )
+    {
+      $request["password"] =  bcrypt($pw);
+    }
+    else
+    {
+      unset($request["password"]);
+    }
+
+
     return $request;
   }
 
 
   public function valildatePasswords( Request $request )
   {
-    $new_password = $request->get("new_password");
-    $confirm_password = $request->get("confirm_password");
-
-    if ( $new_password && $confirm_password && $new_password === $confirm_password )
+    if ( $new_password = $request->get("password") )
     {
-      $request["password"] = bcrypt($new_password);
-      unset($request["new_password"]);
-      unset($request["confirm_password"]);
+       $request["password"] = bcrypt($new_password);
     }
 
     return $request;

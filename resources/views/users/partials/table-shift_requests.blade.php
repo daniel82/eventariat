@@ -18,9 +18,9 @@
                 <tr>
                     <td class="ev-edit-col">
                         @if ( $item->status == 0 )
-                          @include("frontend.partials.edit-button", ["controller" => "ShiftRequestFrontendController", "object" => $item])
+                          @include("frontend.partials.edit-button", ["controller"=>"ShiftRequestFrontendController", "object" => $item])
                         @else
-                          @include("frontend.partials.show-button", ["controller" => "ShiftRequestFrontendController", "object" => $item])
+                          @include("frontend.partials.show-button", ["controller"=>"ShiftRequestFrontendController@show", "object" => $item])
                         @endif
                     </td>
 

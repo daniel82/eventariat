@@ -143,6 +143,7 @@ class AppointmentExport
       // dump($the_date_start);
       $leave_dates = $leave_days->filter(function ($appointment, $key) use($the_date, $the_date_start)
       {
+        // TODO richtig ? <= $the_date_start
         return ($appointment->date_from <= $the_date_start && $appointment->date_to >= $the_date);
       });
 
@@ -168,14 +169,29 @@ class AppointmentExport
 
 
       // FeWo
-      $fewo_dates = $fewo_events->filter(function ($appointment, $key) use($the_date)
+      //
+      // dump($fewo_events);
+      $fewo_dates = $fewo_events->filter(function ($appointment, $key) use($the_date, $the_date_start)
       {
-        return ($appointment->date_from >= $the_date && $appointment->date_to <= $the_date);
+
+
+        // if ( $the_date == "2019-12-28")
+        // {
+        //   dump($appointment->date_from);
+        //   dump( ($appointment->date_from <= $the_date) );
+        //   dump($appointment->date_to);
+        //   dump( ($appointment->date_to >= $the_date) );
+        // }
+        // return ($appointment->date_from >= $the_date && $appointment->date_to <= $the_date);
+        return ( formatDate($appointment->date_from, "Y-m-d") <= $the_date_start && formatDate($appointment->date_to, "Y-m-d") >= $the_date);
+
       });
       if ( $fewo_dates )
       {
-       $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $fewo_dates );
+       $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->fewoAppointmentsToJson( $fewo_dates) );
       }
+
+      // dd($fewo_dates);
 
 
       // Various
@@ -281,6 +297,35 @@ class AppointmentExport
 
    return $items;
   }
+
+
+  public function fewoAppointmentsToJson( $appointments )
+  {
+
+   $items = [];
+
+   foreach ($appointments as $key => $appointment)
+   {
+      $items[] =
+      [
+        "id"             => $appointment->id,
+        "type_class"     => "fewo",
+        "date_from"      => formatDate( $appointment->date_from, "Y-m-d" ),
+        "time_from"      => formatDate( $appointment->date_from, "H:i" ),
+        "date_to"        => formatDate( $appointment->date_to, "Y-m-d" ),
+        "time_to"        => formatDate( $appointment->date_to, "H:i" ),
+        "title"          => "Ferienwohnung",
+        "description"    => null,
+        "location_id"    => $appointment->location_id,
+        "user_id"        => $appointment->user_id,
+        "type"           => $appointment->type,
+        "note"           => $appointment->note,
+      ];
+   }
+
+   return $items;
+  }
+
 
   public function leaveDayAppointmentsToJson( $appointments )
   {

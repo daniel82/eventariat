@@ -51293,6 +51293,9 @@ function startCalendarApp() {
       isFreeDay: function isFreeDay(type) {
         return type === "free-day";
       },
+      isFewo: function isFewo(type) {
+        return type === "fewo";
+      },
       toggleActions: function toggleActions() {
         this.actions_toggled = this.actions_toggled ? false : true;
       },

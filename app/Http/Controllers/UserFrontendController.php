@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use \App\Repositories\UserRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use App\Http\Requests\UpdateUserRequest;
+
 
 
 class UserFrontendController extends Controller
@@ -36,10 +38,10 @@ class UserFrontendController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request )
+    public function update( UpdateUserRequest $request )
     {
         $user = \Auth::user();
-        $request                 = $this->userRepository->valildatePasswords( $request );
+
         $user->first_name        = $request->get("first_name", $user->first_name );
         $user->last_name         = $request->get("last_name", $user->last_name );
         $user->birthdate         = $request->get("birthdate");
@@ -52,7 +54,7 @@ class UserFrontendController extends Controller
 
         if ( $pw = $request->get("password" ) )
         {
-            $user->password = $pw;
+            $user->password =  bcrypt($pw);
         }
 
         $user->save();

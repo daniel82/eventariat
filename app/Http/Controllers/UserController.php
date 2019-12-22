@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Http\Requests; // use the namespace of the request
 
-use App\Http\Requests\CreateUser; // use the namespace of the request
+use App\Http\Requests\CreateUser;
+use App\Http\Requests\UpdateUserRequest;
 use App\Repositories\UserRepository;
 use App\User;
 
@@ -59,7 +60,6 @@ class UserController extends Controller
     public function store(Requests\CreateUser $request, User $user)
     {
         $request = $this->userRepository->sanitizeRequest($request);
-        $request = $this->userRepository->valildatePasswords($request);
         $user = User::create( $request->all() );
         // dd( $request->all() );
         $message = "Mitarbeiter wurde gespeichert";
@@ -98,10 +98,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user )
+    public function update( UpdateUserRequest $request, User $user )
     {
         $request = $this->userRepository->sanitizeRequest($request);
-        $request = $this->userRepository->valildatePasswords($request);
 
         $user->update( $request->all() );
 
