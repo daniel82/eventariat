@@ -128,6 +128,17 @@ class User extends Authenticatable
     }
 
 
+    public function getAppointments( $date_from, $date_to )
+    {
+      return \App\Appointment::userId($this->id)->period($date_from, $date_to)->get();
+    }
+
+    public function appointments()
+    {
+      return $this->hasMany("App\Appointment");
+    }
+
+
 
 
     /**

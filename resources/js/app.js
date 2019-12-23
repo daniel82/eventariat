@@ -74,7 +74,7 @@ function startShiftRequestApp()
     {
       validateDates : function ()
       {
-        if ( this.date_from && !this.date_to || this.date_from && this.date_to &&  this.date_from  > this.date_to )
+        if ( this.date_from && !this.date_to || this.date_from && this.date_to && this.date_from > this.date_to )
         {
           this.date_to = this.date_from;
         }
@@ -90,7 +90,7 @@ function startShiftRequestApp()
         {
           let request_data =
           {
-            users : this.user_id,
+            users : [this.user_id],
             date_from : this.date_from,
             date_to : this.date_to,
           };
@@ -108,7 +108,7 @@ function startShiftRequestApp()
         this.busy = "busy";
         $.ajax(
         {
-          url: "/api/appointments",
+          url: "/api/users/"+this.user_id+"/appointments",
           type: 'GET',
           data: request_data,
           dataType: 'JSON',
@@ -120,24 +120,9 @@ function startShiftRequestApp()
 
       checkAppointments_ajaxCallback : function( response )
       {
-        _log(typeof response);
-        // _log( response.items.length);
-        // _log( response.items);
-
-        if ( typeof response === "object" && response.items)
+        if ( typeof response === "object" && response.length )
         {
-          for (var date in response.items )
-          {
-            // _log(date);
-            this.count_appointments += response.items[date].appointments.length;
-            // _log(response.items[date].appointments.length);
-            // _log(response.items[date]);
-          }
-        }
-
-        _log(this.count_appointments);
-        if ( this.count_appointments )
-        {
+          this.count_appointments = response.length;
           this.show_alert = true;
         }
       }

@@ -173,16 +173,6 @@ class AppointmentExport
       // dump($fewo_events);
       $fewo_dates = $fewo_events->filter(function ($appointment, $key) use($the_date, $the_date_start)
       {
-
-
-        // if ( $the_date == "2019-12-28")
-        // {
-        //   dump($appointment->date_from);
-        //   dump( ($appointment->date_from <= $the_date) );
-        //   dump($appointment->date_to);
-        //   dump( ($appointment->date_to >= $the_date) );
-        // }
-        // return ($appointment->date_from >= $the_date && $appointment->date_to <= $the_date);
         return ( formatDate($appointment->date_from, "Y-m-d") <= $the_date_start && formatDate($appointment->date_to, "Y-m-d") >= $the_date);
 
       });
@@ -190,8 +180,6 @@ class AppointmentExport
       {
        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->fewoAppointmentsToJson( $fewo_dates) );
       }
-
-      // dd($fewo_dates);
 
 
       // Various
@@ -234,10 +222,10 @@ class AppointmentExport
       // Freier Tag
       if ( $appointments = Appointment::free()->userIds($user_ids)->dateFrom($the_date)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get() )
       {
+        // Log::debug($appointments);
         $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->freeAppointmentsToJson($appointments) );
       }
 
-      # code...
     }
 
     $data["items"] = $items;

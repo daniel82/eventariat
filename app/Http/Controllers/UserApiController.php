@@ -101,4 +101,24 @@ class UserApiController extends Controller
     }
 
 
+    public function appointments( Request $request, $user_id )
+    {
+        $user = User::findOrFail($user_id);
+        $date_from = $request->get("date_from");
+        $date_to = $request->get("date_to");
+        if ( $date_from && $date_to )
+        {
+            $data = $user->getAppointments( $date_from, $date_to );
+        }
+        else
+        {
+            $data = $user->appointments;
+        }
+
+        return response()->json($data);
+
+
+    }
+
+
 }

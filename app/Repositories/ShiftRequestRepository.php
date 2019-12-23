@@ -20,7 +20,7 @@ class ShiftRequestRepository
     $data["status"]   = $request->get("status");
     $data["type"]     = $request->get("type");
     $data["user_id"]  = (int) $request->get("user_id");
-    $data["items"] = ShiftRequest::userId($data["user_id"])->type($data["type"])->status($data["status"])->orderBy("created_at")->paginate(50);
+    $data["items"] = ShiftRequest::userId($data["user_id"])->type($data["type"])->status($data["status"])->orderBy("created_at", "DESC")->paginate(50);
 
     foreach ($data["items"] as $key => &$item)
     {
@@ -34,26 +34,24 @@ class ShiftRequestRepository
   public function store( Request $request, ShiftRequest $shiftRequest )
   {
     $shiftRequest->saveEntry( $request );
+    event( new \App\Events\ShiftRequestCreatedEvent($shiftRequest) );
     return $shiftRequest;
   }
 
 
   public function update( Request $request, ShiftRequest $shiftRequest )
   {
-    Log::info("ShiftRequestRepository@update");
-
-
+    // Log::info("ShiftRequestRepository@update");
     $shiftRequest->saveEntry( $request );
 
     if ( $shiftRequest->status )
     {
-      Log::info("has status ".$shiftRequest->status);
+      // Log::info("has status ".$shiftRequest->status);
       if ( $shiftRequest->status == 1 )
       {
         $appointment = \App\Appointment::firstOrNew(["shift_request_id" => $shiftRequest->id]);
         $appointment->assumeShiftRequest($shiftRequest);
-        // store or update appointment
-        // // event( new \App\Events\AppointmentSavedEvent($appointment, "email" ) );
+        event( new \App\Events\AppointmentSavedEvent($appointment, "email" ) );
       }
     }
     {

@@ -80,7 +80,6 @@ class ShiftRequest extends Model
     $status = $request->get("status");
     if ( $status && $user->isAdmin() )
     {
-      // TODO trigger event ShiftRequestStatusChangedEvent
       $this->status = $status;
     }
 
@@ -88,6 +87,21 @@ class ShiftRequest extends Model
     $this->save();
 
     return true;
+  }
+
+
+  public function getTypeHumanReadable()
+  {
+    $types = config("shift-request.type");
+
+    if ( $this->type && isset($types[$this->type]) )
+    {
+      return $types[$this->type]["text"];
+    }
+    else
+    {
+      return null;
+    }
   }
 
 }

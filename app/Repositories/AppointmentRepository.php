@@ -100,6 +100,8 @@ class AppointmentRepository
       }
     }
 
+    $hours->put( "23:59" , "23:59" );
+
     return $hours;
   }
 

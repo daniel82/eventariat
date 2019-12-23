@@ -78,11 +78,11 @@ class Appointment extends Model
 
   public function isUserBooked( $user_id, $date_from, $date_to, $appointment_id )
   {
-    Log::info("is user booked?");
-    Log::info($user_id);
-    Log::info($date_from);
-    Log::info($date_to);
-    Log::info($appointment_id);
+    // Log::info("is user booked?");
+    // Log::info($user_id);
+    // Log::info($date_from);
+    // Log::info($date_to);
+    // Log::info($appointment_id);
     $is_booked = false;
     if ( $user_id )
     {
@@ -146,6 +146,8 @@ class Appointment extends Model
 
   public function scopeUserIds( $query, $user_ids )
   {
+    // $user_ids = (is_numeric($user_ids) ) ?
+
     if ( is_array($user_ids) && !empty($user_ids) )
     {
       return $query->whereIn( "user_id", $user_ids );
@@ -230,9 +232,21 @@ class Appointment extends Model
   }
 
 
-  public function leaveDayToJson()
+  public function getTypeHumanReadable()
   {
+    $types = config("appointment.type");
+    $type = null;
 
+    foreach ($types as $key => $row)
+    {
+      if ( $row["id"] == $this->type )
+      {
+        $type = $row["text"];
+        break;
+      }
+    }
+
+    return $type;
   }
 
 
