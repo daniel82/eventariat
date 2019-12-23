@@ -2,6 +2,9 @@
 
 return [
 
+    'day_start' => "00:00:00",
+    'day_end' => "23:59:59",
+
     'type' =>
     [
         [ "id" => 4, "text"=>"Arbeit" ],

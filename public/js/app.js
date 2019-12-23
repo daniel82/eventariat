@@ -51176,11 +51176,59 @@ function startShiftRequestApp() {
         if (this.date_from && !this.date_to || this.date_from && this.date_to && this.date_from > this.date_to) {
           this.date_to = this.date_from;
         }
+
+        this.checkAppointments();
+      },
+      checkAppointments: function checkAppointments() {
+        _log("checkAppointments...");
+
+        if (this.date_from && this.date_to) {
+          var request_data = {
+            users: this.user_id,
+            date_from: this.date_from,
+            date_to: this.date_to
+          };
+          this.ajaxRequest(request_data);
+        }
+      },
+      ajaxRequest: function ajaxRequest(request_data) {
+        this.show_alert = false;
+        this.count_appointments = 0;
+        this.busy = "busy";
+        $.ajax({
+          url: "/api/appointments",
+          type: 'GET',
+          data: request_data,
+          dataType: 'JSON',
+          success: this.checkAppointments_ajaxCallback,
+          error: this.checkAppointments_ajaxCallback
+        });
+      },
+      checkAppointments_ajaxCallback: function checkAppointments_ajaxCallback(response) {
+        _log(_typeof(response)); // _log( response.items.length);
+        // _log( response.items);
+
+
+        if (_typeof(response) === "object" && response.items) {
+          for (var date in response.items) {
+            // _log(date);
+            this.count_appointments += response.items[date].appointments.length; // _log(response.items[date].appointments.length);
+            // _log(response.items[date]);
+          }
+        }
+
+        _log(this.count_appointments);
+
+        if (this.count_appointments) {
+          this.show_alert = true;
+        }
       }
     },
     created: function created() {
       if (this.status != 0) {
         $("input, select, textarea").attr("disabled", true);
+      } else {
+        this.checkAppointments();
       }
     }
   });
@@ -51309,6 +51357,14 @@ function startCalendarApp() {
           this.time_to = this.time_from;
         }
       },
+      presetTimes: function presetTimes() {
+        if (this.type == 1 || this.type == 6) {
+          this.time_from = this.time_to = "";
+        } else {
+          this.time_from = this.default_time_from;
+          this.time_to = this.default_time_to;
+        }
+      },
       isFutureDate: function isFutureDate(date) {
         return date >= this.today;
       },
@@ -51342,6 +51398,15 @@ function startCalendarApp() {
       },
       getUserData: function getUserData(appointment) {
         // _log("getUserData");
+        // _log(this.is_admin);
+        // _log(appointment.user_id);
+        // _log(this.current_user);
+        if (!this.is_admin && appointment.user_id != this.current_user) {
+          this.tooltip_work_load = "";
+          this.tooltip_leave_days = "";
+          return false;
+        }
+
         if (this.ajax_active) {
           this.ajax_active.abort();
         }
@@ -51379,9 +51444,7 @@ function startCalendarApp() {
         this.tooltip_title = appointment.tooltip_title;
         this.tooltip_time = this.getItemDuration(appointment);
         this.tooltip_location = appointment.tooltip_location;
-        this.tooltip_info = appointment.note; //TODO set timeout
-        //kill ajax request
-
+        this.tooltip_info = appointment.note;
         this.getUserData(appointment);
         this.setToolTip(position.left, position.top);
       },
@@ -51455,6 +51518,7 @@ function startCalendarApp() {
           if (response.status && response.message) {
             this.message_type = response.status === "ok" ? "alert-success" : "alert-danger";
             this.message = response.message;
+            this.appointment_id = response.id;
           }
         }
 

@@ -44,6 +44,9 @@ class AppointmentRepository
       "message"         => null,
       "message_type"    => null,
       "is_admin"        => $data["user"]->isAdmin(),
+      // "is_admin"        => false, // static test value
+      "current_user"    => $data["user"]->id,
+      // "current_user"    => 4,  // static test value
 
       "appointment_id"  => "",
       "location_id"     => "",
@@ -54,6 +57,8 @@ class AppointmentRepository
       "apt_date_to"     => $data["today"],
       "time_from"       => "08:00",
       "time_to"         => "16:30",
+      "default_time_from"=> "08:00",
+      "default_time_to"  => "16:30",
       "note"            => "",
 
       "tooltip_x"         => 0,
@@ -73,6 +78,8 @@ class AppointmentRepository
     // TODO if is admin
     $data["hours"]   = $this->getHours();
 
+    // dd($data["hours"]);
+
 
     return $data;
   }
@@ -81,6 +88,7 @@ class AppointmentRepository
   public function getHours()
   {
     $hours = collect();
+    $hours->put( "" , "---" );
     $minutes = ["00", "15", "30", "45"];
     foreach ( range(0,23) as $key => $hour)
     {

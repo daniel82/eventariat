@@ -30,13 +30,17 @@ class Appointment extends Model
   {
     Log::debug("Appointment@saveEntry");
     $user = \Auth::user();
-    Log::debug($user);
+    Log::debug($request->all());
+
+    $time_from = ( $tf = $request->get("time_from") ) ? $tf : config("appointment.day_start");
+    $time_to   = ( $tt = $request->get("time_to") ) ? $tt : config("appointment.day_end");
+
     $this->location_id    = $request->get("location_id");
     $this->user_id        = $request->get("user_id");
     $this->type           = $request->get("type");
     $this->description    = $request->get("description");
-    $this->date_from      = $request->get("date_from")." ".$request->get("time_from");
-    $this->date_to        = $request->get("date_to")." ".$request->get("time_to");
+    $this->date_from      = $request->get("date_from")." ".$time_from;
+    $this->date_to        = $request->get("date_to")." ".$time_to;
     $this->note           = $request->get("note");
     $this->edited_by      = $user->id;
     $this->created_by     = ($this->id) ? $this->created_by : $user->id;
@@ -44,6 +48,7 @@ class Appointment extends Model
 
     if ( !$this->isUserBooked($this->user_id, $this->date_from, $this->date_to, $this->id) )
     {
+      // Log::debug($this);
       $this->save();
       return true;
     }
@@ -60,8 +65,8 @@ class Appointment extends Model
     $user = \Auth::user();
     $this->shift_request_id   = $shiftRequest->id;
     $this->type               = $shiftRequest->type;
-    $this->date_from          = $shiftRequest->date_from." 00:00:00";
-    $this->date_to            = $shiftRequest->date_to." 23:59:00";
+    $this->date_from          = $shiftRequest->date_from." ".config("appointment.day_start");
+    $this->date_to            = $shiftRequest->date_to." ".config("appointment.day_end");
     $this->edited_by          = $user->id;
     $this->created_by         = ($this->id) ? $this->created_by : $user->id;
     $this->user_id            = $shiftRequest->user_id;
@@ -73,11 +78,11 @@ class Appointment extends Model
 
   public function isUserBooked( $user_id, $date_from, $date_to, $appointment_id )
   {
-    // Log::info("is user booked?");
-    // Log::info($user_id);
-    // Log::info($date_from);
-    // Log::info($date_to);
-    // Log::info($appointment_id);
+    Log::info("is user booked?");
+    Log::info($user_id);
+    Log::info($date_from);
+    Log::info($date_to);
+    Log::info($appointment_id);
     $is_booked = false;
     if ( $user_id )
     {
@@ -98,31 +103,11 @@ class Appointment extends Model
 
 
   // scopes
-  //
-  //
-  public function scopeIdNotIn( $query, $appointment_id )
-  {
-    if ( $appointment_id )
-    {
-      return $query->whereNotIn("id", [$appointment_id] );
-    }
-    else
-    {
-      return $query;
-    }
-
-
-  }
-
-  // public function scopePeriod( $query, $date_from, $date_to )
-  // {
-  //   return $query->whereBetween('date_from', [$date_from, $date_to])
-  //           ->orWhereBetween('date_to', [$date_from, $date_to]);
-  // }
-
   public function scopePeriod( $query, $date_from, $date_to )
   {
-    return $query->whereRaw('(date_from <= ? AND date_to >= ? OR date_from <= ? AND date_to >= ?)', [$date_from, $date_from, $date_to, $date_to]);
+    return $query->whereRaw('(date_from <= ? AND date_to >= ? OR date_from <= ? AND date_to >= ? OR date_from <= ? AND date_to >= ? OR date_from >= ? AND date_to <= ?)', [$date_from, $date_from, $date_to, $date_to, $date_from, $date_to, $date_from, $date_to]);
+    // return $query->whereRaw('(date_from <= ? AND date_to >= ? OR date_from <= ? AND date_to >= ?)', [$date_from, $date_from, $date_to, $date_to]);
+    // return $query->whereRaw('(date_from <= ? AND date_to >= ? OR date_from >= ? AND date_to <= ?)', [$date_from, $date_to, $date_from, $date_to]);
   }
 
 
@@ -136,6 +121,20 @@ class Appointment extends Model
   public function scopePeriodBetween( $query, $date_from, $date_to )
   {
     return $query->whereRaw('(date_from >= ? AND date_to < ? OR date_to >= ? AND date_to < ?)', [$date_from, $date_to, $date_from, $date_to]);
+  }
+
+
+  public function scopeIdNotIn( $query, $appointment_id )
+  {
+    if ( $appointment_id )
+    {
+      return $query->whereNotIn("id", [$appointment_id] );
+    }
+    else
+    {
+      return $query;
+    }
+
   }
 
 
@@ -222,8 +221,8 @@ class Appointment extends Model
   {
     $date_from =
     [
-      ["date_from", ">=", $date." 00:00:00"],
-      ["date_from", "<=", $date." 24:00:00"],
+      ["date_from", ">=", $date." ".config("appointment.day_start")],
+      ["date_from", "<=", $date." ".config("appointment.day_end")],
     ];
 
     // dd($date_from);

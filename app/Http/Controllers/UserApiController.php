@@ -68,8 +68,6 @@ class UserApiController extends Controller
 
                     $data["leave_days_intended"] += ($diff);
                 }
-
-                // TODO remove days from last year
             }
 
 

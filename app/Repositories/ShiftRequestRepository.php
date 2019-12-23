@@ -80,6 +80,10 @@ class ShiftRequestRepository
       "type"       => ($shiftRequest->type) ? $shiftRequest->type : 1,
       "status"     => ($shiftRequest->status) ? $shiftRequest->status : 0,
       "is_admin"   => $data["user"]->isAdmin(),
+      "user_id"    => ($shiftRequest->user_id) ? $shiftRequest->user_id : $data["user"]->id,
+      "show_alert" => false,
+      "alert_message" => false,
+      "count_appointments" => 0,
     ];
 
 

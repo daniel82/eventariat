@@ -38,7 +38,7 @@
 
 <div class="form-group">
   {{ Form::label("type", "Terminart", ["class"=> "d-block is-required"]) }}
-  <select name="type" id="type" class="form-control d-block" v-model="type">
+  <select name="type" id="type" class="form-control d-block" v-model="type" @change="presetTimes">
     @foreach( config("appointment.type") as $item )
       <option value="{{ $item["id"] }}">{{ $item["text"] }}</option>
     @endforeach

@@ -413,7 +413,7 @@ class AppointmentExport
         "note"           => $appointment->note,
 
         "tooltip_title"    => ($appointment->user ) ? $appointment->user->getFullName() : null,
-        "tooltip_location" => $appointment->location->name,
+        "tooltip_location" => ( $appointment->location) ? $appointment->location->name : null,
       ];
    }
 

@@ -5,6 +5,7 @@
         <h2>Antrag speichern</h2>
         <script>ev_app_data = {!! json_encode($ev_app_data) !!}</script>
         <div id="ev-shift-request-app">
+            @include("shift-request.ajax-alert")
             {{  Form::open (['action' => ['ShiftRequestFrontendController@store' ], 'method' => 'POST' ]) }}
                 <div class="row">
                     @component('admin.slots.form-col-left')
