@@ -557,8 +557,6 @@ function startCalendarApp()
             this.message = response.message;
             this.appointment_id = response.id;
           }
-
-
         }
         this.updateItems();
       },
@@ -566,9 +564,9 @@ function startCalendarApp()
 
       deleteAppointment : function (  )
       {
-        _log("deleteAppointment...");
-        _log(this.appointment_id);
-        _log( this.getApiUrl() );
+        // _log("deleteAppointment...");
+        // _log(this.appointment_id);
+        // _log( this.getApiUrl() );
         $.ajax(
         {
           url:       this.getApiUrl(),
@@ -618,7 +616,22 @@ function startCalendarApp()
       isToday : function(date)
       {
         return ( date === this.today ) ? "is-today" : "";
+      },
+
+
+      isNewLocation : function( location_id, date )
+      {
+        let is_new = false;
+        let hash = date+"-"+location_id;
+        if ( location_id && group != hash )
+        {
+          group = hash;
+          is_new = true;
+        }
+
+        return is_new;
       }
+
 
 
     },

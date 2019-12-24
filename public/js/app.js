@@ -51512,12 +51512,9 @@ function startCalendarApp() {
         this.updateItems();
       },
       deleteAppointment: function deleteAppointment() {
-        _log("deleteAppointment...");
-
-        _log(this.appointment_id);
-
-        _log(this.getApiUrl());
-
+        // _log("deleteAppointment...");
+        // _log(this.appointment_id);
+        // _log( this.getApiUrl() );
         $.ajax({
           url: this.getApiUrl(),
           type: "DELETE",
@@ -51553,6 +51550,17 @@ function startCalendarApp() {
       },
       isToday: function isToday(date) {
         return date === this.today ? "is-today" : "";
+      },
+      isNewLocation: function isNewLocation(location_id, date) {
+        var is_new = false;
+        var hash = date + "-" + location_id;
+
+        if (location_id && group != hash) {
+          group = hash;
+          is_new = true;
+        }
+
+        return is_new;
       }
     },
     created: function created() {

@@ -214,7 +214,7 @@ class AppointmentExport
         $user_ids  = [$user->id];
       }
       // Normale Arbeit
-      if ( $appointments = Appointment::work()->userIds($user_ids)->locationIds($location_ids)->dateFrom($the_date)->orderBy("date_from", "ASC")->orderBy("location_id", "ASC")->get() )
+      if ( $appointments = Appointment::work()->userIds($user_ids)->locationIds($location_ids)->dateFrom($the_date)->orderBy("location_id", "ASC")->orderBy("date_from", "ASC")->get() )
       {
         $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->workAppointmentsToJson($appointments) );
       }

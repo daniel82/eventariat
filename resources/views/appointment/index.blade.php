@@ -3,6 +3,7 @@
 
 @section('content')
   @include("appointment.partials.custom-css")
+  <script>group = null;</script>
   <script>ev_app_data = {!! json_encode($ev_app_data) !!}</script>
   <div id="ev-calendar-app" >
 

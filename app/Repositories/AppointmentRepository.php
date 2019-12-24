@@ -46,6 +46,7 @@ class AppointmentRepository
       "is_admin"        => $data["user"]->isAdmin(),
       // "is_admin"        => false, // static test value
       "current_user"    => $data["user"]->id,
+
       // "current_user"    => 4,  // static test value
 
       "appointment_id"  => "",

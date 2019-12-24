@@ -15,6 +15,8 @@
         <div v-if="col.appointments.length">
           <div  v-for="(appointment, key) in col.appointments" class="ev-appointment mb-1" :class="appointment.type_class" >
 
+            <span v-if="isNewLocation(appointment.location_id, date)" class="mt-2" :class="locationClass(appointment.location_id)">@{{ appointment.tooltip_location }}</span>
+
             <div v-if="isLeaveDay(appointment.type_class)">
               <button v-if="is_admin" @click="editAppointment(date,key)" >
                 <i class="fa fa-sun-o" aria-hidden="true"></i> @{{ appointment.title }}
