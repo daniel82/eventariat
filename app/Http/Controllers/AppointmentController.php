@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App;
+use PDF;
 use App\Repositories\AppointmentRepository;
+
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
@@ -87,5 +90,35 @@ class AppointmentController extends Controller
     public function destroy($id)
     {
             //
+    }
+
+
+
+
+    public function pdf( Request $request )
+    {
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 300);
+
+        $request["date_from"] = "2019-12-25";
+        $request["date_to"]   = "2020-02-02";
+
+        $object   = new \App\Repositories\AppointmentApiRepository();
+        $data     = $object->index( $request );
+
+        if ( $data )
+        {
+          view()->share(
+            [
+              'items' => $data["items"]
+            ]
+          );
+        }
+
+        // dd($data["items"]);
+
+        $pdf = PDF::loadView('exports.appointments_pdf')->setPaper('a4');
+        $filename = 'dienstplan-'.date("dmY").'.pdf';
+        return $pdf->stream($filename);
     }
 }

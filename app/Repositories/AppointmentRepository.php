@@ -32,6 +32,7 @@ class AppointmentRepository
 
     $data["ev_app_data"] =
     [
+      "pdf_url"         => action("AppointmentController@pdf"),
       "date_from"       => $date_from,
       "date_to"         => $date_to,
       "today"           => $data["today"],

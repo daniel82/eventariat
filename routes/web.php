@@ -20,6 +20,7 @@ Route::get('/', function () {
 Route::middleware([ "auth", "locale"])->group(function ()
 {
   Route::get('/appointments', "AppointmentController@index" );
+  Route::get('/appointments/export/pdf', "AppointmentController@pdf" );
   Route::get('/calendar', "AppointmentController@index" );
   Route::get('/kalender', "AppointmentController@index" );
   Route::get('/dienstplan', "AppointmentController@index" );

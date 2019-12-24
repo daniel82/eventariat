@@ -11584,7 +11584,7 @@ button {
 }
 
 .appointment-col__items {
-  min-height: 300px;
+  min-height: 200px;
   padding: 0.1rem 0.1rem;
   position: relative;
   border: 1px solid #999;

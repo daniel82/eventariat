@@ -18,6 +18,7 @@
 
     <div class="col-md-3">
       <button @click="updateItems" class="btn btn-primary ev-refresh-btn"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+      <a :href="exportPdfUrl" id="ev-pdf-export-link" class="btn btn-danger ev-refresh-btn"><i class="fa fa-download" aria-hidden="true"></i></a>
     </div>
 
 

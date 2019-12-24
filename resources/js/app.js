@@ -171,6 +171,15 @@ function startCalendarApp()
           'left': (this.tooltip_x-270) + 'px',
           'top': (this.tooltip_y-0) + 'px',
         };
+      },
+
+      exportPdfUrl: function()
+      {
+        return this.pdf_url+"?"
+          +"date_from="+this.date_from
+          +"&date_to="+this.date_to
+          +"&users="+this.user_ids
+          +"&locations="+this.location_ids;
       }
     },
 

@@ -230,6 +230,7 @@ class AppointmentExport
 
     $data["items"] = $items;
 
+    // dd($data);
     return $data;
   }
 
@@ -249,6 +250,7 @@ class AppointmentExport
         "date_to"        => $date,
         "time"           => null,
         "title"          => $user->getCalendarName(),
+        "type_text"      => "Geburtstag",
         "age"            => Carbon::parse($user->birthdate)->diffInYears($date)
       ];
     }
@@ -279,6 +281,7 @@ class AppointmentExport
         "location_id"    => $appointment->location_id,
         "user_id"        => $appointment->user_id,
         "type"           => $appointment->type,
+        "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
       ];
    }
@@ -307,6 +310,7 @@ class AppointmentExport
         "location_id"    => $appointment->location_id,
         "user_id"        => $appointment->user_id,
         "type"           => $appointment->type,
+        "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
       ];
    }
@@ -337,6 +341,7 @@ class AppointmentExport
         "location_id"    => null,
         "user_id"        => $appointment->user_id,
         "type"           => $appointment->type,
+        "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
       ];
    }
@@ -367,6 +372,7 @@ class AppointmentExport
         "location_id"    => null,
         "user_id"        => $appointment->user_id,
         "type"           => $appointment->type,
+        "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
       ];
    }
@@ -398,10 +404,12 @@ class AppointmentExport
 
         "user_id"        => $appointment->user_id,
         "type"           => $appointment->type,
+        "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
 
         "tooltip_title"    => ($appointment->user ) ? $appointment->user->getFullName() : null,
         "tooltip_location" => ( $appointment->location) ? $appointment->location->name : null,
+
       ];
    }
 
