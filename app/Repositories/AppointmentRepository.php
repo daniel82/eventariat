@@ -35,6 +35,7 @@ class AppointmentRepository
       "pdf_url"         => action("AppointmentController@pdf"),
       "date_from"       => $date_from,
       "date_to"         => $date_to,
+      "weeks"           => [],
       "today"           => $data["today"],
       "location_ids"    => [],
       "user_ids"        => ($data["users"]->count() === 1) ? [$data["users"]->first()->id] : [],
@@ -47,6 +48,7 @@ class AppointmentRepository
       "is_admin"        => $data["user"]->isAdmin(),
       // "is_admin"        => false, // static test value
       "current_user"    => $data["user"]->id,
+      "col_counter"     => 0,
 
       // "current_user"    => 4,  // static test value
 

@@ -51305,18 +51305,37 @@ function startCalendarApp() {
         });
       },
       updateItems_ajaxCallback: function updateItems_ajaxCallback(response) {
-        _log("updateItems_ajaxCallback");
-
+        // _log("updateItems_ajaxCallback");
         if (_typeof(response) === "object") {
           this.items = response.items;
           this.date_from = response.date_from;
           this.date_to = response.date_to;
+          this.weeks = response.weeks;
           $(function () {
             $('[data-toggle="popover"]').popover();
           });
+          setTimeout(this.equalHeightItems, 1000);
         }
 
         this.busy = "";
+      },
+      equalHeightItems: function equalHeightItems() {
+        var date = null;
+        var week_number = null;
+
+        var _loop = function _loop() {
+          var max_height = 140;
+          var column_query = ".week-" + week_number + " .appointment-col__items";
+          var columns = $(column_query);
+          $.each(columns, function (key, element) {
+            max_height = element.scrollHeight > max_height ? element.scrollHeight : max_height;
+          });
+          $(column_query).height(max_height + 26);
+        };
+
+        for (week_number in this.weeks) {
+          _loop();
+        }
       },
       locationClass: function locationClass(location_id) {
         location_id = !isNaN(location_id) ? location_id : "none";
@@ -51551,9 +51570,18 @@ function startCalendarApp() {
       buildWeatherIcon: function buildWeatherIcon(icon) {
         return "/images/icons/" + icon;
       },
-      isToday: function isToday(date) {
-        return date === this.today ? "is-today" : "";
+      getCssClasses: function getCssClasses(date, week) {
+        var css_class = date === this.today ? " is-today" : "";
+        return css_class += ' week-' + week;
       },
+      // isToday : function(date)
+      // {
+      //   return ( date === this.today ) ? "is-today" : "";
+      // },
+      // weekNumber : function(date)
+      // {
+      //   return 'week';
+      // },
       isNewLocation: function isNewLocation(location_id, date) {
         var is_new = false;
         var hash = date + "-" + location_id;

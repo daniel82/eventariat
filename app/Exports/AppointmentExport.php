@@ -78,7 +78,8 @@ class AppointmentExport
     [
       "date_from" => $date_from,
       "date_to"   => $date_to,
-      "items"     => []
+      "items"     => [],
+      "weeks"     => []
     ];
 
     // dd($from_month);
@@ -129,11 +130,16 @@ class AppointmentExport
       $the_date_end           = $date->format("Y-m-d")." 24:00:00";
 
       // $data[$the_date]["day"] = $date->formatLocalized("% %d.%m");
-      $items[$the_date]["date"]  = $date->isoFormat('dd. D.M');
-      // $data[$the_date]["date"]  = $date->shortLocaleDayOfWeek; //$date->isoFormat('dd. D.M');
+      // // $data[$the_date]["date"]  = $date->shortLocaleDayOfWeek; //$date->isoFormat('dd. D.M');
+      //
+      $items[$the_date]["date"]         = $date->isoFormat('dd. D.M');
       $items[$the_date]["appointments"] = collect();
 
-      $items[$the_date]["forecast"] = \App\WeatherForecast::getAsJsonByDate( $the_date );
+      $week                             = $date->week();
+      $items[$the_date]["week"]         = $week;
+      $data["weeks"][$week]            = $week;
+
+      $items[$the_date]["forecast"]     = \App\WeatherForecast::getAsJsonByDate( $the_date );
 
 
       // Urlaub

@@ -280,19 +280,44 @@ function startCalendarApp()
 
       updateItems_ajaxCallback : function( response )
       {
-        _log("updateItems_ajaxCallback");
+        // _log("updateItems_ajaxCallback");
         if ( typeof response === "object" )
         {
           this.items     = response.items;
           this.date_from = response.date_from;
           this.date_to   = response.date_to;
+          this.weeks     = response.weeks;
 
           $(function () {
             $('[data-toggle="popover"]').popover()
           })
+
+          setTimeout(this.equalHeightItems, 1000);
         }
 
         this.busy = "";
+      },
+
+
+      equalHeightItems : function()
+      {
+        let date = null;
+        let week_number = null;
+        for( week_number in this.weeks)
+        {
+          let max_height = 140;
+          let column_query = ".week-"+week_number+" .appointment-col__items";
+
+          let columns = $(column_query);
+
+          $.each ( columns, function(key, element )
+          {
+            max_height = ( element.scrollHeight  > max_height ) ? element.scrollHeight  : max_height;
+          });
+
+          $(column_query).height(max_height+26);
+        }
+
       },
 
       locationClass : function( location_id )
@@ -622,10 +647,25 @@ function startCalendarApp()
         return "/images/icons/"+icon;
       },
 
-      isToday : function(date)
+
+
+      getCssClasses : function(date, week)
       {
-        return ( date === this.today ) ? "is-today" : "";
+        let css_class =  ( date === this.today ) ? " is-today" : "";
+
+        return css_class += ' week-'+week;
       },
+
+      // isToday : function(date)
+      // {
+      //   return ( date === this.today ) ? "is-today" : "";
+      // },
+
+
+      // weekNumber : function(date)
+      // {
+      //   return 'week';
+      // },
 
 
       isNewLocation : function( location_id, date )
@@ -640,6 +680,9 @@ function startCalendarApp()
 
         return is_new;
       }
+
+
+
 
 
 
