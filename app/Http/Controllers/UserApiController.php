@@ -51,6 +51,7 @@ class UserApiController extends Controller
             $year_start = $year."-01-01";
             $year_end   = ($year+1)."-12-31";
 
+            // calculate holidays
             if ( $holidays = Appointment::leaveDays()->userId($user->id)->periodBetween($year_start, $year_end)->get() )
             {
 
@@ -71,6 +72,7 @@ class UserApiController extends Controller
             }
 
 
+            // calculate weekly work load
             $week_start   = date("Y-m-d", strtotime('monday this week', $now ) );
             $week_end     = date("Y-m-d", strtotime('sunday this week', $now ) );
             if ( $working_days = Appointment::work()->userId($user->id)->hours($week_start, $week_end)->get() )
@@ -80,11 +82,17 @@ class UserApiController extends Controller
                     $date_from = Carbon::create($work->date_from);
                     $date_to = Carbon::create($work->date_to);
                     $diff = ($date_from->diffInMinutes($date_to)/60);
+
+                    if ( $diff > 6.5 )
+                    {
+                        $diff -= 0.5;
+                    }
                     $data["work_load_this_week"] += $diff;
                 }
             }
 
 
+            // add calculated values to response
             if (  is_numeric($data["leave_days"]) && is_numeric($data["leave_days_intended"]) )
             {
                 $data["tooltip_leave_days"] = sprintf("%s/%s", $data["leave_days_intended"], $data["leave_days"] );

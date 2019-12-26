@@ -51240,7 +51240,7 @@ function startCalendarApp() {
         };
       },
       exportPdfUrl: function exportPdfUrl() {
-        return this.pdf_url + "?" + "date_from=" + this.date_from + "&date_to=" + this.date_to + "&users=" + this.user_ids + "&locations=" + this.location_ids;
+        return this.pdf_url + "?" + "date_from=" + this.date_from + "&date_to=" + this.date_to + (this.user_ids.length ? "&users[]=" + this.user_ids : '') + (this.location_ids.length ? "&locations[]=" + this.location_ids : '');
       }
     },
     methods: {
@@ -51320,6 +51320,12 @@ function startCalendarApp() {
         this.busy = "";
       },
       equalHeightItems: function equalHeightItems() {
+        _log($(window).width());
+
+        if ($(window).width() <= 1024) {
+          return false;
+        }
+
         var date = null;
         var week_number = null;
 
@@ -51448,21 +51454,37 @@ function startCalendarApp() {
         };
       },
       showTooltip: function showTooltip(appointment) {
-        var element = document.getElementById(this.buildAppointmentId(appointment));
-        var position = this.getPosition(element);
-        this.tooltip_title = appointment.tooltip_title;
-        this.tooltip_time = this.getItemDuration(appointment);
-        this.tooltip_location = appointment.tooltip_location;
-        this.tooltip_info = appointment.note;
-        this.getUserData(appointment);
-        this.setToolTip(position.left, position.top);
+        if (appointment.type == 4) {
+          var element = document.getElementById(this.buildAppointmentId(appointment));
+          var position = this.getPosition(element);
+          this.tooltip_title = appointment.tooltip_title;
+          this.tooltip_time = this.getItemDuration(appointment);
+          this.tooltip_location = appointment.tooltip_location;
+          this.tooltip_info = appointment.note;
+          this.getUserData(appointment);
+          var style = "left";
+
+          if (position.left < 400) {
+            _log(document.getElementById("appointment-" + appointment.id).offsetWidth);
+
+            position.left += document.getElementById("appointment-" + appointment.id).offsetWidth + 280;
+            style = "right";
+          }
+
+          this.setToolTip(position.left, position.top, style);
+        }
       },
       hideTooltip: function hideTooltip(appointment) {
         this.setToolTip(0, 0);
+        document.getElementById("appointment-tooltip").classList.remove("place-right");
       },
-      setToolTip: function setToolTip(x, y) {
+      setToolTip: function setToolTip(x, y, style) {
         this.tooltip_x = parseInt(x);
         this.tooltip_y = parseInt(y);
+
+        if (style === "right") {
+          document.getElementById("appointment-tooltip").classList.add("place-right");
+        }
       },
       editAppointment: function editAppointment(date, key) {
         // set appointment details before showing layer

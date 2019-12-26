@@ -15,4 +15,16 @@ html, body
 .container--slim
 {
   max-width: 600px;
+
+  @media(max-width: $screen-sm)
+  {
+    padding-left:5px;
+    padding-right:5px;
+
+    .ev-appointment-form
+    {
+      margin-top: 5px;
+    }
+
+  }
 }

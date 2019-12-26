@@ -21,6 +21,18 @@
     // border-left: 26px solid $color_blue;
     // border-bottom: 13px solid transparent;
   // }
+  //
+
+  &.place-right
+  {
+    &:before
+    {
+      right: 100% !important;
+      left: auto;
+      border-right: 10px solid $color_blue;
+      border-left: 0 !important;
+    }
+  }
 
 
   &:before
@@ -35,17 +47,7 @@
     border-left: 10px solid $color_blue;
     border-bottom: 10px solid transparent;
   }
-  //
-  //
-  //// content: "";
-    // position: absolute;
-    // top: 100%;
-    // left: 50%;
-    // margin-left: -20px;
-    // border-width: 20px;
-    // border-style: solid;
-    // border-color: $color_blue transparent transparent transparent;
-    // content: "";
+
 
 }
 

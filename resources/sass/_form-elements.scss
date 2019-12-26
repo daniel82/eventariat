@@ -34,7 +34,7 @@ button
 
 .ev-refresh-btn
 {
-    @media(max-width: $ipad-landscape)
+    @media(max-width: $screen-sm)
     {
         width: 100%;
         margin-bottom: 2rem;
@@ -197,5 +197,14 @@ button
     {
 
 
+    }
+}
+
+
+.ev-text-area
+{
+    @media(max-width: $screen-md)
+    {
+        height: 40px !important;
     }
 }

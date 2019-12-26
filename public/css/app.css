@@ -11393,6 +11393,17 @@ body {
   max-width: 600px;
 }
 
+@media (max-width: 767px) {
+  .container--slim {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .container--slim .ev-appointment-form {
+    margin-top: 5px;
+  }
+}
+
 .ev-header .nav-item {
   border-right: 1px solid #9F9C99;
 }
@@ -11473,7 +11484,7 @@ button {
   color: #195b91;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 767px) {
   .ev-refresh-btn {
     width: 100%;
     margin-bottom: 2rem;
@@ -11530,6 +11541,12 @@ button {
   }
 }
 
+@media (max-width: 991px) {
+  .ev-text-area {
+    height: 40px !important;
+  }
+}
+
 .busy {
   opacity: 0.6;
 }
@@ -11540,7 +11557,13 @@ button {
     bottom: 2rem;
     right: 1rem;
     z-index: 100;
+  }
+
+  #ev-calendar-app .ev-add-btn i {
     background: white;
+    border-radius: 50%;
+    padding: 3px 5px;
+    box-shadow: 0px 0px 2px #999;
   }
 }
 
@@ -11829,6 +11852,13 @@ button {
   position: absolute;
   z-index: 500;
   left: 100px;
+}
+
+.appointment-tooltip.place-right:before {
+  right: 100% !important;
+  left: auto;
+  border-right: 10px solid #3490dc;
+  border-left: 0 !important;
 }
 
 .appointment-tooltip:before {

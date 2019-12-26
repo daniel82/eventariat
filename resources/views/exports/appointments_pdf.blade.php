@@ -54,8 +54,8 @@
         @foreach ( $col["appointments"] as $a )
           <tr>
             <td style="width: 140px" >{{ ( isset($a["tooltip_location"])) ? $a["tooltip_location"] : '---' }}</td>
-            <td class="w-10">{{ ( isset($a["date_from"])) ? formatDate($a["date_from"], "H:i") : '' }}</td>
-            <td  class="w-10">{{ ( isset($a["date_to"])) ? formatDate( $a["date_to"], "H:i") : '' }}</td>
+            <td class="w-10">{{ ( isset($a["time_from"])) ? $a["time_from"] : '' }}</td>
+            <td  class="w-10">{{ ( isset($a["time_to"])) ? $a["time_to"] : '' }}</td>
             <td  class="w-25">{{ ( isset($a["title"])) ? $a["title"] : '' }}</td>
             <td  class="w-10">{{ ( isset($a["type_text"])) ? $a["type_text"] : '' }}</td>
           </tr>

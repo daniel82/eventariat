@@ -145,6 +145,7 @@ function startShiftRequestApp()
   });
 }
 
+
 function startCalendarApp()
 {
   if ( !document.getElementById("ev-calendar-app") )
@@ -178,8 +179,9 @@ function startCalendarApp()
         return this.pdf_url+"?"
           +"date_from="+this.date_from
           +"&date_to="+this.date_to
-          +"&users="+this.user_ids
-          +"&locations="+this.location_ids;
+
+          + ((this.user_ids.length) ? "&users[]="+this.user_ids : '')
+          + ((this.location_ids.length) ? "&locations[]="+this.location_ids : '');
       }
     },
 
@@ -301,8 +303,15 @@ function startCalendarApp()
 
       equalHeightItems : function()
       {
+        _log($(window).width());
+        if ( $(window).width() <= 1024 )
+        {
+          return false;
+        }
+
         let date = null;
         let week_number = null;
+
         for( week_number in this.weeks)
         {
           let max_height = 140;
@@ -477,37 +486,61 @@ function startCalendarApp()
       getPosition : function offset(el)
       {
         var rect = el.getBoundingClientRect(),
-        scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
-        scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        scrollLeft   = window.pageXOffset || document.documentElement.scrollLeft,
+        scrollTop    = window.pageYOffset || document.documentElement.scrollTop;
 
-        return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
+        return {
+          top: rect.top + scrollTop,
+          left: rect.left + scrollLeft,
+        };
       },
 
 
       showTooltip : function(appointment)
       {
-        let element = document.getElementById(this.buildAppointmentId(appointment));
-        let position          = this.getPosition(element);
-        this.tooltip_title    = appointment.tooltip_title;
-        this.tooltip_time     = this.getItemDuration(appointment);
-        this.tooltip_location = appointment.tooltip_location;
-        this.tooltip_info     = appointment.note;
+        if ( appointment.type == 4 )
+        {
+          let element = document.getElementById(this.buildAppointmentId(appointment));
+          let position          = this.getPosition(element);
+          this.tooltip_title    = appointment.tooltip_title;
+          this.tooltip_time     = this.getItemDuration(appointment);
+          this.tooltip_location = appointment.tooltip_location;
+          this.tooltip_info     = appointment.note;
 
-        this.getUserData(appointment);
-        this.setToolTip(position.left,position.top);
+          this.getUserData(appointment);
+
+          let style = "left";
+          if ( position.left < 400 )
+          {
+            _log(document.getElementById("appointment-"+appointment.id).offsetWidth);
+            position.left += (document.getElementById("appointment-"+appointment.id).offsetWidth+280);
+            style = "right";
+          }
+
+          this.setToolTip(position.left,position.top, style);
+        }
+
       },
 
 
       hideTooltip : function(appointment)
       {
         this.setToolTip(0,0);
+        document.getElementById("appointment-tooltip").classList.remove("place-right");
       },
 
 
-      setToolTip : function(x, y)
+      setToolTip : function(x, y, style )
       {
+
         this.tooltip_x = parseInt(x);
         this.tooltip_y = parseInt(y);
+
+        if ( style === "right" )
+        {
+          document.getElementById("appointment-tooltip").classList.add("place-right");
+        }
+
       },
 
 

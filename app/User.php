@@ -61,31 +61,40 @@ class User extends Authenticatable
     }
 
 
+    public function setHoursOfWorkAttribute( $value )
+    {
+        $this->attributes['hours_of_work'] = ($value) ? $value : 0;
+    }
+
+
+    public function setLeaveDaysAttribute( $value )
+    {
+        $this->attributes['leave_days'] = ($value) ? $value : 0;
+    }
+
+
     public function shiftRequests()
     {
-      return $this->hasMany("App\ShiftRequest");
+        return $this->hasMany("App\ShiftRequest");
     }
 
 
 
     public function getCalendarName()
     {
-      return $this->first_name." ".$this->last_name[0].".";
+        return $this->first_name." ".$this->last_name[0].".";
     }
 
     public function getFullName()
     {
-      return $this->first_name." ".$this->last_name;
+        return $this->first_name." ".$this->last_name;
     }
 
 
     public function scopeBirthdate( $query, $from, $to=null )
     {
-
-      $from = ( $from > 12 ) ? $from : 1;
-      return $query->whereRaw( 'extract(month from birthdate) >= ? AND extract(month from birthdate) <= ?  ', [$from, $to] );
-        // dd($from);
-     // return $query->whereRaw( 'extract(month from birthdate) >= ?  ', [$from] );
+        $from = ( $from > 12 ) ? $from : 1;
+        return $query->whereRaw( 'extract(month from birthdate) >= ? AND extract(month from birthdate) <= ?  ', [$from, $to] );
     }
 
 
@@ -109,36 +118,33 @@ class User extends Authenticatable
 
     public function canSee( $appointment_type )
     {
-      // dd($this->appointment_types);
-      $appointment_types = ($this->appointment_types) ? unserialize($this->appointment_types) : [];
+        $appointment_types = ($this->appointment_types) ? unserialize($this->appointment_types) : [];
 
-      return in_array($appointment_type, $appointment_types);
+        return in_array($appointment_type, $appointment_types);
     }
 
 
     public function isAdmin()
     {
-      return ($this->role === "admin");
+        return ($this->role === "admin");
     }
 
 
     public static function current()
     {
-      return \Auth::user();
+        return \Auth::user();
     }
 
 
     public function getAppointments( $date_from, $date_to )
     {
-      return \App\Appointment::userId($this->id)->period($date_from, $date_to)->get();
+        return \App\Appointment::userId($this->id)->period($date_from, $date_to)->get();
     }
 
     public function appointments()
     {
-      return $this->hasMany("App\Appointment");
+        return $this->hasMany("App\Appointment");
     }
-
-
 
 
     /**

@@ -100,9 +100,6 @@ class AppointmentController extends Controller
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 300);
 
-        $request["date_from"] = "2019-12-25";
-        $request["date_to"]   = "2020-02-02";
-
         $object   = new \App\Repositories\AppointmentApiRepository();
         $data     = $object->index( $request );
 

@@ -98,7 +98,7 @@
   {{
     Form::textarea("note", null,
     [
-      "class"=> "d-block form-control",
+      "class"=> "d-block form-control ev-text-area",
       "rows"=>3,
       "v-model" =>"note"
     ])
