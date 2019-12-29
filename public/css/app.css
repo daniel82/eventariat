@@ -11393,8 +11393,9 @@ body {
   max-width: 600px;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .container--slim {
+    max-width: 400px;
     padding-left: 5px;
     padding-right: 5px;
   }
@@ -11747,6 +11748,12 @@ button {
 }
 
 @media (max-width: 1024px) {
+  .ev-appointment-form label {
+    margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 1024px) {
   .ev-appointment-form {
     margin-top: 1rem;
   }
@@ -11852,6 +11859,12 @@ button {
   position: absolute;
   z-index: 500;
   left: 100px;
+}
+
+@media (max-width: 991px) {
+  .appointment-tooltip {
+    display: none !important;
+  }
 }
 
 .appointment-tooltip.place-right:before {

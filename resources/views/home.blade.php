@@ -8,7 +8,7 @@
             <div class="card mb-5">
                 <div class="card-header">Neueste Antr&auml;ge</div>
                 <div class="card-body">
-                    @if ( $shift_requests )
+                    @if ( $shift_requests->count() )
                     <table class="table table-striped">
                         <thead>
                             <tr>

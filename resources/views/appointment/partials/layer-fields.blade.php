@@ -26,12 +26,17 @@
 @if ( $users && $users->count() )
   <div class="form-group">
     {{ Form::label("user_id", "Mitarbeiter", ["class"=> "d-block"]) }}
-    <select name="user_id" id="user_id" class="form-control d-block" v-model="user_id">
+    <select name="user_id" id="user_id" class="form-control d-block" v-model="user_id" @change="adminGetUserData">
       <option value="">---</option>
       @foreach( $users as $item )
         <option value="{{ $item->id }}">{{ $item->getCalendarName() }}</option>
       @endforeach
     </select>
+
+    <div class="d-flex ml-2 mt-1">
+      <div class="w-50"><span class="appointment-tooltip__icon"><i class="fa fa-tachometer" aria-hidden="true"></i></span> @{{tooltip_work_load}}</div>
+      <div class="w-50"><span class="appointment-tooltip__icon"><i class="fa fa-sun-o" aria-hidden="true"></i></span> @{{tooltip_leave_days}}</div>
+    </div>
   </div>
 @endif
 

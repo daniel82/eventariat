@@ -6,7 +6,13 @@
       <div class="modal-body">
         <div class="alert " :class="message_type" v-if="message && message_type">@{{ message }}</div>
 
-        @include("appointment.partials.layer-fields")
+        @if ( $user->isAdmin() )
+          @include("appointment.partials.layer-fields")
+        @else
+          @include("appointment.partials.tooltip-mobile")
+        @endif
+
+
       </div>
 
     </div>

@@ -51320,8 +51320,6 @@ function startCalendarApp() {
         this.busy = "";
       },
       equalHeightItems: function equalHeightItems() {
-        _log($(window).width());
-
         if ($(window).width() <= 1024) {
           return false;
         }
@@ -51366,6 +51364,8 @@ function startCalendarApp() {
         if (this.apt_date_from && !this.apt_date_to || this.apt_date_from && this.apt_date_to && this.apt_date_from > this.apt_date_to) {
           this.apt_date_to = this.apt_date_from;
         }
+
+        this.adminGetUserData();
       },
       validateTimes: function validateTimes() {
         if (this.time_from && !this.time_to || this.time_from && this.time_to && this.time_from > this.time_to) {
@@ -51390,9 +51390,6 @@ function startCalendarApp() {
       },
       resetForm: function resetForm() {
         this.resetMessage();
-
-        _log(this.today);
-
         this.appointment_id = null;
         this.location_id = "";
         this.user_id = "";
@@ -51426,11 +51423,17 @@ function startCalendarApp() {
           this.ajax_active.abort();
         }
 
+        this.ajaxGetUserData(appointment.user_id, appointment.date_from);
+      },
+      adminGetUserData: function adminGetUserData() {
+        this.ajaxGetUserData(this.user_id, this.apt_date_from);
+      },
+      ajaxGetUserData: function ajaxGetUserData(user_id, date) {
         var request_data = {
-          date: appointment.date_from
+          date: date
         };
         this.ajax_active = $.ajax({
-          url: "/api/users/" + appointment.user_id,
+          url: "/api/users/" + user_id,
           type: "GET",
           data: request_data,
           dataType: 'JSON',
@@ -51442,6 +51445,9 @@ function startCalendarApp() {
         if (_typeof(response) === "object") {
           this.tooltip_work_load = response.tooltip_work_load;
           this.tooltip_leave_days = response.tooltip_leave_days;
+        } else {
+          this.tooltip_work_load = "";
+          this.tooltip_leave_days = "";
         }
       },
       getPosition: function offset(el) {
@@ -51455,24 +51461,27 @@ function startCalendarApp() {
       },
       showTooltip: function showTooltip(appointment) {
         if (appointment.type == 4) {
+          // load tool tip data
+          this.loadTooltip(appointment); // set tool tip position
+
           var element = document.getElementById(this.buildAppointmentId(appointment));
           var position = this.getPosition(element);
-          this.tooltip_title = appointment.tooltip_title;
-          this.tooltip_time = this.getItemDuration(appointment);
-          this.tooltip_location = appointment.tooltip_location;
-          this.tooltip_info = appointment.note;
-          this.getUserData(appointment);
           var style = "left";
 
           if (position.left < 400) {
-            _log(document.getElementById("appointment-" + appointment.id).offsetWidth);
-
             position.left += document.getElementById("appointment-" + appointment.id).offsetWidth + 280;
             style = "right";
           }
 
           this.setToolTip(position.left, position.top, style);
         }
+      },
+      loadTooltip: function loadTooltip(appointment) {
+        this.tooltip_title = appointment.tooltip_title;
+        this.tooltip_time = this.getItemDuration(appointment);
+        this.tooltip_location = appointment.tooltip_location;
+        this.tooltip_info = appointment.note;
+        this.getUserData(appointment);
       },
       hideTooltip: function hideTooltip(appointment) {
         this.setToolTip(0, 0);
@@ -51490,6 +51499,7 @@ function startCalendarApp() {
         // set appointment details before showing layer
         if (typeof this.items[date].appointments[key] !== "undefined") {
           this.resetMessage();
+          var appointment = this.items[date].appointments[key];
           this.appointment_id = this.items[date].appointments[key].id;
           this.location_id = this.items[date].appointments[key].location_id;
           this.user_id = this.items[date].appointments[key].user_id;
@@ -51500,6 +51510,7 @@ function startCalendarApp() {
           this.time_from = this.items[date].appointments[key].time_from;
           this.time_to = this.items[date].appointments[key].time_to;
           this.note = this.items[date].appointments[key].note;
+          this.loadTooltip(appointment);
         }
 
         this.toggleLayer();
@@ -51553,6 +51564,7 @@ function startCalendarApp() {
           }
         }
 
+        this.adminGetUserData(this.user_id, this.apt_date_from);
         this.updateItems();
       },
       deleteAppointment: function deleteAppointment() {

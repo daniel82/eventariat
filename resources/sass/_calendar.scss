@@ -204,6 +204,14 @@
   min-height: 300px;
   margin-top: 5rem;
 
+  label
+  {
+    @media(max-width: $ipad-landscape )
+    {
+      margin-bottom: 0.25rem;
+    }
+  }
+
   @media(max-width: $ipad-landscape )
   {
     margin-top: 1rem;

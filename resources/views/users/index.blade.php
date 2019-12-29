@@ -13,6 +13,7 @@
           <th class="ev-edit-col"></th>
           <th>Vorname</th>
           <th>Nachname</th>
+          <th>Rolle</th>
           <th>Mobilnr</th>
           <th>E-Mail</th>
           <th></th>
@@ -27,6 +28,7 @@
             </td>
             <td>{{$item->first_name}}</td>
             <td>{{$item->last_name}}</td>
+            <td>{{$item->role}}</td>
             <td>
               @if ( $item->mobile )
                 <a href="tel:{{$item->mobile}}">{{$item->mobile}}</a>

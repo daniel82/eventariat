@@ -10,6 +10,11 @@
 
   left: 100px;
 
+  @media(max-width: $screen-md)
+  {
+    display: none !important;
+  }
+
   // &:before
   // {
     // position: absolute;

@@ -74,7 +74,10 @@ class UserApiController extends Controller
 
             // calculate weekly work load
             $week_start   = date("Y-m-d", strtotime('monday this week', $now ) );
-            $week_end     = date("Y-m-d", strtotime('sunday this week', $now ) );
+            $week_end     = date("Y-m-d", strtotime('sunday this week', $now ) )." ".config("appointment.day_end");
+            // Log::debug($user->id);
+            // Log::debug($week_start);
+            // Log::debug($week_end);
             if ( $working_days = Appointment::work()->userId($user->id)->hours($week_start, $week_end)->get() )
             {
                 foreach ( $working_days as $key => $work)

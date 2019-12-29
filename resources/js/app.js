@@ -303,7 +303,6 @@ function startCalendarApp()
 
       equalHeightItems : function()
       {
-        _log($(window).width());
         if ( $(window).width() <= 1024 )
         {
           return false;
@@ -368,6 +367,7 @@ function startCalendarApp()
         {
           this.apt_date_to = this.apt_date_from;
         }
+        this.adminGetUserData();
       },
 
       validateTimes : function ()
@@ -389,8 +389,6 @@ function startCalendarApp()
            this.time_from = this.default_time_from;
            this.time_to   = this.default_time_to;
         }
-
-
       },
 
 
@@ -411,7 +409,6 @@ function startCalendarApp()
       {
         this.resetMessage();
 
-        _log(this.today);
         this.appointment_id  = null;
         this.location_id     = "";
         this.user_id         = "";
@@ -433,7 +430,6 @@ function startCalendarApp()
       buildAppointmentId: function( appointment )
       {
         return "appointment-"+appointment.id;
-
       },
 
 
@@ -443,6 +439,7 @@ function startCalendarApp()
         // _log(this.is_admin);
         // _log(appointment.user_id);
         // _log(this.current_user);
+
         if ( !this.is_admin && appointment.user_id != this.current_user )
         {
           this.tooltip_work_load = "";
@@ -455,14 +452,25 @@ function startCalendarApp()
           this.ajax_active.abort();
         }
 
+        this.ajaxGetUserData( appointment.user_id, appointment.date_from );
+      },
+
+      adminGetUserData: function()
+      {
+        this.ajaxGetUserData(this.user_id, this.apt_date_from );
+      },
+
+
+      ajaxGetUserData : function( user_id, date )
+      {
         let request_data =
         {
-          date : appointment.date_from,
+          date : date,
         };
 
         this.ajax_active = $.ajax(
         {
-          url:       "/api/users/"+appointment.user_id,
+          url:       "/api/users/"+user_id,
           type:      "GET",
           data:      request_data,
           dataType:  'JSON',
@@ -479,6 +487,11 @@ function startCalendarApp()
         {
           this.tooltip_work_load = response.tooltip_work_load;
           this.tooltip_leave_days = response.tooltip_leave_days;
+        }
+        else
+        {
+          this.tooltip_work_load = "";
+          this.tooltip_leave_days = "";
         }
       },
 
@@ -500,26 +513,32 @@ function startCalendarApp()
       {
         if ( appointment.type == 4 )
         {
+          // load tool tip data
+          this.loadTooltip(appointment);
+
+          // set tool tip position
           let element = document.getElementById(this.buildAppointmentId(appointment));
-          let position          = this.getPosition(element);
-          this.tooltip_title    = appointment.tooltip_title;
-          this.tooltip_time     = this.getItemDuration(appointment);
-          this.tooltip_location = appointment.tooltip_location;
-          this.tooltip_info     = appointment.note;
-
-          this.getUserData(appointment);
-
+          let position = this.getPosition(element);
           let style = "left";
           if ( position.left < 400 )
           {
-            _log(document.getElementById("appointment-"+appointment.id).offsetWidth);
             position.left += (document.getElementById("appointment-"+appointment.id).offsetWidth+280);
             style = "right";
           }
 
           this.setToolTip(position.left,position.top, style);
         }
+      },
 
+
+      loadTooltip : function ( appointment )
+      {
+        this.tooltip_title    = appointment.tooltip_title;
+        this.tooltip_time     = this.getItemDuration(appointment);
+        this.tooltip_location = appointment.tooltip_location;
+        this.tooltip_info     = appointment.note;
+
+        this.getUserData(appointment);
       },
 
 
@@ -532,7 +551,6 @@ function startCalendarApp()
 
       setToolTip : function(x, y, style )
       {
-
         this.tooltip_x = parseInt(x);
         this.tooltip_y = parseInt(y);
 
@@ -540,7 +558,6 @@ function startCalendarApp()
         {
           document.getElementById("appointment-tooltip").classList.add("place-right");
         }
-
       },
 
 
@@ -549,7 +566,9 @@ function startCalendarApp()
         // set appointment details before showing layer
         if ( typeof this.items[date].appointments[key] !== "undefined" )
         {
+
           this.resetMessage();
+          let appointment = this.items[date].appointments[key];
 
           this.appointment_id  = this.items[date].appointments[key].id;
           this.location_id     = this.items[date].appointments[key].location_id;
@@ -561,9 +580,12 @@ function startCalendarApp()
           this.time_from       = this.items[date].appointments[key].time_from;
           this.time_to         = this.items[date].appointments[key].time_to;
           this.note            = this.items[date].appointments[key].note;
+
+          this.loadTooltip(appointment);
         }
 
         this.toggleLayer();
+
       },
 
       saveAppointment : function ( action )
@@ -612,7 +634,7 @@ function startCalendarApp()
 
       },
 
-      saveAppointment_ajaxCallback : function( response)
+      saveAppointment_ajaxCallback : function(response)
       {
         _log("saveAppointment_ajaxCallback");
         _log(response);
@@ -625,11 +647,13 @@ function startCalendarApp()
             this.appointment_id = response.id;
           }
         }
+
+        this.adminGetUserData( this.user_id, this.apt_date_from );
         this.updateItems();
       },
 
 
-      deleteAppointment : function (  )
+      deleteAppointment : function ()
       {
         // _log("deleteAppointment...");
         // _log(this.appointment_id);
@@ -679,7 +703,6 @@ function startCalendarApp()
       {
         return "/images/icons/"+icon;
       },
-
 
 
       getCssClasses : function(date, week)
