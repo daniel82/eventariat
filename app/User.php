@@ -136,6 +136,13 @@ class User extends Authenticatable
     }
 
 
+    public static function makeDefaultPassword( $last_name )
+    {
+        $hash = md5( $last_name );
+        return substr($hash, 0, 8);
+    }
+
+
     public function getAppointments( $date_from, $date_to )
     {
         return \App\Appointment::userId($this->id)->period($date_from, $date_to)->get();

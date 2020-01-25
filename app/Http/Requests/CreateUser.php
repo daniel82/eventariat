@@ -27,8 +27,8 @@ class CreateUser extends FormRequest
         'email'                 => 'unique:users',
         'first_name'            => 'required',
         'last_name'             => 'required',
-        'password'              => 'min:6|required_with:password_confirmation|same:password_confirmation',
-        'password_confirmation' => 'min:6'
+        'password'              => 'sometimes|min:6|required_with:password_confirmation|same:password_confirmation',
+        'password_confirmation' => 'sometimes|min:6'
     ];
   }
 }

@@ -1,7 +1,7 @@
 <hr class="my-5" />
 <h4>Rechte</h4>
 <div class="form-group">
-    {{ Form::checkbox("can_see_other_appointments", 1, $object->can_see_other_appointments ) }}
+    {{ Form::checkbox("can_see_other_appointments", 1, $object->can_see_other_appointments, ["id"=>"can_see_other_appointments"] ) }}
     {{ Form::label("can_see_other_appointments", "Kann andere Termine sehen", ["class" => ""]) }}
 </div>
 

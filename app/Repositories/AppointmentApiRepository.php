@@ -25,9 +25,21 @@ class AppointmentApiRepository
     {
       $message = "Termin wurde aktualisiert.";
 
-      if ( $this->maybeTriggerEvent($request, $appointment) && is_object($appointment->user) )
+      // if ( $this->maybeTriggerEvent($request, $appointment) && is_object($appointment->user) )
+      // {
+      //   $message .=  sprintf( " Benachrichtiung an: %s", $appointment->user->email );
+      // }
+
+      if ( $appointment->user->email )
       {
-        $message .=  sprintf( " Benachrichtiung an: %s", $appointment->user->email );
+        if ( $this->maybeTriggerEvent($request, $appointment) && is_object($appointment->user) )
+        {
+          $message .=  sprintf(" Benachrichtiung an: %s", $appointment->user->email);
+        }
+      }
+      else
+      {
+        $message .=  sprintf(" Noch keine E-Mail hinterlegt.");
       }
 
       return ["status"=> "ok", "message"=>$message, "id"=> $appointment->id ];
@@ -42,12 +54,14 @@ class AppointmentApiRepository
 
   public function update( Request $request, $appointment_id )
   {
+    Log::debug("AppointmentApiRepository@update");
     $appointment = Appointment::findOrFail($appointment_id);
     $saved = $appointment->saveEntry( $request );
 
     if ( $saved && $appointment->id && is_numeric($appointment->id) )
     {
       $message = "Termin wurde aktualisiert.";
+      Log::debug($appointment->user->email);
 
       if ( $appointment->user->email )
       {

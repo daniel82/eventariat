@@ -38,14 +38,14 @@ class UserRepository
   }
 
 
-  public function sanitizeRequest( Request $request )
+  public function sanitizeRequest( Request $request, $method=null )
   {
     $request["appointment_types"] = serialize( $request->get("appointment_types", []) );
     $request["can_see_other_appointments"] = $request->get("can_see_other_appointments", 0);
 
-    if ( $pw = $request->get("password") )
+    if ( $pw = $this->valildatePasswords($request, $method ) )
     {
-      $request["password"] =  bcrypt($pw);
+      $request["password"] = $pw;
     }
     else
     {
@@ -57,14 +57,23 @@ class UserRepository
   }
 
 
-  public function valildatePasswords( Request $request )
+  public function valildatePasswords( Request $request, $method=null )
   {
-    if ( $new_password = $request->get("password") )
-    {
-       $request["password"] = bcrypt($new_password);
-    }
+    $password = $request->get("password");
+    $new_password = $request->get("password_confirmation");
 
-    return $request;
+    if ( $password && $password === $new_password )
+    {
+      return bcrypt($new_password);
+    }
+    elseif ( !$password && $method === "store" )
+    {
+      return bcrypt( User::makeDefaultPassword( $request->get("last_name") ) );
+    }
+    else
+    {
+      return null;
+    }
   }
 
 }

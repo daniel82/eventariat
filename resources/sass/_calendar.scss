@@ -270,8 +270,9 @@
 
 .ev-appointment__duration
 {
-  font-family: courier;
-  width: 76px !important;
+  font-family: arial;
+  width: 60px !important;
+  letter-spacing: -1px;
 
   &:empty
   {

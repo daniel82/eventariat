@@ -51116,10 +51116,10 @@ __webpack_require__.r(__webpack_exports__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+* First we will load all of this project's JavaScript dependencies which
+* includes Vue and other libraries. It is a great starting point when
+* building robust, powerful web applications using Vue and Laravel.
+*/
 
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
@@ -51329,11 +51329,19 @@ function startCalendarApp() {
 
         var _loop = function _loop() {
           var max_height = 140;
+
+          _log("week_number: " + week_number);
+
           var column_query = ".week-" + week_number + " .appointment-col__items";
           var columns = $(column_query);
           $.each(columns, function (key, element) {
             max_height = element.scrollHeight > max_height ? element.scrollHeight : max_height;
           });
+
+          _log("max_height");
+
+          _log(max_height);
+
           $(column_query).height(max_height + 26);
         };
 

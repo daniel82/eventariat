@@ -13,8 +13,9 @@
 
 Route::get('/', function () {
   return redirect( "/dienstplan" );
-
 });
+
+Route::get('/test', "WatchController@test" );
 
 
 Route::middleware([ "auth", "locale"])->group(function ()

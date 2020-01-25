@@ -59,8 +59,11 @@ class UserController extends Controller
      */
     public function store(Requests\CreateUser $request, User $user)
     {
-        $request = $this->userRepository->sanitizeRequest($request);
+
+        $request = $this->userRepository->sanitizeRequest($request, $method="store");
         $user = User::create( $request->all() );
+
+        event( new \App\Events\UserCreatedEvent($user) );
         // dd( $request->all() );
         $message = "Mitarbeiter wurde gespeichert";
 

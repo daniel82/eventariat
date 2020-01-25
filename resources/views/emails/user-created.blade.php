@@ -15,14 +15,11 @@
     <td>{{ $user->email }}</td>
   </tr>
 
-  @if (is_object($appointment->location))
+
   <tr>
-    <td style="width: 140px">Wo:</td>
-    <td>{{ $appointment->location->name }}</td>
+    <td style="width: 140px">Passwort:</td>
+    <td>{{ $password }}</td>
   </tr>
-  @endif
-
-
 
 
 </table>

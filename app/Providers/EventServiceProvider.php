@@ -26,6 +26,10 @@ class EventServiceProvider extends ServiceProvider
         [
             'App\Listeners\ShiftRequestCreatedListener',
         ],
+        'App\Events\UserCreatedEvent' =>
+        [
+            'App\Listeners\UserCreatedListener',
+        ],
     ];
 
     /**
