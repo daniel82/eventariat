@@ -32,7 +32,7 @@ class AppointmentApiRepository
 
       if ( $appointment->user->email )
       {
-        if ( $this->maybeTriggerEvent($request, $appointment) && is_object($appointment->user) )
+        if ( $this->maybeTriggerEvent($request, $appointment, "saved") && is_object($appointment->user) )
         {
           $message .=  sprintf(" Benachrichtiung an: %s", $appointment->user->email);
         }
@@ -65,7 +65,7 @@ class AppointmentApiRepository
 
       if ( $appointment->user->email )
       {
-        if ( $this->maybeTriggerEvent($request, $appointment) && is_object($appointment->user) )
+        if ( $this->maybeTriggerEvent($request, $appointment, "saved") && is_object($appointment->user) )
         {
           $message .=  sprintf(" Benachrichtiung an: %s", $appointment->user->email);
         }
@@ -85,12 +85,21 @@ class AppointmentApiRepository
   }
 
 
-  public function maybeTriggerEvent( Request $request, Appointment $appointment )
+  public function maybeTriggerEvent( Request $request, Appointment $appointment, $event_type="saved" )
   {
     $type = $request->get("action");
     if ( $type === "email" or $type === "sms" )
     {
-      event( new \App\Events\AppointmentSavedEvent($appointment, $type ) );
+
+      if ( $event_type === "saved" )
+      {
+        event( new \App\Events\AppointmentSavedEvent($appointment, $type ) );
+      }
+      else if ( $event_type === "destroyed" )
+      {
+        event( new \App\Events\AppointmentDestroyedEvent($appointment, $type ) );
+      }
+
       return true;
     }
     else
@@ -100,12 +109,26 @@ class AppointmentApiRepository
   }
 
 
-  public function destroy( $appointment_id )
+  public function destroy( Request $request, $appointment_id )
   {
     $appointment = Appointment::findOrFail($appointment_id);
-    $appointment->delete();
 
-    return ["status"=> "ok", "message"=>"Termin wurde entfernt", "id"=> $appointment->id ];
+    $message = "Termin wurde entfernt";
+    if ( $appointment->user->email )
+    {
+      if ( $this->maybeTriggerEvent($request, $appointment, "destroyed") && is_object($appointment->user) )
+      {
+        $message .=  sprintf(" Benachrichtiung an: %s", $appointment->user->email);
+      }
+    }
+    else
+    {
+       $message .=  sprintf(" Noch keine E-Mail hinterlegt.");
+    }
+
+
+    $appointment->delete();
+    return ["status"=> "ok", "message"=>$message, "id"=> $appointment->id ];
   }
 
 

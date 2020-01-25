@@ -84,7 +84,7 @@ function startShiftRequestApp()
 
       checkAppointments : function()
       {
-        _log("checkAppointments...");
+        // _log("checkAppointments...");
 
         if ( this.date_from && this.date_to )
         {
@@ -314,7 +314,7 @@ function startCalendarApp()
         for( week_number in this.weeks)
         {
           let max_height = 140;
-          _log("week_number: "+week_number);
+          // _log("week_number: "+week_number);
           let column_query = ".week-"+week_number+" .appointment-col__items";
 
           let columns = $(column_query);
@@ -324,8 +324,8 @@ function startCalendarApp()
             max_height = ( element.scrollHeight  > max_height ) ? element.scrollHeight  : max_height;
           });
 
-          _log("max_height");
-          _log(max_height);
+          // _log("max_height");
+          // _log(max_height);
 
           $(column_query).height(max_height+26);
         }
@@ -467,21 +467,26 @@ function startCalendarApp()
 
       ajaxGetUserData : function( user_id, date )
       {
-        let request_data =
-        {
-          date : date,
-        };
 
-        this.ajax_active = $.ajax(
+        if ( typeof user_id !== "undefined" && user_id )
         {
-          url:       "/api/users/"+user_id,
-          type:      "GET",
-          data:      request_data,
-          dataType:  'JSON',
-          success:   this.getUserData_ajaxCallback,
-          error:     this.getUserData_ajaxCallback
-          }
-        );
+          let request_data =
+          {
+            date : date,
+          };
+
+          this.ajax_active = $.ajax(
+          {
+            url:       "/api/users/"+user_id,
+            type:      "GET",
+            data:      request_data,
+            dataType:  'JSON',
+            success:   this.getUserData_ajaxCallback,
+            error:     this.getUserData_ajaxCallback
+            }
+          );
+        }
+
       },
 
 
@@ -657,21 +662,21 @@ function startCalendarApp()
       },
 
 
-      deleteAppointment : function ()
+      deleteAppointment : function ( action )
       {
         // _log("deleteAppointment...");
         // _log(this.appointment_id);
         // _log( this.getApiUrl() );
+        action = ( typeof action !== "undefined" ) ? action : null;
         $.ajax(
         {
           url:       this.getApiUrl(),
           type:      "DELETE",
-          data:      {_token : csrf_token },
+          data:      {_token : csrf_token, action : action },
           dataType:  'JSON',
           success:   this.saveAppointment_ajaxCallback,
-          error:     this.saveAppointment_ajaxCallback
-          }
-        );
+          error:     this.saveAppointment_ajaxCallback,
+        });
 
         this.resetForm();
       },
@@ -750,7 +755,7 @@ function startCalendarApp()
 
     created : function()
     {
-      _log("created");
+      // _log("created");
       this.getItems();
     },
   });

@@ -1,6 +1,6 @@
 @component('mail::message')
 
-# Neuer Termin
+# Termin geklöscht
 
 
 <table>

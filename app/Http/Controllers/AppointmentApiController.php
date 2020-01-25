@@ -98,10 +98,11 @@ class AppointmentApiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy( Request $request, $id)
     {
-        Log::debug("AppointmentApiController@delete");
-        $data = $this->appointmentApiRepository->destroy( $id );
+        // Log::debug("AppointmentApiController@delete");
+        // Log::debug( $request->all() );
+        $data = $this->appointmentApiRepository->destroy( $request, $id );
         return response()->json($data);
     }
 }

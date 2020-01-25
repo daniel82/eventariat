@@ -22,6 +22,10 @@ class EventServiceProvider extends ServiceProvider
         [
             'App\Listeners\AppointmentSavedListener',
         ],
+        'App\Events\AppointmentDestroyedEvent' =>
+        [
+            'App\Listeners\AppointmentDestroyedListener',
+        ],
         'App\Events\ShiftRequestCreatedEvent' =>
         [
             'App\Listeners\ShiftRequestCreatedListener',

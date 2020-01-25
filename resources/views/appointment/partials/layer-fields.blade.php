@@ -127,6 +127,10 @@
     <a class="dropdown-item color-red" href="#" @click="deleteAppointment()" v-if="appointment_id">
       <i class="fa fa-trash" aria-hidden="true"></i> L&ouml;schen
     </a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item color-red" href="#" @click="deleteAppointment('email')" v-if="appointment_id">
+      <i class="fa fa-trash" aria-hidden="true"></i> L&ouml;schen & Email
+    </a>
   </div>
 </div>
 </div>
