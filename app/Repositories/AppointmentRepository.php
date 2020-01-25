@@ -30,6 +30,13 @@ class AppointmentRepository
     $data["user"]       = \Auth::user();
     $data["users"]      = ( $data["user"]->can_see_other_appointments ) ? User::all() : collect([$data["user"]]);
 
+  // [ "id" => 4, "text"=>"Arbeit" ],
+  // [ "id" => 1, "text"=>"Urlaub" ],
+  // [ "id" => 2, "text"=>"Ereignis"],
+  // [ "id" => 3, "text"=>"Ferienwohnung"],
+  // // [ "id" => 5, "text"=>"Sonstiges"],
+  // [ "id" => 6, "text"=>"Frei"],
+
     $data["ev_app_data"] =
     [
       "pdf_url"         => action("AppointmentController@pdf"),
@@ -38,6 +45,7 @@ class AppointmentRepository
       "weeks"           => [],
       "today"           => $data["today"],
       "location_ids"    => [],
+      "appointment_types"=> [1,2,4,5,6],
       "user_ids"        => ($data["users"]->count() === 1) ? [$data["users"]->first()->id] : [],
       "items"           => [],
       "busy"            => "",
@@ -77,6 +85,7 @@ class AppointmentRepository
     ];
 
     $data["locations"]   = Location::all();
+    $data["appointment_types"]   = config("appointment.type");
 
 
     // TODO if is admin

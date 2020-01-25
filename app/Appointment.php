@@ -159,6 +159,21 @@ class Appointment extends Model
   }
 
 
+  public function scopeTypeIds( $query, $type_ids )
+  {
+    // $user_ids = (is_numeric($user_ids) ) ?
+
+    if ( is_array($type_ids) && !empty($type_ids) )
+    {
+      return $query->whereIn( "type", $type_ids );
+    }
+    else
+    {
+      return $query;
+    }
+  }
+
+
 
   public function scopeLocationIds( $query, $location_ids )
   {

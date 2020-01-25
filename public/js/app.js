@@ -51261,7 +51261,8 @@ function startCalendarApp() {
           "date_from": this.date_from,
           "date_to": this.date_to,
           "users": this.user_ids,
-          "locations": this.location_ids
+          "locations": this.location_ids,
+          "types": this.appointment_types
         };
         return rd;
       },

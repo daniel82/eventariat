@@ -15,12 +15,30 @@ class AppointmentExport
 {
   public function __construct(){}
 
+
+  // [ "id" => 4, "text"=>"Arbeit" ],
+  // [ "id" => 1, "text"=>"Urlaub" ],
+  // [ "id" => 2, "text"=>"Ereignis"],
+  // [ "id" => 3, "text"=>"Ferienwohnung"],
+  // // [ "id" => 5, "text"=>"Sonstiges"],
+  // [ "id" => 6, "text"=>"Frei"],
+  //
+
+  public function includeType( $type )
+  {
+    return ( in_array($type, $this->type_ids) );
+  }
+
+
   public function index( Request $request )
   {
     $date_from      = $request->get("date_from" );
     $date_to        = $request->get("date_to");
     $user_ids       = $request->get("users");
     $location_ids   = $request->get("locations");
+    $this->type_ids  = $request->get("types", []);
+
+
     $nav            = $request->get("nav", null);
 
     $user = \Auth::user();
@@ -93,30 +111,45 @@ class AppointmentExport
 
     // events without location
     $top_events = collect();
-    if ( $user->canSee("events") )
+    if ( $user->canSee("events") && $this->includeType(2) )
     {
-      $top_events = Appointment::events()->noLocation()->dateFromBetween($date_from, $date_to)->orderBy("date_from")->get();
+      $top_events = Appointment::events()
+                    ->noLocation()
+                    ->dateFromBetween($date_from, $date_to)
+                    ->orderBy("date_from")
+                    ->get();
     }
 
 
     // FeWo
     $fewo_events = collect();
-    if ( $user->canSee("fewo_dates") )
+    if ( $user->canSee("fewo_dates") && $this->includeType(3) )
     {
-      $fewo_events = Appointment::holidayFlat()->dateFromBetween($date_from, $date_to)->orderBy("date_from", "ASC")->orderBy("location_id", "ASC")->get();
+      $fewo_events =  Appointment::holidayFlat()
+                      ->dateFromBetween($date_from, $date_to)
+                      ->orderBy("date_from", "ASC")
+                      ->orderBy("location_id", "ASC")
+                      ->get();
     }
 
 
     $leave_days = collect();
-    if ( $user->canSee("leave_days") )
+    if ( $user->canSee("leave_days") && $this->includeType(1) )
     {
-      // TODO improve dateFromBetween
-      $leave_days = Appointment::leaveDays()->userIds($user_ids)->dateFromBetween($date_from, $date_to)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get();
+      $leave_days = Appointment::leaveDays()
+                    ->userIds($user_ids)
+                    ->dateFromBetween($date_from, $date_to)
+                    ->orderBy("date_from", "ASC")
+                    ->orderBy("user_id", "ASC")->get();
     }
 
 
 
-    $various_events = Appointment::various()->userIds($user_ids)->dateFromBetween($date_from, $date_to)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get();
+    $various_events = Appointment::various()
+                      ->userIds($user_ids)
+                      ->dateFromBetween($date_from, $date_to)
+                      ->orderBy("date_from", "ASC")
+                      ->orderBy("user_id", "ASC")->get();
 
     // Log::debug($various_events);
 
@@ -152,11 +185,6 @@ class AppointmentExport
         // TODO richtig ? <= $the_date_start
         return ($appointment->date_from <= $the_date_start && $appointment->date_to >= $the_date);
       });
-
-      // dump($leave_dates);
-
-
-
       if ( $leave_dates && $leave_dates->count() )
       {
         $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->leaveDayAppointmentsToJson( $leave_dates) );
@@ -219,17 +247,26 @@ class AppointmentExport
       {
         $user_ids  = [$user->id];
       }
-      // Normale Arbeit
-      if ( $appointments = Appointment::work()->userIds($user_ids)->locationIds($location_ids)->dateFrom($the_date)->orderBy("location_id", "ASC")->orderBy("date_from", "ASC")->get() )
+
+
+       // Normale Arbeit
+      if ( $this->includeType(4) )
       {
-        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->workAppointmentsToJson($appointments) );
+        if ( $appointments = Appointment::work()->userIds($user_ids)->locationIds($location_ids)->dateFrom($the_date)->orderBy("location_id", "ASC")->orderBy("date_from", "ASC")->get() )
+        {
+          $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->workAppointmentsToJson($appointments) );
+        }
       }
 
+
       // Freier Tag
-      if ( $appointments = Appointment::free()->userIds($user_ids)->dateFrom($the_date)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get() )
+      if ( $this->includeType(6) )
       {
-        // Log::debug($appointments);
-        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->freeAppointmentsToJson($appointments) );
+        if ( $appointments = Appointment::free()->userIds($user_ids)->dateFrom($the_date)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get() )
+        {
+          // Log::debug($appointments);
+          $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->freeAppointmentsToJson($appointments) );
+        }
       }
 
     }
