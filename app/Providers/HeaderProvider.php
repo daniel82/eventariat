@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Request;
-use App\Cart;
+use App\ShiftRequest;
 
 class HeaderProvider extends ServiceProvider
 {
@@ -18,9 +18,8 @@ class HeaderProvider extends ServiceProvider
     view()->composer('layouts/header',
       function($view) use( $request ){
         $head["user"] = \Auth::user();
-        // dd($head);
-
         $view->with( 'head', $head );
+        $view->with( 'count_shift_requests', ShiftRequest::whereStatus(0)->count() );
       }
     );
   }

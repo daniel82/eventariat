@@ -27,7 +27,12 @@
 
                 @if($head["user"]->isAdmin())
                   <li class="nav-item {{ activeHeaderItem("admin/shift-requests") }}" >
-                    <a class="nav-link" href="{{ action("ShiftRequestController@index") }}"><span>Antr&auml;ge</span></a>
+                    <a class="nav-link" href="{{ action("ShiftRequestController@index") }}">
+                      <span>Antr&auml;ge</span>
+                      @if ( $count_shift_requests )
+                        <span class="badge badge-light">{{$count_shift_requests}}</span>
+                      @endif
+                    </a>
                   </li>
 
                   <li class="nav-item {{ activeHeaderItem("admin/users") }}">
