@@ -36,8 +36,7 @@ class AppointmentExport
     $date_to        = $request->get("date_to");
     $user_ids       = $request->get("users");
     $location_ids   = $request->get("locations");
-    $this->type_ids  = $request->get("types", []);
-
+    $this->type_ids = $request->get("types", []);
 
     $nav            = $request->get("nav", null);
 
@@ -144,14 +143,33 @@ class AppointmentExport
     }
 
 
+    $private_dates = collect();
+    if ( $user->canSee("private_dates") && $this->includeType(5) )
+    {
+      $private_dates = Appointment::privateDates()
+                    ->userIds($user_ids)
+                    ->dateFromBetween($date_from, $date_to)
+                    ->orderBy("date_from", "ASC")
+                    ->orderBy("user_id", "ASC")->get();
+    }
+
+
+    $sick_days = collect();
+    if ( $user->canSee("sick") && $this->includeType(7) )
+    {
+      $sick_days = Appointment::sick()
+                    ->userIds($user_ids)
+                    ->dateFromBetween($date_from, $date_to)
+                    ->orderBy("date_from", "ASC")
+                    ->orderBy("user_id", "ASC")->get();
+    }
+
 
     $various_events = Appointment::various()
                       ->userIds($user_ids)
                       ->dateFromBetween($date_from, $date_to)
                       ->orderBy("date_from", "ASC")
                       ->orderBy("user_id", "ASC")->get();
-
-    // Log::debug($various_events);
 
 
     // // work
@@ -162,32 +180,47 @@ class AppointmentExport
       $the_date_start         = $date->format("Y-m-d")." 00:00:00";
       $the_date_end           = $date->format("Y-m-d")." 24:00:00";
 
-      // $data[$the_date]["day"] = $date->formatLocalized("% %d.%m");
-      // // $data[$the_date]["date"]  = $date->shortLocaleDayOfWeek; //$date->isoFormat('dd. D.M');
-      //
       $items[$the_date]["date"]         = $date->isoFormat('dd. D.M');
       $items[$the_date]["appointments"] = collect();
 
       $week                             = $date->week();
       $items[$the_date]["week"]         = $week;
-      $data["weeks"][$week]            = $week;
-
+      $data["weeks"][$week]             = $week;
       $items[$the_date]["forecast"]     = \App\WeatherForecast::getAsJsonByDate( $the_date );
 
 
       // Urlaub
-      //
-      // $leave_dates = $leave_days->filter(function ($appointment, $key) use($the_date_start, $the_date_end)
-      //
-      // dump($the_date_start);
       $leave_dates = $leave_days->filter(function ($appointment, $key) use($the_date, $the_date_start)
       {
-        // TODO richtig ? <= $the_date_start
         return ($appointment->date_from <= $the_date_start && $appointment->date_to >= $the_date);
       });
       if ( $leave_dates && $leave_dates->count() )
       {
         $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->leaveDayAppointmentsToJson( $leave_dates) );
+      }
+
+
+      // private Termine
+      $private_dates2 = $private_dates->filter(function ($appointment, $key) use($the_date_start, $the_date)
+      {
+        return ( date("Y-m-d", strtotime($appointment->date_from)) === $the_date);
+      });
+      if ( $private_dates2 && $private_dates2->count() )
+      {
+        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->privateAppointmentsToJson($private_dates2) );
+      }
+
+
+      // Kranktage
+      $sick_dates = $sick_days->filter(function ($appointment, $key) use($the_date_start, $the_date)
+      {
+        return ($appointment->date_from <= $the_date_start && $appointment->date_to >= $the_date);
+      });
+
+      if ( $sick_dates && $sick_dates->count() )
+      {
+
+        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->sickAppointmentsToJson($sick_dates) );
       }
 
 
@@ -203,8 +236,6 @@ class AppointmentExport
 
 
       // FeWo
-      //
-      // dump($fewo_events);
       $fewo_dates = $fewo_events->filter(function ($appointment, $key) use($the_date, $the_date_start)
       {
         return ( formatDate($appointment->date_from, "Y-m-d") <= $the_date_start && formatDate($appointment->date_to, "Y-m-d") >= $the_date);
@@ -217,8 +248,6 @@ class AppointmentExport
 
 
       // Various
-
-      // $various_dates = $various_events->whereBetween("date_from", [$the_date_start, $the_date_end] );
       $various_dates = $various_events->filter(function ($appointment, $key) use($the_date_start, $the_date)
       {
         return ($appointment->date_from <= $the_date_start && $appointment->date_to >= $the_date);
@@ -252,7 +281,15 @@ class AppointmentExport
        // Normale Arbeit
       if ( $this->includeType(4) )
       {
-        if ( $appointments = Appointment::work()->userIds($user_ids)->locationIds($location_ids)->dateFrom($the_date)->orderBy("location_id", "ASC")->orderBy("date_from", "ASC")->get() )
+        $appointments = Appointment::work()
+                        ->userIds($user_ids)
+                        ->locationIds($location_ids)
+                        ->dateFrom($the_date)
+                        ->orderBy("location_id", "ASC")
+                        ->orderBy("date_from", "ASC")
+                        ->get();
+
+        if ( $appointments )
         {
           $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->workAppointmentsToJson($appointments) );
         }
@@ -262,9 +299,15 @@ class AppointmentExport
       // Freier Tag
       if ( $this->includeType(6) )
       {
-        if ( $appointments = Appointment::free()->userIds($user_ids)->dateFrom($the_date)->orderBy("date_from", "ASC")->orderBy("user_id", "ASC")->get() )
+        $appointments = Appointment::free()
+                        ->userIds($user_ids)
+                        ->dateFrom($the_date)
+                        ->orderBy("date_from", "ASC")
+                        ->orderBy("user_id", "ASC")
+                        ->get();
+
+        if ( $appointments )
         {
-          // Log::debug($appointments);
           $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->freeAppointmentsToJson($appointments) );
         }
       }
@@ -364,11 +407,10 @@ class AppointmentExport
 
   public function leaveDayAppointmentsToJson( $appointments )
   {
+    $items = [];
 
-   $items = [];
-
-   foreach ($appointments as $key => $appointment)
-   {
+    foreach ($appointments as $key => $appointment)
+    {
       $title = ($appointment->user ) ? $appointment->user->getCalendarName() : null;
 
       $items[] =
@@ -387,9 +429,72 @@ class AppointmentExport
         "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
       ];
-   }
+    }
 
-   return $items;
+    return $items;
+  }
+
+
+  public function privateAppointmentsToJson( $appointments )
+  {
+    $items = [];
+
+    foreach ($appointments as $key => $appointment)
+    {
+      $title = ($appointment->user ) ? $appointment->user->getCalendarName() : null;
+
+      $items[] =
+      [
+        "id"             => $appointment->id,
+        "type_class"     => "private",
+        "date_from"      => formatDate( $appointment->date_from, $format="Y-m-d" ),
+        "time_from"      => formatDate( $appointment->date_from, $format="H:i" ),
+        "date_to"        => formatDate( $appointment->date_to, $format="Y-m-d" ),
+        "time_to"        => formatDate( $appointment->date_to, $format="H:i" ),
+        "title"          => $title,
+        "description"    => null,
+        "location_id"    => null,
+        "user_id"        => $appointment->user_id,
+        "type"           => $appointment->type,
+        "type_text"      => $appointment->getTypeHumanReadable(),
+        "note"           => $appointment->note,
+      ];
+    }
+
+    return $items;
+  }
+
+
+  public function sickAppointmentsToJson( $appointments )
+  {
+    $items = [];
+
+
+    foreach ($appointments as $key => $appointment)
+    {
+      $title = ($appointment->user ) ? $appointment->user->getCalendarName() : null;
+
+      $items[] =
+      [
+        "id"             => $appointment->id,
+        "type_class"     => "sick",
+        "date_from"      => formatDate( $appointment->date_from, $format="Y-m-d" ),
+        "time_from"      => formatDate( $appointment->date_from, $format="H:i" ),
+        "date_to"        => formatDate( $appointment->date_to, $format="Y-m-d" ),
+        "time_to"        => formatDate( $appointment->date_to, $format="H:i" ),
+        "title"          => $title,
+        "description"    => null,
+        "location_id"    => null,
+        "user_id"        => $appointment->user_id,
+        "type"           => $appointment->type,
+        "type_text"      => $appointment->getTypeHumanReadable(),
+        "note"           => $appointment->note,
+      ];
+    }
+
+
+
+    return $items;
   }
 
 

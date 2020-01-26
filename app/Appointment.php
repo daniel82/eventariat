@@ -65,8 +65,8 @@ class Appointment extends Model
     $user = \Auth::user();
     $this->shift_request_id   = $shiftRequest->id;
     $this->type               = $shiftRequest->type;
-    $this->date_from          = $shiftRequest->date_from." ".config("appointment.day_start");
-    $this->date_to            = $shiftRequest->date_to." ".config("appointment.day_end");
+    $this->date_from          = $shiftRequest->date_from;
+    $this->date_to            = $shiftRequest->date_to;
     $this->edited_by          = $user->id;
     $this->created_by         = ($this->id) ? $this->created_by : $user->id;
     $this->user_id            = $shiftRequest->user_id;
@@ -220,6 +220,17 @@ class Appointment extends Model
   {
     return $query->whereType(6);
   }
+
+  public function scopePrivateDates( $query )
+  {
+    return $query->whereType(5);
+  }
+
+  public function scopeSick( $query )
+  {
+    return $query->whereType(7);
+  }
+
 
 
   public function scopeNoLocation( $query )

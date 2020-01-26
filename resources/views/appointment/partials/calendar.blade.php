@@ -37,6 +37,26 @@
               </span>
             </div>
 
+
+            <div v-else-if="isPrivate(appointment.type_class)">
+              <button v-if="is_admin" @click="editAppointment(date,key)" >
+                <i class="fa fa-clock-o" aria-hidden="true"></i> @{{ appointment.title }}
+              </button>
+              <span v-else >
+                <i class="fa fa-clock-o" aria-hidden="true"></i> @{{ appointment.title }}
+              </span>
+            </div>
+
+
+            <div v-else-if="isSick(appointment.type_class)">
+              <button v-if="is_admin" @click="editAppointment(date,key)" >
+                <i class="fa fa-medkit" aria-hidden="true"></i> @{{ appointment.title }}
+              </button>
+              <span v-else >
+                <i class="fa fa-medkit" aria-hidden="true"></i> @{{ appointment.title }}
+              </span>
+            </div>
+
             <span v-else-if="isBirthday(appointment.type_class)">
               <i class="fa fa-birthday-cake" aria-hidden="true"></i> @{{ appointment.title }} (@{{ appointment.age}})
             </span>

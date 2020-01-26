@@ -125,7 +125,15 @@ function startShiftRequestApp()
           this.count_appointments = response.length;
           this.show_alert = true;
         }
-      }
+      },
+
+      validateTimes : function ()
+      {
+        if ( this.time_from && !this.time_to || this.time_from && this.time_to &&  this.time_from  > this.time_to )
+        {
+          this.time_to = this.time_from;
+        }
+      },
 
 
     },
@@ -356,6 +364,17 @@ function startCalendarApp()
       },
 
 
+      isSick : function (type)
+      {
+        return (type === "sick" );
+      },
+
+      isPrivate : function (type)
+      {
+        return (type === "private" );
+      },
+
+
       isFewo : function (type)
       {
         return (type === "fewo" );
@@ -385,7 +404,7 @@ function startCalendarApp()
 
       presetTimes : function()
       {
-        if ( this.type == 1 || this.type == 6)
+        if ( this.type == 1 || this.type == 6 || this.type == 7)
         {
           this.time_from = this.time_to = "";
         }

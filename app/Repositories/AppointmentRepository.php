@@ -45,7 +45,7 @@ class AppointmentRepository
       "weeks"           => [],
       "today"           => $data["today"],
       "location_ids"    => [],
-      "appointment_types"=> [1,2,4,5,6],
+      "appointment_types"=> [1,2,4,5,6,7],
       "user_ids"        => ($data["users"]->count() === 1) ? [$data["users"]->first()->id] : [],
       "items"           => [],
       "busy"            => "",
@@ -88,35 +88,11 @@ class AppointmentRepository
     $data["appointment_types"]   = config("appointment.type");
 
 
-    // TODO if is admin
-    $data["hours"]   = $this->getHours();
-
-    // dd($data["hours"]);
-
+    $data["hours"]   = getHours();
 
     return $data;
   }
 
-
-  public function getHours()
-  {
-    $hours = collect();
-    $hours->put( "" , "---" );
-    $minutes = ["00", "15", "30", "45"];
-    foreach ( range(0,23) as $key => $hour)
-    {
-      $hour = ($hour<10) ? "0".$hour : $hour;
-
-      foreach ($minutes as $quarter)
-      {
-        $hours->put( $hour.":".$quarter , $hour.":".$quarter );
-      }
-    }
-
-    $hours->put( "23:59" , "23:59" );
-
-    return $hours;
-  }
 
 
 }

@@ -33,6 +33,8 @@ return [
         'fewo_dates' => 'FeWo',
         'leave_days' => 'Urlaub',
         'work'       => 'Arbeit',
+        'private_dates' => 'Termin',
+        'sick' => 'Krank',
     ],
 
 

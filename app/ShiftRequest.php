@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ShiftRequest extends Model
 {
-  protected $fillable = ["type", "date_from", "date_to", "note" ];
+  protected $fillable = ["type", "date_from", "date_to", "time_from", "time_to", "note" ];
 
 
   public function user()
@@ -70,10 +70,14 @@ class ShiftRequest extends Model
   {
     $user = \Auth::user();
 
+    $time_from = ( $tf = $request->get("time_from") ) ? $tf : config("appointment.day_start");
+    $time_to   = ( $tt = $request->get("time_to") ) ? $tt : config("appointment.day_end");
+
     $this->user_id        = ($this->user_id) ? $this->user_id : $user->id;
     $this->type           = $request->get("type");
-    $this->date_from      = $request->get("date_from");
-    $this->date_to        = $request->get("date_to");
+    $this->date_from      = $request->get("date_from")." ".$time_from;
+    $this->date_to        = $request->get("date_to")." ".$time_to;
+
     $this->note           = $request->get("note");
     $this->edited_by      = $user->id;
 

@@ -17,35 +17,37 @@
               <ul class="navbar-nav mr-auto">
                 @if($head["user"]->isAdmin())
                   <li class="nav-item {{ activeHeaderItem("admin/home") }}" >
-                    <a class="nav-link" href="/home">Start</a>
+                    <a class="nav-link" href="/home"><span class="nav-text">Start</span></a>
                   </li>
                 @endif
 
                 <li class="nav-item {{ activeHeaderItem("dienstplan") }}">
-                  <a class="nav-link" href="{{ action("AppointmentController@index") }}"><span>Kalender</span></a>
+                  <a class="nav-link" href="{{ action("AppointmentController@index") }}"><span class="nav-text">Kalender</span></a>
                 </li>
 
                 @if($head["user"]->isAdmin())
                   <li class="nav-item {{ activeHeaderItem("admin/shift-requests") }}" >
                     <a class="nav-link" href="{{ action("ShiftRequestController@index") }}">
-                      <span>Antr&auml;ge</span>
-                      @if ( $count_shift_requests )
-                        <span class="badge badge-light">{{$count_shift_requests}}</span>
-                      @endif
+                      <div class="nav-text">Antr&auml;ge
+                        @if ( $count_shift_requests )
+                        <span class="badge {{  ( activeHeaderItem("admin/shift-requests") === "active" ) ?  'badge-dark' : 'badge-light' }}">{{$count_shift_requests}}
+                        </span>
+                        @endif
+                      </div>
                     </a>
                   </li>
 
                   <li class="nav-item {{ activeHeaderItem("admin/users") }}">
-                    <a class="nav-link" href="{{ action("UserController@index") }}"><span>Mitarbeiter</span></a>
+                    <a class="nav-link" href="{{ action("UserController@index") }}"><span class="nav-text">Mitarbeiter</span></a>
                   </li>
 
                   <li class="nav-item {{ activeHeaderItem("admin/locations") }}">
-                    <a class="nav-link" href="{{ action("LocationController@index") }}"><span>Lokalit&auml;t</span></a>
+                    <a class="nav-link" href="{{ action("LocationController@index") }}"><span class="nav-text">Lokalit&auml;t</span></a>
                   </li>
                 @endif
 
                 {{-- logout --}}
-                <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Abmelden</a>
+                <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="nav-text">Abmelden</span></a>
                   <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                      @csrf
                   </form>
@@ -59,7 +61,7 @@
           <div class="navbar ">
             <div class="text-right d-block w-100">
               <span class="ev-logged-as">
-                <a href="{{ action("UserFrontendController@edit") }}" class="btn btn-light">
+                <a href="{{ action("UserFrontendController@edit") }}" class="btn btn-light d-block">
                    <i class="fa fa-user-circle" aria-hidden="true"></i> {{$head["user"]->getFullName()}}
                 </a>
               </span>

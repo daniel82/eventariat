@@ -20,8 +20,8 @@ class CreateShiftRequestsTable extends Migration
             $table->integer("type")->unsigned(); // free / leave_days
             $table->integer("status")->unsigned()->default(0); // 0, 1, 2
 
-            $table->date("date_from")->nullable();
-            $table->date("date_to")->nullable();
+            $table->timestamp("date_from")->nullable();
+            $table->timestamp("date_to")->nullable();
 
             $table->text("note")->nullable();
 

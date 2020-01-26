@@ -18,18 +18,38 @@
                 // color: #FF6F61;
                 text-decoration: underline;
             }
+
+
+            .nav-text
+            {
+                padding: 0.4rem;
+                display: block;
+            }
         }
 
         &.active
         {
             //
-            span
+            .nav-text
             {
+                display: inline-block;
                 background: white;
                 color: black;
-                padding: 0.4rem;
                 border-radius: 3px;
             }
+
+
+            a,
+            .nav-link
+            {
+                &:hover,
+                &:focus
+                {
+                    text-decoration: none !important;
+                }
+            }
+
+
         }
     }
 
