@@ -318,15 +318,17 @@ class AppointmentExport
     }
 
 
-    // TODO
+    // TODO #1
     if ( $user->can_see_other_appointments == 1 )
     {
       // filter $items
       // get date list where user has type work
       // where type = arbeit, krank, termin
       // check if user has date
-
     }
+
+    // TODO #2
+    // exlcude all items other users where not IN capabilities
 
 
     $data["items"] = $items;
