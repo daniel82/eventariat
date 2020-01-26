@@ -200,29 +200,6 @@ class AppointmentExport
       }
 
 
-      // private Termine
-      $private_dates2 = $private_dates->filter(function ($appointment, $key) use($the_date_start, $the_date)
-      {
-        return ( date("Y-m-d", strtotime($appointment->date_from)) === $the_date);
-      });
-      if ( $private_dates2 && $private_dates2->count() )
-      {
-        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->privateAppointmentsToJson($private_dates2) );
-      }
-
-
-      // Kranktage
-      $sick_dates = $sick_days->filter(function ($appointment, $key) use($the_date_start, $the_date)
-      {
-        return ($appointment->date_from <= $the_date_start && $appointment->date_to >= $the_date);
-      });
-
-      if ( $sick_dates && $sick_dates->count() )
-      {
-
-        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->sickAppointmentsToJson($sick_dates) );
-      }
-
 
       // Ereignisse ohne Lokalitaet
       $event_dates = $top_events->filter(function ($appointment, $key) use($the_date_start, $the_date)
@@ -271,6 +248,32 @@ class AppointmentExport
       }
 
 
+      // private Termine
+      $private_dates2 = $private_dates->filter(function ($appointment, $key) use($the_date_start, $the_date)
+      {
+        return ( date("Y-m-d", strtotime($appointment->date_from)) === $the_date);
+      });
+      if ( $private_dates2 && $private_dates2->count() )
+      {
+        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->privateAppointmentsToJson($private_dates2) );
+      }
+
+
+      // Kranktage
+      $sick_dates = $sick_days->filter(function ($appointment, $key) use($the_date_start, $the_date)
+      {
+        return ($appointment->date_from <= $the_date_start && $appointment->date_to >= $the_date);
+      });
+
+      if ( $sick_dates && $sick_dates->count() )
+      {
+
+        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->sickAppointmentsToJson($sick_dates) );
+      }
+
+
+
+
 
       if ( !$user->can_see_other_appointments )
       {
@@ -313,6 +316,18 @@ class AppointmentExport
       }
 
     }
+
+
+    // TODO
+    if ( $user->can_see_other_appointments == 1 )
+    {
+      // filter $items
+      // get date list where user has type work
+      // where type = arbeit, krank, termin
+      // check if user has date
+
+    }
+
 
     $data["items"] = $items;
 

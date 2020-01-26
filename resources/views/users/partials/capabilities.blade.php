@@ -1,8 +1,8 @@
 <hr class="my-5" />
 <h4>Rechte</h4>
-<div class="form-group">
-    {{ Form::checkbox("can_see_other_appointments", 1, $object->can_see_other_appointments, ["id"=>"can_see_other_appointments"] ) }}
-    {{ Form::label("can_see_other_appointments", "Kann andere Termine sehen", ["class" => ""]) }}
+<div class="form-group mb-4">
+    {{ Form::label("can_see_other_appointments", "Kann andere Termine sehen", ["class" => "d-block"]) }}
+    {{Form::select("can_see_other_appointments", config("users.can_see_other_appointments"), $object->can_see_other_appointments, ["id"=>"can_see_other_appointments", "class"=>"form-control"] )}}
 </div>
 
 

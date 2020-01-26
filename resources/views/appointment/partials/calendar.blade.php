@@ -38,6 +38,21 @@
             </div>
 
 
+            <span v-else-if="isBirthday(appointment.type_class)">
+              <i class="fa fa-birthday-cake" aria-hidden="true"></i> @{{ appointment.title }} (@{{ appointment.age}})
+            </span>
+
+
+            <button v-else-if="isFewo(appointment.type_class)" @click="editAppointment(date,key)">
+              <i class="fa fa-bed" aria-hidden="true"></i> @{{ appointment.title }}
+            </button>
+
+            <button v-else-if="is_admin" :id="buildAppointmentId(appointment)" @click="editAppointment(date,key)" :class="locationClass(appointment.location_id)" @mouseover="showTooltip(appointment)" @mouseout="hideTooltip()">
+              <span class="mr-2 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span>@{{ appointment.title }}
+              <i class="fa fa-info-circle ev-appointment__note-info" aria-hidden="true"  v-if="appointment.note"></i>
+            </button>
+
+
             <div v-else-if="isPrivate(appointment.type_class)">
               <button v-if="is_admin" @click="editAppointment(date,key)" >
                 <i class="fa fa-clock-o" aria-hidden="true"></i> @{{ appointment.title }}
@@ -56,20 +71,6 @@
                 <i class="fa fa-medkit" aria-hidden="true"></i> @{{ appointment.title }}
               </span>
             </div>
-
-            <span v-else-if="isBirthday(appointment.type_class)">
-              <i class="fa fa-birthday-cake" aria-hidden="true"></i> @{{ appointment.title }} (@{{ appointment.age}})
-            </span>
-
-
-            <button v-else-if="isFewo(appointment.type_class)" @click="editAppointment(date,key)">
-              <i class="fa fa-bed" aria-hidden="true"></i> @{{ appointment.title }}
-            </button>
-
-            <button v-else-if="is_admin" :id="buildAppointmentId(appointment)" @click="editAppointment(date,key)" :class="locationClass(appointment.location_id)" @mouseover="showTooltip(appointment)" @mouseout="hideTooltip()">
-              <span class="mr-2 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span>@{{ appointment.title }}
-              <i class="fa fa-info-circle ev-appointment__note-info" aria-hidden="true"  v-if="appointment.note"></i>
-            </button>
 
 
             <button v-else :id="buildAppointmentId(appointment)" :class="locationClass(appointment.location_id)" class="readonly-entry" @click="editAppointment(date,key)">

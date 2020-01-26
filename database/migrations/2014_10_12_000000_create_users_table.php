@@ -34,7 +34,7 @@ class CreateUsersTable extends Migration
             $table->string('role')->nullable();
             $table->string('employment')->nullable();
 
-            $table->tinyint('can_see_other_appointments')->default(0);
+            $table->integer('can_see_other_appointments')->default(0);
             $table->text('capabilities')->nullable();
 
             $table->rememberToken();

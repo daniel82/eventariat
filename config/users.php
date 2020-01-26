@@ -26,6 +26,14 @@ return [
     ],
 
 
+    'can_see_other_appointments' =>
+    [
+        '0' => 'Nur eigene Termine',
+        '1' => 'Nur Schichtkollegen',
+        '2' => 'Alle',
+    ],
+
+
     'appointment_types' =>
     [
         'birthdates' => 'Geburtstage',
