@@ -318,9 +318,27 @@ class AppointmentExport
     }
 
 
-    // TODO #1
+    // can only see co workers same day, same location
     if ( $user->can_see_other_appointments == 1 )
     {
+      foreach ($items as $date => &$date_data)
+      {
+        if ( isset($date_data["appointments"]) && !empty($date_data["appointments"]) )
+        {
+          $location_ids = $date_data["appointments"]->where("user_id", $user->id)->where("type_class", "work")->pluck("location_id");
+
+          if ( $location_ids->count() )
+          {
+            // delete all where location id not in
+            $date_data["appointments"] = $date_data["appointments"]->whereIn("location_id", $location_ids);
+          }
+          else
+          {
+            // hide all appointments if user has items this day
+            $date_data["appointments"] = $date_data["appointments"]->where("type_class", "!=", "work");
+          }
+        }
+      }
       // filter $items
       // get date list where user has type work
       // where type = arbeit, krank, termin
