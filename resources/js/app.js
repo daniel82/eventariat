@@ -323,16 +323,20 @@ function startCalendarApp()
         for( week_number in this.weeks)
         {
           let max_height = 140;
-          // _log("week_number: "+week_number);
           let column_query = ".week-"+week_number+" .appointment-col__items";
+          $(column_query).height(max_height);
 
           let columns = $(column_query);
 
           $.each ( columns, function(key, element )
           {
-            max_height = ( element.scrollHeight  > max_height ) ? element.scrollHeight  : max_height;
+            let tmp_height = element.scrollHeight;
+            max_height = ( (tmp_height) > max_height ) ? tmp_height : max_height;
+            // max_height -= 26;
           });
 
+
+          // _log(column_query);
           // _log("max_height");
           // _log(max_height);
 
@@ -665,8 +669,8 @@ function startCalendarApp()
 
       saveAppointment_ajaxCallback : function(response)
       {
-        _log("saveAppointment_ajaxCallback");
-        _log(response);
+        // _log("saveAppointment_ajaxCallback");
+        // _log(response);
         if ( typeof response === "object" )
         {
           if ( response.status && response.message )
@@ -752,7 +756,6 @@ function startCalendarApp()
       //   return 'week';
       // },
 
-
       isNewLocation : function( location_id, date )
       {
         let is_new = false;
@@ -765,11 +768,6 @@ function startCalendarApp()
 
         return is_new;
       }
-
-
-
-
-
 
     },
 
