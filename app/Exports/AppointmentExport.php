@@ -202,10 +202,25 @@ class AppointmentExport
 
 
       // Ereignisse ohne Lokalitaet
+      //
+
+
       $event_dates = $top_events->filter(function ($appointment, $key) use($the_date_start, $the_date)
       {
-        return ($appointment->date_from <= $the_date_start && $appointment->date_to >= $the_date);
+        // "2020-02-07 00:00:00"
+        // 2020-02-07 08:00:00
+        // 2020-02-07 16:30:00
+        return ( formatDate( $appointment->date_from,"Y-m-d") <= $the_date && $appointment->date_to >= $the_date);
       });
+
+      // if ( $the_date == "2020-02-07")
+      // {
+      //   dump($the_date_start);
+      //   dump($the_date);
+      //   dd($event_dates);
+      // }
+
+
       if ( $event_dates )
       {
         $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->eventAppointmentsToJson($event_dates) );
