@@ -1,5 +1,15 @@
+<div class="form-group">
+  {{ Form::label("type", "Terminart", ["class"=> "d-block is-required"]) }}
+  <select name="type" id="type" class="form-control d-block" v-model="type" @change="presetTimes">
+    @foreach( config("appointment.type") as $item )
+      <option value="{{ $item["id"] }}">{{ $item["text"] }}</option>
+    @endforeach
+  </select>
+</div>
+
+
 @if ( $locations && $locations->count() )
-  <div class="form-group">
+  <div class="form-group" v-if="type==4">
     {{ Form::label("location_id", "Lokalität", ["class"=> "d-block"]) }}
     <select name="location_id" id="location_id" class="form-control d-block" v-model="location_id">
       <option value="">---</option>
@@ -10,7 +20,7 @@
   </div>
 @endif
 
-<div class="form-group">
+<div class="form-group" v-if="type==2">
   {{ Form::label("description", "Freitext", ["class"=> "d-block"]) }}
   {{
     Form::text("description", null,
@@ -24,7 +34,7 @@
 
 
 @if ( $users && $users->count() )
-  <div class="form-group">
+  <div class="form-group" v-if="type!=2 && type!=3">
     {{ Form::label("user_id", "Mitarbeiter", ["class"=> "d-block"]) }}
     <select name="user_id" id="user_id" class="form-control d-block" v-model="user_id" @change="adminGetUserData">
       <option value="">---</option>
@@ -39,16 +49,6 @@
     </div>
   </div>
 @endif
-
-
-<div class="form-group">
-  {{ Form::label("type", "Terminart", ["class"=> "d-block is-required"]) }}
-  <select name="type" id="type" class="form-control d-block" v-model="type" @change="presetTimes">
-    @foreach( config("appointment.type") as $item )
-      <option value="{{ $item["id"] }}">{{ $item["text"] }}</option>
-    @endforeach
-  </select>
-</div>
 
 
 <div class="form-group">

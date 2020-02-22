@@ -19,6 +19,12 @@ class Appointment extends Model
   }
 
 
+  public function userEmail()
+  {
+    return ( is_object($this->user) && isset($this->user->email) && $this->user->email ) ? $this->user->email : null;
+  }
+
+
   public function location()
   {
     return $this->belongsTo("App\Location");
@@ -241,6 +247,7 @@ class Appointment extends Model
 
   public function scopeDateFromBetween( $query, $from, $to )
   {
+    $to = $to." ".config("appointment.day_end");
     return $query->whereBetween('date_from', [$from, $to]);
   }
 

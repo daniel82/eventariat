@@ -30,11 +30,11 @@ class AppointmentApiRepository
       //   $message .=  sprintf( " Benachrichtiung an: %s", $appointment->user->email );
       // }
 
-      if ( $appointment->user->email )
+      if ( $email = $appointment->userEmail() )
       {
-        if ( $this->maybeTriggerEvent($request, $appointment, "saved") && is_object($appointment->user) )
+        if ( $this->maybeTriggerEvent($request, $appointment, "saved") )
         {
-          $message .=  sprintf(" Benachrichtiung an: %s", $appointment->user->email);
+          $message .=  sprintf(" Benachrichtiung an: %s", $email);
         }
       }
       else
@@ -61,13 +61,13 @@ class AppointmentApiRepository
     if ( $saved && $appointment->id && is_numeric($appointment->id) )
     {
       $message = "Termin wurde aktualisiert.";
-      Log::debug($appointment->user->email);
 
-      if ( $appointment->user->email )
+
+      if ( $email = $appointment->userEmail() )
       {
-        if ( $this->maybeTriggerEvent($request, $appointment, "saved") && is_object($appointment->user) )
+        if ( $this->maybeTriggerEvent($request, $appointment, "saved") )
         {
-          $message .=  sprintf(" Benachrichtiung an: %s", $appointment->user->email);
+          $message .=  sprintf(" Benachrichtiung an: %s", $email );
         }
       }
       else
@@ -114,11 +114,11 @@ class AppointmentApiRepository
     $appointment = Appointment::findOrFail($appointment_id);
 
     $message = "Termin wurde entfernt";
-    if ( $appointment->user->email )
+    if ( $email = $appointment->userEmail() )
     {
-      if ( $this->maybeTriggerEvent($request, $appointment, "destroyed") && is_object($appointment->user) )
+      if ( $this->maybeTriggerEvent($request, $appointment, "destroyed") )
       {
-        $message .=  sprintf(" Benachrichtiung an: %s", $appointment->user->email);
+        $message .=  sprintf(" Benachrichtiung an: %s", $email);
       }
     }
     else
