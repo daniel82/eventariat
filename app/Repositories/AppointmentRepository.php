@@ -28,7 +28,28 @@ class AppointmentRepository
     $yr->getForecast($data["today"]);
 
     $data["user"]       = \Auth::user();
-    $data["users"]      = ( $data["user"]->can_see_other_appointments ) ? User::all() : collect([$data["user"]]);
+    // $data["users"]      = ( $data["user"]->can_see_other_appointments ) ? User::orderBy("employment")->orderBy("first_name")->get() : collect([$data["user"]]);
+    $data["users"] = collect();
+    $data["employment_types"] = config("users.employment");
+
+    if ( !$data["user"]->can_see_other_appointments  )
+    {
+      $data["users"][ $data["user"]->employment ]  = collect([$data["user"]]);
+    }
+    else
+    {
+      foreach ( $data["employment_types"] as $employment => $title)
+      {
+
+        if ( $items = User::where("employment",$employment)->orderBy("first_name")->get() )
+        {
+          $data["users"][$employment] = $items;
+        }
+
+      }
+    }
+
+
 
   // [ "id" => 4, "text"=>"Arbeit" ],
   // [ "id" => 1, "text"=>"Urlaub" ],
@@ -88,7 +109,9 @@ class AppointmentRepository
     $data["appointment_types"]   = config("appointment.type");
 
 
-    $data["hours"]   = getHours();
+    $data["from_hours"]   = getHours("from");
+    $data["to_hours"]   = getHours("to");
+
 
     return $data;
   }

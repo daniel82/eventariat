@@ -20,9 +20,12 @@ return [
     ],
 
 
-    'employment' => [
-        'free' => 'Pauschalist',
-        'permanent' => 'Festanstellung',
+    'employment' =>
+    [
+        'permanent'    => 'Festanstellung',
+        'free'         => 'Pauschalist',
+        'training'     => 'Ausbildung',
+        'traineeship'  => 'Praktikant',
     ],
 
 
@@ -41,7 +44,7 @@ return [
         'fewo_dates' => 'FeWo',
         'leave_days' => 'Urlaub',
         'work'       => 'Arbeit',
-        'private_dates' => 'Termin',
+        'private_dates' => 'Privater Termin',
         'sick' => 'Krank',
     ],
 

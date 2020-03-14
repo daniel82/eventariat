@@ -38,8 +38,12 @@
     {{ Form::label("user_id", "Mitarbeiter", ["class"=> "d-block"]) }}
     <select name="user_id" id="user_id" class="form-control d-block" v-model="user_id" @change="adminGetUserData">
       <option value="">---</option>
-      @foreach( $users as $item )
-        <option value="{{ $item->id }}">{{ $item->getCalendarName() }}</option>
+      @foreach( $users as $employment => $items )
+        <optgroup label="{{ $employment_types[$employment] }}">
+          @foreach( $items as $key => $item )
+            <option value="{{ $item->id }}">{{ $item->first_name }} {{ $item->last_name }}</option>
+          @endforeach
+        </optgroup>
       @endforeach
     </select>
 
@@ -63,7 +67,7 @@
       ])
     }}
 
-    {{ Form::select("time_from", $hours, null,
+    {{ Form::select("time_from", $from_hours, null,
       [
         "class"    => "form-control ev-date-field ml-3",
         "v-model"  => "time_from",
@@ -86,7 +90,7 @@
       }}
 
       {{
-        Form::select("time2_to", $hours, null,
+        Form::select("time2_to", $to_hours, null,
           [
             "class"    =>"form-control ev-date-field  ml-3",
             "v-model"  =>"time_to",

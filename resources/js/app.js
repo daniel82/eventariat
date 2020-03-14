@@ -398,9 +398,32 @@ function startCalendarApp()
         this.adminGetUserData();
       },
 
+      increaseDateTo : function()
+      {
+        let to_date = new Date(this.apt_date_to);
+        let time_ms = to_date.getTime();
+
+        // add 1 day
+        to_date.setTime( time_ms+(60*60*24*1000) );
+
+        let day = to_date.getDate();
+        let month = to_date.getMonth()+1;
+        day = (day<10) ? "0"+day : day;
+        month = (month<10) ? "0"+month : month;
+        this.apt_date_to = to_date.getFullYear()+"-"+month+"-"+day;
+      },
+
+
       validateTimes : function ()
       {
-        if ( this.time_from && !this.time_to || this.time_from && this.time_to &&  this.time_from  > this.time_to )
+
+        if ( this.time_to === "24:00")
+        {
+          this.increaseDateTo();
+          this.time_to = "00:00";
+        }
+
+        if ( this.time_from && !this.time_to || this.time_from && this.time_to && this.time_from > this.time_to && this.apt_date_from == this.apt_date_to )
         {
           this.time_to = this.time_from;
         }
@@ -683,6 +706,19 @@ function startCalendarApp()
 
         this.adminGetUserData( this.user_id, this.apt_date_from );
         this.updateItems();
+
+
+        if ( this.message_type === "alert-success" )
+        {
+          this.hideLayer(null, true);
+        }
+
+      },
+
+
+      messageFadeOut : function()
+      {
+        this.message = null;
       },
 
 
@@ -722,12 +758,20 @@ function startCalendarApp()
       {
         this.showLayer = (this.showLayer) ? false : true;
         this.actions_toggled=false;
+
       },
 
-      hideLayer : function( event )
+      hideLayer : function( event, force )
       {
-        if ( typeof event.target.id !== "undefined" && event.target.id === "ev-layer")
+        let force_hide = (typeof force === "boolean" && force === true) ? true : false;
+        if ( force_hide )
         {
+          this.toggleLayer();
+          setTimeout( this.messageFadeOut, 2000 );
+        }
+        else if ( typeof event.target.id !== "undefined" && event.target.id === "ev-layer" )
+        {
+          this.messageFadeOut();
           this.toggleLayer();
         }
       },

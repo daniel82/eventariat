@@ -6,6 +6,9 @@
   <script>group = null;</script>
   <script>ev_app_data = {!! json_encode($ev_app_data) !!}</script>
   <div id="ev-calendar-app" >
+    <div class="message-box">
+      <div class="ev-alert p-3 " :class="message_type" v-if="message && message_type">@{{ message }}</div>
+    </div>
 
     @if ( $user->isAdmin() )
       <div class="text-right">

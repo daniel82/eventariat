@@ -28,7 +28,7 @@ if ( !function_exists("isSelected") )
 
 if ( !function_exists("getHours") )
 {
-  function getHours()
+  function getHours( $type="from")
   {
     $hours = collect();
     $hours->put( "" , "---" );
@@ -43,7 +43,11 @@ if ( !function_exists("getHours") )
       }
     }
 
-    $hours->put( "23:59" , "23:59" );
+    if ( $type === "to")
+    {
+      $hours->put( "23:59" , "23:59" );
+      $hours->put( "24:00" , "24:00" );
+    }
 
     return $hours;
   }

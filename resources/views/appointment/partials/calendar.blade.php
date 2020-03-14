@@ -13,7 +13,7 @@
 
       <div class="appointment-col__items ">
 
-        <div v-if="col.appointments.length">
+        <div v-if="typeof col.appointments==='object' ">
           <div  v-for="(appointment, key) in col.appointments" class="ev-appointment " :class="appointment.type_class" >
 
             <span v-if="isNewLocation(appointment.location_id, date)" class="mt-2 font-weight-bold" :class="locationClass(appointment.location_id)">@{{ appointment.tooltip_location }}</span>

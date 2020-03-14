@@ -137,7 +137,8 @@ class AppointmentExport
     {
       $leave_days = Appointment::leaveDays()
                     ->userIds($user_ids)
-                    ->dateFromBetween($date_from, $date_to)
+                    // ->dateFromBetween($date_from, $date_to)
+                    ->period($date_from, $date_to)
                     ->orderBy("date_from", "ASC")
                     ->orderBy("user_id", "ASC")->get();
     }
@@ -197,6 +198,23 @@ class AppointmentExport
       if ( $leave_dates && $leave_dates->count() )
       {
         $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->leaveDayAppointmentsToJson( $leave_dates) );
+      }
+
+
+      // Freier Tag
+      if ( $this->includeType(6) )
+      {
+        $appointments = Appointment::free()
+                        ->userIds($user_ids)
+                        ->dateFrom($the_date)
+                        ->orderBy("date_from", "ASC")
+                        ->orderBy("user_id", "ASC")
+                        ->get();
+
+        if ( $appointments )
+        {
+          $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->freeAppointmentsToJson($appointments) );
+        }
       }
 
 
@@ -287,9 +305,6 @@ class AppointmentExport
       }
 
 
-
-
-
       if ( !$user->can_see_other_appointments )
       {
         $user_ids  = [$user->id];
@@ -313,23 +328,6 @@ class AppointmentExport
         }
       }
 
-
-      // Freier Tag
-      if ( $this->includeType(6) )
-      {
-        $appointments = Appointment::free()
-                        ->userIds($user_ids)
-                        ->dateFrom($the_date)
-                        ->orderBy("date_from", "ASC")
-                        ->orderBy("user_id", "ASC")
-                        ->get();
-
-        if ( $appointments )
-        {
-          $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->freeAppointmentsToJson($appointments) );
-        }
-      }
-
     }
 
 
@@ -345,7 +343,10 @@ class AppointmentExport
           if ( $location_ids->count() )
           {
             // delete all where location id not in
-            $date_data["appointments"] = $date_data["appointments"]->whereIn("location_id", $location_ids);
+            $date_data["appointments"] = $date_data["appointments"]->filter( function ($a, $key) use ($location_ids)
+                                        {
+                                          return ($a["type"] != 4 || $a["type"] == 4 && $location_ids->contains($a["location_id"]) );
+                                        });
           }
           else
           {
