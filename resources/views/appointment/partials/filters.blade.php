@@ -28,7 +28,12 @@
   </div>
 
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-10">
+      <div class="text-center">
+        <h3 class="m-0 pt-2">@{{date_from_hr}} - @{{date_to_hr}}</h3>
+      </div>
+    </div>
+    <div class="col-md-2">
       <div class="ev-calendar-nav ">
         <button class="btn btn-secondary" @click="prevMonth()"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
         <button class="btn btn-secondary btn-today" @click="thisWeek()">Heute</button>

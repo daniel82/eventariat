@@ -294,10 +294,12 @@ function startCalendarApp()
         // _log("updateItems_ajaxCallback");
         if ( typeof response === "object" )
         {
-          this.items     = response.items;
-          this.date_from = response.date_from;
-          this.date_to   = response.date_to;
-          this.weeks     = response.weeks;
+          this.items        = response.items;
+          this.date_from    = response.date_from;
+          this.date_to      = response.date_to;
+          this.date_from_hr = response.date_from_hr;
+          this.date_to_hr   = response.date_to_hr;
+          this.weeks        = response.weeks;
 
           $(function () {
             $('[data-toggle="popover"]').popover()
@@ -362,6 +364,11 @@ function startCalendarApp()
         return (type === "leave-day" );
       },
 
+      isSchoolDay : function (type)
+      {
+        return (type === "school-day" );
+      },
+
       isFreeDay : function (type)
       {
         return (type === "free-day" );
@@ -412,7 +419,6 @@ function startCalendarApp()
         month = (month<10) ? "0"+month : month;
         this.apt_date_to = to_date.getFullYear()+"-"+month+"-"+day;
       },
-
 
       validateTimes : function ()
       {

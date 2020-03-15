@@ -237,6 +237,11 @@ class Appointment extends Model
     return $query->whereType(7);
   }
 
+  public function scopeSchool( $query )
+  {
+    return $query->whereType(8);
+  }
+
 
 
   public function scopeNoLocation( $query )

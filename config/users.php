@@ -39,13 +39,15 @@ return [
 
     'appointment_types' =>
     [
-        'birthdates' => 'Geburtstage',
-        'events'     => 'Ereignisse',
-        'fewo_dates' => 'FeWo',
-        'leave_days' => 'Urlaub',
-        'work'       => 'Arbeit',
-        'private_dates' => 'Privater Termin',
-        'sick' => 'Krank',
+        'birthdates'     => 'Geburtstage',
+        'events'         => 'Ereignisse',
+        'fewo_dates'     => 'FeWo',
+        'leave_days'     => 'Urlaub',
+        'free_days'      => 'Frei',
+        'work'           => 'Arbeit',
+        'private_dates'  => 'Privater Termin',
+        'sick'           => 'Krank',
+        'school'         => 'Berufsschule',
     ],
 
 

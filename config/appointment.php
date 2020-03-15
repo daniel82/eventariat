@@ -14,6 +14,7 @@ return [
         [ "id" => 5, "text"=>"Termin"],
         [ "id" => 6, "text"=>"Frei"],
         [ "id" => 7, "text"=>"Krank"],
+        [ "id" => 8, "text"=>"Berufsschule"],
 
     ],
 

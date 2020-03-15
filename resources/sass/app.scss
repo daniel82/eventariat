@@ -16,6 +16,17 @@
 @import 'shift-request';
 @import 'admin';
 
+
+body
+{
+  padding-top: 130px;
+
+  @media(max-width: $screen-md)
+  {
+    padding-top: 180px;
+  }
+}
+
 .ev-color-square
 {
    width:20px;

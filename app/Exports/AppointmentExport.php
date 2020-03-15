@@ -34,6 +34,7 @@ class AppointmentExport
   {
     $date_from      = $request->get("date_from" );
     $date_to        = $request->get("date_to");
+
     $user_ids       = $request->get("users");
     $location_ids   = $request->get("locations");
     $this->type_ids = $request->get("types", []);
@@ -95,6 +96,8 @@ class AppointmentExport
     [
       "date_from" => $date_from,
       "date_to"   => $date_to,
+      "date_from_hr" => formatDate($date_from, "d.m.Y"),
+      "date_to_hr"   => formatDate($date_to, "d.m.Y"),
       "items"     => [],
       "weeks"     => []
     ];
@@ -144,6 +147,32 @@ class AppointmentExport
     }
 
 
+    $school_days = collect();
+    if ( $user->canSee("school") && $this->includeType(8) )
+    {
+
+      $school_days = Appointment::school()
+                    ->userIds($user_ids)
+                    // ->dateFromBetween($date_from, $date_to)
+                    ->period($date_from, $date_to)
+                    ->orderBy("date_from", "ASC")
+                    ->orderBy("user_id", "ASC")->get();
+    }
+
+
+
+    $free_days = collect();
+    if ( $user->canSee("free_days") && $this->includeType(6) )
+    {
+      $free_days = Appointment::free()
+                    ->userIds($user_ids)
+                    // ->dateFromBetween($date_from, $date_to)
+                    ->period($date_from, $date_to)
+                    ->orderBy("date_from", "ASC")
+                    ->orderBy("user_id", "ASC")->get();
+    }
+
+
     $private_dates = collect();
     if ( $user->canSee("private_dates") && $this->includeType(5) )
     {
@@ -181,7 +210,7 @@ class AppointmentExport
       $the_date_start         = $date->format("Y-m-d")." 00:00:00";
       $the_date_end           = $date->format("Y-m-d")." 24:00:00";
 
-      $items[$the_date]["date"]         = $date->isoFormat('dd. D.M');
+      $items[$the_date]["date"]         = $date->isoFormat('dd. D.M.');
       $items[$the_date]["appointments"] = collect();
 
       $week                             = $date->week();
@@ -201,26 +230,25 @@ class AppointmentExport
       }
 
 
-      // Freier Tag
-      if ( $this->includeType(6) )
+      $school_dates = $school_days->filter(function ($appointment, $key) use($the_date, $the_date_start)
       {
-        $appointments = Appointment::free()
-                        ->userIds($user_ids)
-                        ->dateFrom($the_date)
-                        ->orderBy("date_from", "ASC")
-                        ->orderBy("user_id", "ASC")
-                        ->get();
-
-        if ( $appointments )
-        {
-          $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->freeAppointmentsToJson($appointments) );
-        }
+        return ( formatDate($appointment->date_from, $format = "Y-m-d") <= $the_date && $appointment->date_to >= $the_date);
+      });
+      if ( $school_dates && $school_dates->count() )
+      {
+        // dump($the_date);
+        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->schoolDayAppointmentsToJson($school_dates) );
       }
 
 
-
-      // Ereignisse ohne Lokalitaet
-      //
+      $free_dates = $free_days->filter(function ($appointment, $key) use($the_date, $the_date_start)
+      {
+        return (  formatDate($appointment->date_from, $format = "Y-m-d") <= $the_date && $appointment->date_to >= $the_date);
+      });
+      if ( $free_dates && $free_dates->count() )
+      {
+        $items[$the_date]["appointments"] = $items[$the_date]["appointments"]->merge( $this->freeAppointmentsToJson( $free_dates) );
+      }
 
 
       $event_dates = $top_events->filter(function ($appointment, $key) use($the_date_start, $the_date)
@@ -468,6 +496,36 @@ class AppointmentExport
       [
         "id"             => $appointment->id,
         "type_class"     => "leave-day",
+        "date_from"      => formatDate( $appointment->date_from, $format="Y-m-d" ),
+        "time_from"      => formatDate( $appointment->date_from, $format="H:i" ),
+        "date_to"        => formatDate( $appointment->date_to, $format="Y-m-d" ),
+        "time_to"        => formatDate( $appointment->date_to, $format="H:i" ),
+        "title"          => $title,
+        "description"    => null,
+        "location_id"    => null,
+        "user_id"        => $appointment->user_id,
+        "type"           => $appointment->type,
+        "type_text"      => $appointment->getTypeHumanReadable(),
+        "note"           => $appointment->note,
+      ];
+    }
+
+    return $items;
+  }
+
+
+  public function schoolDayAppointmentsToJson( $appointments )
+  {
+    $items = [];
+
+    foreach ($appointments as $key => $appointment)
+    {
+      $title = ($appointment->user ) ? $appointment->user->getCalendarName() : null;
+
+      $items[] =
+      [
+        "id"             => $appointment->id,
+        "type_class"     => "school-day",
         "date_from"      => formatDate( $appointment->date_from, $format="Y-m-d" ),
         "time_from"      => formatDate( $appointment->date_from, $format="H:i" ),
         "date_to"        => formatDate( $appointment->date_to, $format="Y-m-d" ),

@@ -1,4 +1,4 @@
-<div class="bg-black">
+<div class="bg-black fixed-header">
   <div class="container">
 
     <div class="row">
