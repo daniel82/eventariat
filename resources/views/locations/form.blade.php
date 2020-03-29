@@ -1,37 +1,27 @@
-<div class="form-group">
-    {{ Form::label("name", "Name", ["class" => "is-required"])}}
-    {{Form::text("name", $object->name, ["class" => "form-control", "required" => "required" ] )}}
+<ul class="nav nav-tabs" id="location-tabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Details</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="false">Mitarbeiter</a>
+  </li>
+
+</ul>
+
+
+<div class="tab-content" id="locationTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+      @include("locations.form-fields")
+  </div>
+  <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+        @if ( $users = $object->users()->orderBy("first_name")->get() )
+            <ul class="list-group mt-3">
+                @foreach( $users as $user )
+                    <li class="list-group-item">
+                        <a class="d-block" href="{{ action("UserController@edit", $user->id) }}">{{ $user->first_name }} {{ $user->last_name }}</a>
+                    </li>
+                @endforeach
+            </ul>
+      @endif
+  </div>
 </div>
-
-
-<div class="form-group">
-    {{ Form::label("phone", "Festnetznummer", ["class" => ""])}}
-    {{Form::text("phone", $object->phone, ["class" => "form-control"] )}}
-</div>
-
-
-<div class="form-group">
-    {{ Form::label("street", "Stra&szlig;e", ["class" => ""])}}
-    {{Form::text("street", $object->street, ["class" => "form-control"] )}}
-</div>
-
-
-<div class="form-group">
-    {{ Form::label("zipcode", "PLZ", ["class" => ""])}}
-    {{Form::text("zipcode", $object->zipcode, ["class" => "form-control"] )}}
-</div>
-
-
-<div class="form-group">
-    {{ Form::label("city", "Ort", ["class" => ""])}}
-    {{Form::text("city", $object->city, ["class" => "form-control"] )}}
-</div>
-
-
-<div class="form-group">
-    {{ Form::label("color", "Farbe", ["class" => ""])}}
-    {{Form::text("color", $object->color, ["class" => "form-control", "id"=>"color" ] )}}
-
-</div>
-
-<div class="wheel" id="colorWheelDemo"></div>

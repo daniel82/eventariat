@@ -18,4 +18,10 @@ class Location extends Model
 
         'color',
     ];
+
+
+    public function users()
+    {
+        return $this->belongsToMany("App\User");
+    }
 }

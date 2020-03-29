@@ -43,6 +43,13 @@ class AppointmentExport
 
     $user = \Auth::user();
 
+    $user_locations = null;
+    if ( $user->isPermanent() )
+    {
+      $user_locations = $user->locations()->pluck("id");
+    }
+
+
     if ( $nav )
     {
       if ( $nav === "next" && $date_to )
@@ -368,11 +375,17 @@ class AppointmentExport
         {
           $location_ids = $date_data["appointments"]->where("user_id", $user->id)->where("type_class", "work")->pluck("location_id");
 
+          if ( $user_locations )
+          {
+            $location_ids = $location_ids->merge($user_locations);
+          }
+
           if ( $location_ids->count() )
           {
             // delete all where location id not in
             $date_data["appointments"] = $date_data["appointments"]->filter( function ($a, $key) use ($location_ids)
                                         {
+                                          // appointment type 4 = work
                                           return ($a["type"] != 4 || $a["type"] == 4 && $location_ids->contains($a["location_id"]) );
                                         });
           }

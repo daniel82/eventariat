@@ -56,7 +56,19 @@ docReady(function()
   startCalendarApp();
   startShiftRequestApp();
   startColorPicker();
+  startUser();
 });
+
+
+function startUser()
+{
+  const user_app = new Vue(
+  {
+    el: '#ev-user-app',
+    data: ev_app_data,
+  });
+}
+
 
 function startShiftRequestApp()
 {

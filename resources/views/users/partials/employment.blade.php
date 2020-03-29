@@ -21,5 +21,20 @@
 
 <div class="form-group">
     {{ Form::label("employment", "Anstellungsart", ["class" => ""])}}
-    {{Form::select("employment", config("users.employment"), $object->employment, ["class" => "form-control"] )}}
+    {{ Form::select("employment", config("users.employment"), $object->employment, ["class"=>"form-control", "v-model"=>"employment"] )}}
 </div>
+
+
+@if ( isset($locations) && count($locations) )
+    <div v-if="employment==='permanent' ">
+        <h5>Lokalit&auml;ten</h5>
+        <div class="d-flex justify-content-start flex-wrap">
+            @foreach( $locations as $location )
+                <div class="form-group w-50 " >
+                    {{ Form::checkbox("location_ids[]", $location->id, $user_locations->contains($location->id), ["id"=>"location-".$location->id] )}}
+                    {{ Form::label("location-".$location->id, $location->name )}}
+                </div>
+            @endforeach
+        </div>
+    </div>
+@endif

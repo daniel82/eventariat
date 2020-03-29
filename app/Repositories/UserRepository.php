@@ -4,18 +4,23 @@ namespace App\Repositories;
 
 use Illuminate\Http\Request;
 use App\Appointment;
+use App\Location;
 use App\ShiftRequest;
 use App\User;
 use Carbon\Carbon;
 
 class UserRepository
 {
+
   public function getFormData( User $user )
   {
     $data["object"] = $user;
     $data["appointment_types"] = ($user->appointment_types ) ? unserialize( $user->appointment_types ) : [];
 
     $data["leave_days"] = Appointment::leaveDays()->userIds([$user->id])->orderBy("date_from", "DESC")->get();
+    $data["locations"] = Location::all();
+    $data["user_locations"] = $user->locations()->pluck("id");
+    $data["ev_app_data"]["employment"] = $user->employment;
 
     foreach ( $data["leave_days"] as $key => $period )
     {
@@ -32,9 +37,17 @@ class UserRepository
       $item->type_hr = ( isset($types[$item->type]) ) ? $types[$item->type]["text"] : null;
     }
 
-    // dd($data["shift_requests"]);
 
     return $data;
+  }
+
+
+  public function syncTags( Request $request, User $user )
+  {
+    if ( $location_ids = $request->get("location_ids") )
+    {
+      $user->locations()->sync( $location_ids );
+    }
   }
 
 

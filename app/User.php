@@ -46,6 +46,12 @@ class User extends Authenticatable
     ];
 
 
+    public function locations()
+    {
+        return $this->belongsToMany("App\Location");
+    }
+
+
     public function setMobileAttribute( $value )
     {
         if ( trim($value) )
@@ -127,6 +133,12 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return ($this->role === "admin");
+    }
+
+
+    public function isPermanent()
+    {
+        return ($this->employment === "permanent");
     }
 
 

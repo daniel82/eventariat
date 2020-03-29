@@ -62,6 +62,7 @@ class UserController extends Controller
 
         $request = $this->userRepository->sanitizeRequest($request, $method="store");
         $user = User::create( $request->all() );
+        $this->userRepository->syncTags($request, $user);
 
         event( new \App\Events\UserCreatedEvent($user) );
         // dd( $request->all() );
@@ -106,6 +107,7 @@ class UserController extends Controller
         $request = $this->userRepository->sanitizeRequest($request);
 
         $user->update( $request->all() );
+        $this->userRepository->syncTags($request, $user);
 
         $message = "Mitarbeiter wurde aktualisiert";
 
