@@ -52,6 +52,14 @@
                      @csrf
                   </form>
                 </li>
+
+                @if ( isset($head["return_name"]) && isset($head["return_link"]) )
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ $head["return_link"] }}">
+                      <span class="nav-text"><i class="fa fa-sign-out" aria-hidden="true"></i> {{$head["return_name"]}}</span>
+                    </a>
+                  </li>
+                @endif
               </ul>
             </div>
           </nav>

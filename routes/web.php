@@ -52,6 +52,9 @@ Route::middleware([ "admin", "locale"])->group(function ()
 });
 
 
+Route::get('return-as/', "UserController@returnAs");
+
+
 
 Auth::routes(["register"=>false]);
 

@@ -9,27 +9,40 @@ class Yr
 
   public function __construct()
   {
-    $xml = file_get_contents("https://www.yr.no/place/Germany/Sachsen/Pirna/forecast.xml");
-    $this->json = $this->namespacedXMLToArray($xml);
+
+    $this->json = null;
+    try
+    {
+      $xml = file_get_contents("https://www.yr.no/place/Germany/Sachsen/Pirna/forecast.xml");
+      $this->json = $this->namespacedXMLToArray($xml);
+    }
+    catch(Exception $e)
+    {
+      // nothing
+    }
+
 
   }
 
   public function getForecast( $from_date )
   {
 
-    $times = $this->json["forecast"]["tabular"]["time"];
-
-    foreach ( $times as $key => $time)
+    if ( $this->json )
     {
-      if ( isset($time["@attributes"]["period"]) && $time["@attributes"]["period"] == 2 )
-      {
+      $times = $this->json["forecast"]["tabular"]["time"];
 
-        $date = date("Y-m-d",  strtotime($time["@attributes"]["from"]) );
-        $forecast = WeatherForecast::firstOrNew( ["date"=>$date] );
-        $forecast->date        = $date;
-        $forecast->icon        = str_replace(" ", "_", strtolower( $time["symbol"]["@attributes"]["name"] ) );
-        $forecast->temperature = $time["temperature"]["@attributes"]["value"];
-        $forecast->save();
+      foreach ( $times as $key => $time)
+      {
+        if ( isset($time["@attributes"]["period"]) && $time["@attributes"]["period"] == 2 )
+        {
+
+          $date = date("Y-m-d",  strtotime($time["@attributes"]["from"]) );
+          $forecast = WeatherForecast::firstOrNew( ["date"=>$date] );
+          $forecast->date        = $date;
+          $forecast->icon        = str_replace(" ", "_", strtolower( $time["symbol"]["@attributes"]["name"] ) );
+          $forecast->temperature = $time["temperature"]["@attributes"]["value"];
+          $forecast->save();
+        }
       }
     }
   }

@@ -128,6 +128,23 @@ class UserController extends Controller
         return redirect()->action('UserController@index')->with( "flash_message", $message );
     }
 
+
+    public function returnAs( Request $request )
+    {
+        if( isset($_COOKIE["return_to_admin"]) && is_numeric($_COOKIE["return_to_admin"]) )
+        {
+            $user_id = (int)$_COOKIE["return_to_admin"];
+            if ( $user = User::find($user_id) )
+            {
+                setcookie("return_to_admin", $user->id, time()-(1*60*60*24*30), "/");
+                \Auth::loginUsingId($user->id, true);
+            }
+        }
+
+        return redirect( "/dienstplan" );
+    }
+
+
     public function loginAs( Request $request )
     {
         $current_user = \Auth::user();
@@ -142,13 +159,14 @@ class UserController extends Controller
 
         if ( $login_user )
         {
-          \Auth::loginUsingId($user_id, true);
-
-          return redirect( "/dienstplan" );
+            setcookie("return_to_admin", $current_user->id, time()+(1*60*60), "/");
+            \Auth::loginUsingId($user_id, true);
+            return redirect( "/dienstplan" );
         }
-        else{
-          $message = sprintf("Benutzer nicht vorhanden oder keine Adminrechte" );
-          return redirect()->action('UserController@index')->with( "flash_message", $message );
+        else
+        {
+            $message = sprintf("Benutzer nicht vorhanden oder keine Adminrechte" );
+            return redirect()->action('UserController@index')->with( "flash_message", $message );
         }
       }
 
