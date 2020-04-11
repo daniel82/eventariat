@@ -10,8 +10,8 @@
     <div class="ev-checkboxes flex-wrap">
         @foreach( config("users.appointment_types") as $key  => $label )
             <div class="d-flex-item w-25">
-                {{ Form::checkbox("appointment_types[]", $key, in_array($key, $appointment_types), ["id" => $key ] ) }}
-                {{ Form::label($key, $label) }}
+                {{ Form::checkbox("appointment_types[]", $key, in_array($key, $appointment_types), ["id" => "type-".$key ] ) }}
+                {{ Form::label("type-".$key, $label) }}
             </div>
         @endforeach
     </div>
