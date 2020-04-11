@@ -26,7 +26,7 @@
 
 
 @if ( isset($locations) && count($locations) )
-    <div v-if="employment==='permanent' ">
+    <div v-if="employment==='permanent' || employment==='training'">
         <h5>Lokalit&auml;ten</h5>
         <div class="d-flex justify-content-start flex-wrap">
             @foreach( $locations as $location )

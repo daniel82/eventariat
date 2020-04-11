@@ -141,6 +141,11 @@ class User extends Authenticatable
         return ($this->employment === "permanent");
     }
 
+    public function isTraining()
+    {
+        return ($this->employment === "training");
+    }
+
 
     public static function current()
     {

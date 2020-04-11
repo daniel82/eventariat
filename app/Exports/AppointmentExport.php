@@ -44,7 +44,7 @@ class AppointmentExport
     $user = \Auth::user();
 
     $user_locations = null;
-    if ( $user->isPermanent() )
+    if ( $user->isPermanent() or $user->isTraining() )
     {
       $user_locations = $user->locations()->pluck("id");
     }
