@@ -62,6 +62,12 @@ docReady(function()
 
 function startUser()
 {
+
+  if( typeof ev_app_data === "undefined" )
+  {
+    return false;
+  }
+
   const user_app = new Vue(
   {
     el: '#ev-user-app',
