@@ -533,7 +533,7 @@ class AppointmentExport
 
     foreach ($appointments as $key => $appointment)
     {
-      $title = ($appointment->user ) ? $appointment->user->getCalendarName() : null;
+      $title = ($appointment->user) ? $appointment->user->getCalendarName() : null;
 
       $items[] =
       [
@@ -543,7 +543,7 @@ class AppointmentExport
         "time_from"      => formatDate( $appointment->date_from, $format="H:i" ),
         "date_to"        => formatDate( $appointment->date_to, $format="Y-m-d" ),
         "time_to"        => formatDate( $appointment->date_to, $format="H:i" ),
-        "title"          => $title,
+        "title"          => $title." (BS)",
         "description"    => null,
         "location_id"    => null,
         "user_id"        => $appointment->user_id,
