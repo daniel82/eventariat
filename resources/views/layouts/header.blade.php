@@ -3,7 +3,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <h1 class="ev-header__title">Dienstplan</h1>
+        <h1 class="ev-header__title"><a href="/" class="color-white">Dienstplan</a></h1>
       </div>
 
       @if ( isset($head["user"]) && is_object($head["user"]) )

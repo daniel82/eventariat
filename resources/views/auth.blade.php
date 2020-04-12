@@ -14,17 +14,16 @@
             @include("layouts.header")
 
             <div class="container">
-                <div class="content py-5">
-                    <div class="row">
+                <div class="content">
+                    <div class="row justify-content-center">
                         <div class="col-md-8">
                             @include("admin.messages.errors")
                             @include("admin.messages.flash")
                         </div>
                     </div>
-
-                    @yield('content')
                 </div>
             </div>
+            @yield('content')
         </div>
     </body>
 </html>

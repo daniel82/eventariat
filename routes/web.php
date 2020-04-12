@@ -15,8 +15,6 @@ Route::get('/', function () {
   return redirect( "/dienstplan" );
 });
 
-Route::get('/test', "WatchController@test" );
-
 
 Route::middleware([ "auth", "locale"])->group(function ()
 {
@@ -56,7 +54,11 @@ Route::get('return-as/', "UserController@returnAs");
 
 
 
-Auth::routes(["register"=>false]);
+Route::middleware(["locale"])->group(function ()
+{
+  Auth::routes(["register"=>false]);
+}
+);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
