@@ -32,11 +32,11 @@ class UserRepository
   public function getFormData( User $user )
   {
     $data["object"] = $user;
-    $data["appointment_types"] = ($user->appointment_types ) ? unserialize( $user->appointment_types ) : [];
+    $data["appointment_types"] = $user->appointment_types;
 
-    $data["leave_days"] = Appointment::leaveDays()->userIds([$user->id])->orderBy("date_from", "DESC")->get();
-    $data["locations"] = Location::all();
-    $data["user_locations"] = $user->locations()->pluck("id");
+    $data["leave_days"]      = Appointment::leaveDays()->userIds([$user->id])->orderBy("date_from", "DESC")->get();
+    $data["locations"]       = Location::all();
+    $data["user_locations"]  = $user->locations()->pluck("id");
     $data["ev_app_data"]["employment"] = $user->employment;
 
     foreach ( $data["leave_days"] as $key => $appointment )
