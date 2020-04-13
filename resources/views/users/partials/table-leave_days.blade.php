@@ -3,7 +3,8 @@
         <tr>
             <th>Vom</th>
             <th>bis</th>
-            <th>Tage</th>
+            <th><span class="d-none d-sm-block">Urlaubstage</span> <span class="d-block d-sm-none">Urlaub</span></th>
+            <th><span class="d-none d-sm-block">Gesamt</span> <span class="d-block d-sm-none">Gesamt</span></th>
         </tr>
     </thead>
 
@@ -12,7 +13,8 @@
             <tr>
                 <td>{{ formatDate( $appointment->date_from, "d.m.Y") }}</td>
                 <td>{{ formatDate( $appointment->date_to, "d.m.Y") }}</td>
-                <td>{{ $appointment->diffInDays }}</td>
+                <td>{{ $appointment->diffInDaysNetto }} T.</td>
+                <td>{{ $appointment->diffInDays }} T.</td>
             </tr>
         @endforeach
     </tbody>

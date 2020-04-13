@@ -11,6 +11,23 @@ use Carbon\Carbon;
 
 class UserRepository
 {
+  public function diffInDaysNetto( int $diffInDays )
+  {
+
+    $netto_days = config("appointment.weekend_map");
+
+    $diffInDays_netto = $diffInDays;
+    foreach ($netto_days as $key => $value)
+    {
+      if ( $diffInDays >= $value["days"] )
+      {
+        $diffInDays_netto = $diffInDays - $value["weekend"];
+      }
+    }
+
+    return $diffInDays_netto;
+  }
+
 
   public function getFormData( User $user )
   {
@@ -22,11 +39,16 @@ class UserRepository
     $data["user_locations"] = $user->locations()->pluck("id");
     $data["ev_app_data"]["employment"] = $user->employment;
 
-    foreach ( $data["leave_days"] as $key => $period )
+    foreach ( $data["leave_days"] as $key => $appointment )
     {
-      $date1 = Carbon::create($period->date_from);
-      $date2 = Carbon::create($period->date_to);
-      $period->diffInDays = ($date1->diffInDays($date2)+1);
+      $date1 = Carbon::create($appointment->date_from);
+      $date2 = Carbon::create($appointment->date_to);
+
+      $diffInDays = ($date1->diffInDays($date2)+1);
+
+      $appointment->diffInDays       = $diffInDays;
+      $appointment->diffInDaysNetto  = $this->diffInDaysNetto($diffInDays);
+
     }
 
     $data["shift_requests"] = $user->shiftRequests;

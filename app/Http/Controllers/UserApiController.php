@@ -41,7 +41,7 @@ class UserApiController extends Controller
 
             $user = User::find($id);
 
-            $data["leave_days"]          = $user->leave_days;
+            $data["leave_days"]          = $user->leave_days; // disposible leave days
             $data["hours_of_work"]       = $user->hours_of_work;
             $data["leave_days_intended"] = 0;
             $data["work_load_this_week"] = 0;
@@ -61,13 +61,15 @@ class UserApiController extends Controller
                     $date_to = Carbon::create($holiday->date_to);
                     // $diff = $date_from->diffInDays($date_to);
 
+
+                    // only leave days of current year
                     $diff = $date_from->diffInDaysFiltered(function(Carbon $date) use($year)
                     {
                        return ($date->year == $year);
                     }, $date_to);
 
 
-                    $data["leave_days_intended"] += ($diff);
+                    $data["leave_days_intended"] += $this->userRepository->diffInDaysNetto($diff);
                 }
             }
 

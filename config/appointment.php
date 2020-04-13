@@ -18,4 +18,17 @@ return [
 
     ],
 
+    'weekend_map' =>
+    [
+        [ "days"=>6, "weekend"=>1 ],
+        [ "days"=>7, "weekend"=>2 ],
+        [ "days"=>13, "weekend"=>3 ],
+        [ "days"=>14, "weekend"=>4 ],
+        [ "days"=>20, "weekend"=>5 ],
+        [ "days"=>21, "weekend"=>6 ],
+        [ "days"=>27, "weekend"=>7 ],
+        [ "days"=>28, "weekend"=>8 ],
+    ]
+
 ];
+
