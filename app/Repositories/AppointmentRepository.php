@@ -32,31 +32,24 @@ class AppointmentRepository
     $data["users"] = collect();
     $data["employment_types"] = config("users.employment");
 
+    // if user can not see other appointmens
     if ( !$data["user"]->can_see_other_appointments  )
     {
+      // set only this user to users list
       $data["users"][ $data["user"]->employment ]  = collect([$data["user"]]);
     }
     else
     {
+      // get all users ordered dy employment
       foreach ( $data["employment_types"] as $employment => $title)
       {
-
         if ( $items = User::where("employment",$employment)->orderBy("first_name")->get() )
         {
           $data["users"][$employment] = $items;
         }
-
       }
     }
 
-
-
-  // [ "id" => 4, "text"=>"Arbeit" ],
-  // [ "id" => 1, "text"=>"Urlaub" ],
-  // [ "id" => 2, "text"=>"Ereignis"],
-  // [ "id" => 3, "text"=>"Ferienwohnung"],
-  // // [ "id" => 5, "text"=>"Sonstiges"],
-  // [ "id" => 6, "text"=>"Frei"],
 
     $data["ev_app_data"] =
     [
@@ -69,7 +62,7 @@ class AppointmentRepository
       "today"           => $data["today"],
       "location_ids"    => [],
       "appointment_types"=> [1,2,4,5,6,7,8],
-      "user_ids"        => ($data["users"]->count() === 1) ? [$data["users"]->first()->id] : [],
+      "user_ids"        => ($data["users"]->count() === 1) ? [$data["user"]->id] : [],
       "items"           => [],
       "busy"            => "",
       "actions_toggled" => false,
