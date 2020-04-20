@@ -101,7 +101,7 @@ class UserRepository
     {
       return bcrypt($new_password);
     }
-    elseif ( !$password && $method === "store" )
+    elseif ( !$password && $method === "store" or $request->get("new_password") )
     {
       return bcrypt( User::makeDefaultPassword( $request->get("last_name") ) );
     }

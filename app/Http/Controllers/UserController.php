@@ -111,6 +111,13 @@ class UserController extends Controller
 
         $message = "Mitarbeiter wurde aktualisiert";
 
+        if ( $request->get("new_password") && $user->id != \Auth::user()->id )
+        {
+            event( new \App\Events\UserCreatedEvent($user) );
+            $message .= " und neues Passwort versendet";
+        }
+
+
         return redirect()->action('UserController@edit', ['id' => $user->id ])->with( "flash_message", $message );
     }
 

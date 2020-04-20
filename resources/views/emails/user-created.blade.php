@@ -1,6 +1,6 @@
 @component('mail::message')
 
-# Neues Konto
+# Deine Zugangsdaten
 
 
 <table>

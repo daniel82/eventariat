@@ -34,7 +34,7 @@ class UserCreatedListener
         {
             $email = $event->user->email;
             Log::info("send notification to: ".$email );
-            Mail::to($email)->send( new \App\Mail\NewUserCreatedMail( $event->user ) );
+            Mail::to($email)->send( new \App\Mail\NewUserCreatedMail($event->user) );
         }
         else
         {

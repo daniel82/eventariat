@@ -33,7 +33,7 @@ class NewUserCreatedMail extends Mailable
      */
     public function build()
     {
-      $subject = "Dienstplan Pirna: Neues Konto erstellt";
+      $subject = "Dienstplan Pirna: Zugangsdaten";
       return $this->subject($subject)->markdown('emails.user-created');
     }
 }
