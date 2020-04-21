@@ -105,8 +105,17 @@ class User extends Authenticatable
 
   public function scopeBirthdate( $query, $from, $to=null )
   {
-    $from = ( $from > 12 ) ? $from : 1;
-    return $query->whereRaw( 'extract(month from birthdate) >= ? AND extract(month from birthdate) <= ?  ', [$from, $to] );
+    $from = ( $from > 1 ) ? $from : 1;
+
+    if ( $to > $from )
+    {
+      return $query->whereRaw( 'extract(month from birthdate) >= ? AND extract(month from birthdate) <= ?  ', [$from, $to] );
+    }
+    else
+    {
+      return $query->whereRaw( 'extract(month from birthdate) >= ? OR extract(month from birthdate) <= ?  ', [$from, $to] );
+    }
+
   }
 
 

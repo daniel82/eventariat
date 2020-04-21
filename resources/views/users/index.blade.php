@@ -16,6 +16,7 @@
           <th>Rolle</th>
           <th>Mobilnr</th>
           <th>E-Mail</th>
+          <th>Geburtstag</th>
           <th></th>
         </tr>
       </thead>
@@ -44,6 +45,7 @@
                 <span>Keine E-Mail eingetragen</span>
               @endif
             </td>
+            <td>{{ $item->birthdate }}</td>
 
             <td class="ev-action-col">
                 @include("admin.common.delete-button", ["controller" => "UserController", "object" => $item])
