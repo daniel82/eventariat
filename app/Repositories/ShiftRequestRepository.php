@@ -68,7 +68,8 @@ class ShiftRequestRepository
     {
         $data["object"] = $shiftRequest;
         $data["today"] = date("Y-m-d");
-        $data["user"] = \Auth::user();
+
+        $data["user"] = ( is_object($shiftRequest->user) ) ? $shiftRequest->user : \Auth::user();
 
         $data["hours"]   = getHours();
 

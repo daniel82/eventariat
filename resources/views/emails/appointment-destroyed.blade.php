@@ -1,6 +1,6 @@
 @component('mail::message')
 
-# Termin geklöscht
+# Termin gelöscht
 
 
 <table>
