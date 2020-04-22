@@ -117,6 +117,7 @@
     min-height: 0px;
   }
 
+
   .event
   {
     background: #9B1B30;
@@ -158,6 +159,15 @@
       color: white;
     }
   }
+
+  .private
+  {
+    a,button,span
+    {
+      color: #cc0000;
+    }
+  }
+
 }
 
 .appointment-col__new-item
