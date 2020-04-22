@@ -30,7 +30,7 @@ class ShiftRequestCreatedListener
      */
     public function handle( ShiftRequestCreatedEvent $event )
     {
-        $email = "info@canaletto-pirna.de";
+        $email = "claudia@schloss-pirna.de";
         Log::info("send notification to: ".$email );
         Mail::to($email)->send( new \App\Mail\ShiftRequestCreatedMail($event->shiftRequest) );
     }
