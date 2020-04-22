@@ -386,7 +386,15 @@ class AppointmentExport
             $date_data["appointments"] = $date_data["appointments"]->filter( function ($a, $key) use ($location_ids)
                                         {
                                           // appointment type 4 = work
-                                          return ($a["type"] != 4 || $a["type"] == 4 && $location_ids->contains($a["location_id"]) );
+                                          if ( isset($a["type"]) )
+                                          {
+                                            return ($a["type"] != 4 || $a["type"] == 4 && $location_ids->contains($a["location_id"]) );
+                                          }
+                                          else
+                                          {
+                                            return false;
+                                          }
+
                                         });
           }
           else
