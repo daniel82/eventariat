@@ -21,7 +21,7 @@
 
 <div class="form-group">
     {{ Form::label("employment", "Anstellungsart", ["class" => ""])}}
-    {{ Form::select("employment", config("users.employment"), $object->employment, ["class"=>"form-control", "v-model"=>"employment"] )}}
+    {{ Form::select("employment", config("users.employment"), $object->employment, ["class"=>"form-control", "v-model"=>"employment", "required"=>"required"] )}}
 </div>
 
 

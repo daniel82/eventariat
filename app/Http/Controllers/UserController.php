@@ -65,6 +65,7 @@ class UserController extends Controller
         $this->userRepository->syncTags($request, $user);
 
         event( new \App\Events\UserCreatedEvent($user) );
+
         // dd( $request->all() );
         $message = "Mitarbeiter wurde gespeichert";
 
@@ -111,7 +112,7 @@ class UserController extends Controller
 
         $message = "Mitarbeiter wurde aktualisiert";
 
-        if ( $request->get("new_password") && $user->id != \Auth::user()->id )
+        if ( $request->get("new_password") )
         {
             event( new \App\Events\UserCreatedEvent($user) );
             $message .= " und neues Passwort versendet (".$user->email.")";
