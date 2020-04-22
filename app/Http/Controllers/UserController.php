@@ -114,7 +114,7 @@ class UserController extends Controller
         if ( $request->get("new_password") && $user->id != \Auth::user()->id )
         {
             event( new \App\Events\UserCreatedEvent($user) );
-            $message .= " und neues Passwort versendet";
+            $message .= " und neues Passwort versendet (".$user->email.")";
         }
 
 
