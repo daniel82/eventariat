@@ -38,7 +38,7 @@ class UserCreatedListener
         }
         else
         {
-            Log::info("missing field email for user: ".$user->id);
+            Log::info("missing field email for user: ".$event->user->id);
         }
 
     }

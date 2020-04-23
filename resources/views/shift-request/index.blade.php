@@ -5,8 +5,6 @@
 
   @include("shift-request.partials.filters")
 
-
-
   @if (  $items->count() )
     <table class="table table-striped ev-admin-table">
       <thead>

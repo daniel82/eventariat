@@ -6,6 +6,8 @@
   <div class="text-right"><a href="{{ action("UserController@create") }}" class="ev-add-btn "><span class="d-none">Neuer Mitarbeiter</span><i class="fa fa-plus-circle" aria-hidden="true"></i>
 </a></div>
 
+@include("users.partials.filters")
+
   @if ( $items )
     <table class="table table-striped ev-admin-table">
       <thead>
@@ -48,8 +50,12 @@
             <td>{{ $item->birthdate }}</td>
 
             <td class="ev-action-col">
+              @if ( !$item->deleted_at )
                 @include("admin.common.delete-button", ["controller" => "UserController", "object" => $item])
                 <a href="/admin/login-as/?user_id={{$item->id}}" class="btn btn-warning" title="Anmelden als {{ $item->first_name }} {{ $item->last_name }}"><i class="fa fa-sign-in" aria-hidden="true"></i></a>
+              @else
+                @include("admin.common.restore-button", ["controller" => "UserController", "object" => $item])
+              @endif
             </td>
           </tr>
         @endforeach

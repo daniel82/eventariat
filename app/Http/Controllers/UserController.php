@@ -31,11 +31,29 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index( Request $request )
     {
-        $data["items"] = User::orderBy("first_name")->get();
+      $data["first_name"] = $request->get("first_name");
+      $data["last_name"]  = $request->get("last_name");
+      $data["email"]      = $request->get("email");
+      $data["trashed"]    = $request->get("trashed");
 
-        return view("users.index", $data );
+      $data["items"]      = User::where("id", ">", 0)
+                            ->when($data["first_name"], function($query) use ($data){
+                              return $query->where("first_name", "LIKE", "%".$data["first_name"]."%" );
+                            })
+                            ->when($data["last_name"], function($query) use ($data){
+                              return $query->where("last_name", "LIKE", "%".$data["last_name"]."%" );
+                            })
+                            ->when($data["email"], function($query) use ($data){
+                              return $query->where("email", "LIKE", "%".$data["email"]."%" );
+                            })
+                            ->when($data["trashed"], function($query) use ($data){
+                              return $query->withTrashed()->whereNotNull("deleted_at");
+                            })
+                            ->orderBy("first_name")->get();
+
+      return view("users.index", $data );
     }
 
     /**
@@ -59,17 +77,35 @@ class UserController extends Controller
      */
     public function store(Requests\CreateUser $request, User $user)
     {
+      $request = $this->userRepository->sanitizeRequest($request, $method="store");
+      $user = User::create( $request->all() );
+      $this->userRepository->syncTags($request, $user);
 
-        $request = $this->userRepository->sanitizeRequest($request, $method="store");
-        $user = User::create( $request->all() );
-        $this->userRepository->syncTags($request, $user);
+      event( new \App\Events\UserCreatedEvent($user) );
 
-        event( new \App\Events\UserCreatedEvent($user) );
+      // dd( $request->all() );
+      $message = "Mitarbeiter wurde gespeichert";
 
-        // dd( $request->all() );
-        $message = "Mitarbeiter wurde gespeichert";
+      return redirect()->action('UserController@edit', ['id' => $user->id ])->with( "flash_message", $message );
+    }
 
+
+    public function restore( Request $request )
+    {
+      $user_id = $request->get("user_id");
+
+      if ( $user = User::withTrashed()->find($user_id) )
+      {
+        $user->restore();
+        $message = "Mitarbeiter wurde wiederhergestellt";
         return redirect()->action('UserController@edit', ['id' => $user->id ])->with( "flash_message", $message );
+      }
+      else
+      {
+        $message = "Unbekannter Benutzer (".$user_id.")";
+        return redirect()->action('UserController@index')->with( "flash_message", $message );
+      }
+
     }
 
     /**
@@ -105,21 +141,30 @@ class UserController extends Controller
      */
     public function update( UpdateUserRequest $request, User $user )
     {
-        $request = $this->userRepository->sanitizeRequest($request);
+      $request = $this->userRepository->sanitizeRequest($request);
 
-        $user->update( $request->all() );
-        $this->userRepository->syncTags($request, $user);
+      // default update user
+      $user->update( $request->all() );
+      $this->userRepository->syncTags($request, $user);
 
-        $message = "Mitarbeiter wurde aktualisiert";
+      $message = "Mitarbeiter wurde aktualisiert";
 
-        if ( $request->get("new_password") )
+      if ( $request->get("new_password") )
+      {
+        if ( $user->email )
         {
-            event( new \App\Events\UserCreatedEvent($user) );
-            $message .= " und neues Passwort versendet (".$user->email.")";
+          event( new \App\Events\UserCreatedEvent($user) );
+          $message .= " und neues Passwort versendet (".$user->email.")";
+        }
+        else
+        {
+          $message .= " - noch keine E-Mailadresse hinterlegt";
         }
 
+      }
 
-        return redirect()->action('UserController@edit', ['id' => $user->id ])->with( "flash_message", $message );
+
+      return redirect()->action('UserController@edit', ['id' => $user->id ])->with( "flash_message", $message );
     }
 
     /**
@@ -130,10 +175,10 @@ class UserController extends Controller
      */
     public function destroy( User $user )
     {
-        $user->delete();
+      $user->delete();
 
-        $message = "Mitarbeiter wurde gelöscht";
-        return redirect()->action('UserController@index')->with( "flash_message", $message );
+      $message = "Mitarbeiter wurde gelöscht";
+      return redirect()->action('UserController@index')->with( "flash_message", $message );
     }
 
 
@@ -155,27 +200,27 @@ class UserController extends Controller
 
     public function loginAs( Request $request )
     {
-        $current_user = \Auth::user();
-        $user_id = $request->get("user_id");
+      $current_user = \Auth::user();
+      $user_id = $request->get("user_id");
 
-        $login_user = false;
-        if ( is_numeric($user_id) && $current_user->isAdmin() )
-        {
-          $user = User::find($user_id);
-          $login_user = true;
-        }
-
-        if ( $login_user )
-        {
-            setcookie("return_to_admin", $current_user->id, time()+(1*60*60), "/");
-            \Auth::loginUsingId($user_id, true);
-            return redirect( "/dienstplan" );
-        }
-        else
-        {
-            $message = sprintf("Benutzer nicht vorhanden oder keine Adminrechte" );
-            return redirect()->action('UserController@index')->with( "flash_message", $message );
-        }
+      $login_user = false;
+      if ( is_numeric($user_id) && $current_user->isAdmin() )
+      {
+        $user = User::find($user_id);
+        $login_user = true;
       }
+
+      if ( $login_user )
+      {
+        setcookie("return_to_admin", $current_user->id, time()+(1*60*60), "/");
+        \Auth::loginUsingId($user_id, true);
+        return redirect( "/dienstplan" );
+      }
+      else
+      {
+        $message = sprintf("Benutzer nicht vorhanden oder keine Adminrechte" );
+        return redirect()->action('UserController@index')->with( "flash_message", $message );
+      }
+    }
 
 }
