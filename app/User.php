@@ -45,6 +45,8 @@ class User extends Authenticatable
 
     'leave_days', 'hours_of_work',
 
+    'remaining_leave', 'disposable_until',
+
     'role', 'employment',
 
     'can_see_other_appointments',
@@ -82,6 +84,32 @@ class User extends Authenticatable
   public function setLeaveDaysAttribute( $value )
   {
     $this->attributes['leave_days'] = ($value) ? $value : 0;
+  }
+
+
+  public function getTotalLeaveDays()
+  {
+    $leave_days = $this->leave_days;
+
+    if ( is_numeric($this->remaining_leave) && $this->disposable_until )
+    {
+      $year = date("Y");
+      $first_day_of_current_year = $year."-01-01";
+      $last_day_of_current_year = $year."-12-31";
+
+      if ( $this->disposable_until >= $first_day_of_current_year && $this->disposable_until <= $last_day_of_current_year )
+      {
+        $leave_days += $this->remaining_leave;
+      }
+      elseif ( $this->disposable_until < $first_day_of_current_year)
+      {
+        $this->disposable_until = null;
+        $this->remaining_leave  = null;
+      }
+    }
+
+
+    return $leave_days;
   }
 
 

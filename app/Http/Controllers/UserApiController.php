@@ -41,7 +41,7 @@ class UserApiController extends Controller
 
             $user = User::find($id);
 
-            $data["leave_days"]          = $user->leave_days; // disposible leave days
+            $data["leave_days"]          = $user->getTotalLeaveDays();
             $data["hours_of_work"]       = $user->hours_of_work;
             $data["leave_days_intended"] = 0;
             $data["work_load_this_week"] = 0;
