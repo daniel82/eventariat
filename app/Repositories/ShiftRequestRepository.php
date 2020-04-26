@@ -69,7 +69,9 @@ class ShiftRequestRepository
         $data["object"] = $shiftRequest;
         $data["today"] = date("Y-m-d");
 
-        $data["user"] = ( is_object($shiftRequest->user) ) ? $shiftRequest->user : \Auth::user();
+        $current_user = \Auth::user();
+
+        $data["user"] = ( is_object($shiftRequest->user) ) ? $shiftRequest->user : $current_user;
 
         $data["hours"]   = getHours();
 
@@ -87,7 +89,7 @@ class ShiftRequestRepository
           "note"       => $shiftRequest->note,
           "type"       => ($shiftRequest->type) ? $shiftRequest->type : 1,
           "status"     => ($shiftRequest->status) ? $shiftRequest->status : 0,
-          "is_admin"   => $data["user"]->isAdmin(),
+          "is_admin"   => $current_user->isAdmin(),
           "user_id"    => ($shiftRequest->user_id) ? $shiftRequest->user_id : $data["user"]->id,
           "show_alert" => false,
           "alert_message" => false,
