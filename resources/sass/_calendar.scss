@@ -3,6 +3,55 @@
   opacity: 0.6;
 }
 
+.col-xs-4
+{
+  @extend .col-sm-4;
+
+
+  @media(max-width: $screen-sm)
+  {
+    font-size: 12px;
+    position: relative;
+    width: 100%;
+    padding-right: 5px;
+    padding-left: 5px;
+    -webkit-box-flex: 0;
+    flex: 0 0 30%;
+    max-width: 30%;
+  }
+}
+
+.col-xs-8
+{
+  @extend .col-sm-8;
+
+  @media(max-width: $screen-sm)
+  {
+    font-size: 12px;
+    position: relative;
+    width: 100%;
+    padding-right: 5px;
+    padding-left: 5px;
+    -webkit-box-flex: 0;
+    flex: 0 0 70%;
+    max-width: 70%;
+  }
+
+}
+
+.appointment-range
+{
+  margin: 0px;
+
+  @media(max-width: $screen-md)
+  {
+    font-size: 1.2rem;
+    line-height: 1.4rem;
+    margin-bottom: 1rem;
+  }
+}
+
+
 .message-box
 {
   width: 100%;
@@ -11,6 +60,7 @@
   justify-content: center;
   z-index: 999;
   top: 50%;
+  left: 0px;
 
   .ev-alert
   {
@@ -18,17 +68,17 @@
     box-shadow: 0px 0px 100px #333;
 
 
-    &.alert-success
-    {
-      color: white;
-      background: #28a745;
-    }
+    // &.alert-success
+    // {
+    //   color: white;
+    //   background: #28a745;
+    // }
 
-    &.alert-danger
-    {
-      color: white;
-      background: #dc3545;
-    }
+    // &.alert-danger
+    // {
+    //   color: white;
+    //   background: #dc3545;
+    // }
   }
 }
 
@@ -279,15 +329,20 @@
     {
       padding:  0.1rem 0.3rem;
     }
+
+    @media(max-width: $screen-xs )
+    {
+      font-size: 0.8rem;
+    }
   }
 
   .ev-date-field
   {
-    width: 30%;
+    width: 60%;
 
     @media(max-width: $ipad-landscape )
     {
-      width: 48%;
+      // width: 48%;
     }
   }
 

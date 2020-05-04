@@ -6,7 +6,7 @@
         <script>ev_app_data = {!! json_encode($ev_app_data) !!}</script>
         <div id="ev-shift-request-app">
             @include("shift-request.ajax-alert")
-            {{  Form::open (['action' => ['ShiftRequestFrontendController@store' ], 'method' => 'POST' ]) }}
+            {{  Form::open (['action' => ['ShiftRequestFrontendController@store' ], 'method' => 'POST', "@submit"=>"submitForm" ]) }}
                 <div class="row">
                     @component('admin.slots.form-col-left')
                         @include("shift-request.form", ["action"=>"create"])

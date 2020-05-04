@@ -31,12 +31,12 @@
             </td>
             <td>{{$item->first_name}}</td>
             <td>{{$item->last_name}}</td>
-            <td>{{$item->role}}</td>
+            <td class="hide-on-mobile">{{$item->role}}</td>
             <td>
               @if ( $item->mobile )
                 <a href="tel:{{$item->mobile}}">{{$item->mobile}}</a>
               @else
-                <span>Keine Mobilnummer eingetragen</span>
+                <span>---</span>
               @endif
 
             </td>
@@ -44,10 +44,10 @@
               @if ( $item->email )
                 <a href="mailto:{{$item->email}}">{{$item->email}}</a>
               @else
-                <span>Keine E-Mail eingetragen</span>
+                <span>---</span>
               @endif
             </td>
-            <td>{{ $item->birthdate }}</td>
+            <td class="hide-on-mobile">{{ $item->birthdate }}</td>
 
             <td class="ev-action-col">
               @if ( !$item->deleted_at )

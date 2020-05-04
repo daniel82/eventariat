@@ -6,6 +6,7 @@
 
 import iro from "@jaames/iro";
 
+// require('./jquery');
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -63,7 +64,7 @@ docReady(function()
 function startUser()
 {
 
-  if( typeof ev_app_data === "undefined" )
+  if( typeof ev_app_data === "undefined" || !$("#ev-user-app").length )
   {
     return false;
   }
@@ -90,6 +91,12 @@ function startShiftRequestApp()
     data: ev_app_data,
     methods:
     {
+
+      submitForm : function()
+      {
+        $(".ev-save-btn").attr("disabled", true);
+      },
+
       validateDates : function ()
       {
         if ( this.date_from && !this.date_to || this.date_from && this.date_to && this.date_from > this.date_to )
@@ -271,7 +278,8 @@ function startCalendarApp()
       thisWeek : function()
       {
         let request_data = this.getRequestData();
-        request_data.nav = "today";
+        this.requested_nav = request_data.nav = "today";
+
         this.ajaxRequest(request_data);
       },
 
@@ -327,6 +335,19 @@ function startCalendarApp()
         }
 
         this.busy = "";
+
+        if ( this.requested_nav === "today" && $(".is-today").length )
+        {
+          $("body").animate(
+            {
+              // scrollTop: ($(".is-today").offset().top - 400)
+              scrollTop: ($(".is-today").offset().top)
+            },
+            500
+          );
+        }
+
+        this.requested_nav = null;
       },
 
 
@@ -414,6 +435,57 @@ function startCalendarApp()
         this.actions_toggled = (this.actions_toggled) ? false : true;
       },
 
+      previewRecurringFutureDates : function()
+      {
+        if ( this.recurring === "weekly" )
+        {
+          this.ajaxGetRecurringFutureDates();
+        }
+        else
+        {
+          this.future_events = null;
+        }
+      },
+
+      ajaxGetRecurringFutureDates : function( )
+      {
+
+        if ( this.recurring && this.apt_date_from && this.apt_repeat_until )
+        {
+          let request_data =
+          {
+            "type" : this.recurring,
+            "from" : this.apt_date_from,
+            "to" : this.apt_repeat_until,
+          };
+
+          this.ajax_active = $.ajax(
+          {
+            url:       "/api/future-events/",
+            type:      "GET",
+            data:      request_data,
+            dataType:  'JSON',
+            success:   this.getRecurringFutureDates_ajaxCallback,
+            error:     this.getRecurringFutureDates_ajaxCallback
+            }
+          );
+        }
+
+      },
+
+      getRecurringFutureDates_ajaxCallback : function( response )
+      {
+        if (  typeof response === "object" )
+        {
+          this.future_events =  response;
+        }
+        else
+        {
+          this.future_events = null;
+        }
+      },
+
+
       validateDates : function ()
       {
         if ( this.apt_date_from && !this.apt_date_to || this.apt_date_from && this.apt_date_to &&  this.apt_date_from  > this.apt_date_to )
@@ -421,6 +493,7 @@ function startCalendarApp()
           this.apt_date_to = this.apt_date_from;
         }
         this.adminGetUserData();
+        this.previewRecurringFutureDates();
       },
 
       increaseDateTo : function()
@@ -494,6 +567,9 @@ function startCalendarApp()
         this.time_from       = "08:00";
         this.time_to         = "16:30";
         this.note            = "";
+        this.apt_repeat_until= null;
+        this.recurring       = 0;
+        this.future_events   = null;
       },
 
       resetMessage : function()
@@ -659,6 +735,9 @@ function startCalendarApp()
           this.apt_date_to     = this.items[date].appointments[key].date_to;
           this.time_from       = this.items[date].appointments[key].time_from;
           this.time_to         = this.items[date].appointments[key].time_to;
+
+          this.apt_repeat_until= this.items[date].appointments[key].repeat_until;
+          this.recurring       = this.items[date].appointments[key].recurring;
           this.note            = this.items[date].appointments[key].note;
 
           this.loadTooltip(appointment);
@@ -685,7 +764,9 @@ function startCalendarApp()
           time_from   : this.time_from,
           time_to     : this.time_to,
           date_to     : this.apt_date_to,
+          repeat_until: this.apt_repeat_until,
           note        : this.note,
+          recurring   : this.recurring,
           action      : action
         };
 
