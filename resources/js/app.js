@@ -439,6 +439,7 @@ function startCalendarApp()
       {
         if ( this.recurring === "weekly" )
         {
+          this.setRepeatUntil();
           this.ajaxGetRecurringFutureDates();
         }
         else
@@ -492,8 +493,22 @@ function startCalendarApp()
         {
           this.apt_date_to = this.apt_date_from;
         }
+
         this.adminGetUserData();
         this.previewRecurringFutureDates();
+      },
+
+
+      setRepeatUntil : function()
+      {
+        if ( this.recurring === "weekly" )
+        {
+          this.apt_date_date =this.apt_date_from;
+          if ( this.apt_date_from && !this.apt_repeat_until || this.apt_date_from && this.apt_repeat_until &&  this.apt_date_from  > this.apt_repeat_until )
+          {
+            this.apt_repeat_until = this.apt_date_from;
+          }
+        }
       },
 
       increaseDateTo : function()
