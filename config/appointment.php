@@ -15,7 +15,13 @@ return [
         [ "id" => 6, "text"=>"Frei"],
         [ "id" => 7, "text"=>"Krank"],
         [ "id" => 8, "text"=>"Berufsschule"],
+    ],
 
+
+    'recurring' =>
+    [
+        [ "id" => 0, "text"=>"nein" ],
+        [ "id" => "weekly", "text"=>"wöchentlich" ],
     ],
 
     'weekend_map' =>

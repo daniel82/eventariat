@@ -74,6 +74,8 @@ Route::middleware(["auth", "locale"])->group(function ()
     Route::patch("appointments/{id}", "AppointmentApiController@update");
     Route::delete("appointments/{id}", "AppointmentApiController@destroy");
 
+    Route::get("future-events", "FutureEventsApiController@index");
+
     Route::get("users/{id}", "UserApiController@show");
     Route::get("users/{id}/appointments", "UserApiController@appointments");
   });

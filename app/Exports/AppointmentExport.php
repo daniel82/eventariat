@@ -469,6 +469,8 @@ class AppointmentExport
         "type"           => $appointment->type,
         "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
+        "recurring"      => $appointment->recurring,
+        "repeat_until"   => $appointment->repeat_until,
       ];
    }
 
@@ -498,6 +500,8 @@ class AppointmentExport
         "type"           => $appointment->type,
         "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
+        "recurring"      => $appointment->recurring,
+        "repeat_until"   => $appointment->repeat_until,
       ];
    }
 
@@ -528,6 +532,8 @@ class AppointmentExport
         "type"           => $appointment->type,
         "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
+        "recurring"      => $appointment->recurring,
+        "repeat_until"   => $appointment->repeat_until,
       ];
     }
 
@@ -558,6 +564,8 @@ class AppointmentExport
         "type"           => $appointment->type,
         "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
+        "recurring"      => $appointment->recurring,
+        "repeat_until"   => $appointment->repeat_until,
       ];
     }
 
@@ -588,6 +596,8 @@ class AppointmentExport
         "type"           => $appointment->type,
         "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
+        "recurring"      => $appointment->recurring,
+        "repeat_until"   => $appointment->repeat_until,
       ];
     }
 
@@ -619,6 +629,8 @@ class AppointmentExport
         "type"           => $appointment->type,
         "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
+        "recurring"      => $appointment->recurring,
+        "repeat_until"   => $appointment->repeat_until,
       ];
     }
 
@@ -652,6 +664,8 @@ class AppointmentExport
         "type"           => $appointment->type,
         "type_text"      => $appointment->getTypeHumanReadable(),
         "note"           => $appointment->note,
+        "recurring"      => $appointment->recurring,
+        "repeat_until"   => $appointment->repeat_until,
       ];
    }
 
@@ -687,6 +701,8 @@ class AppointmentExport
 
         "tooltip_title"    => ($appointment->user ) ? $appointment->user->getFullName() : null,
         "tooltip_location" => ( $appointment->location) ? $appointment->location->name : null,
+        "recurring"      => $appointment->recurring,
+        "repeat_until"   => $appointment->repeat_until,
 
       ];
    }

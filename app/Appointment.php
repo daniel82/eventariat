@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use App\ShiftRequest;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Appointment extends Model
 {
@@ -48,20 +49,120 @@ class Appointment extends Model
     $this->date_from      = $request->get("date_from")." ".$time_from;
     $this->date_to        = $request->get("date_to")." ".$time_to;
     $this->note           = $request->get("note");
+    $this->recurring      = $request->get("recurring", null);
     $this->edited_by      = $user->id;
     $this->created_by     = ($this->id) ? $this->created_by : $user->id;
+    $this->repeat_until   = $request->get("repeat_until", null);
+
+    // excepction for recurring events
+    // check if is recurring && if user is booked
+    $future_events = null;
+    // Log::debug($this->recurring);
+    // Log::debug($this->repeat_until);
+    if ( $this->recurring && $this->repeat_until)
+    {
+      $future_events = $this->getRecurringFutureEvents($time_from, $time_to);
+      if ( $future_events )
+      {
+        foreach ($future_events as $future_date)
+        {
+          $children_ids = Appointment::whereParentId($this->id)->pluck("id");
+          if ( $this->isUserBooked($this->user_id, $future_date["from"], $future_date["to"], $children_ids) )
+          {
+            return false;
+          }
+        }
+      }
+    }
 
 
     if ( !$this->isUserBooked($this->user_id, $this->date_from, $this->date_to, $this->id) )
     {
       // Log::debug($this);
       $this->save();
+
+      $this->saveChildren( $future_events );
       return true;
     }
     else
     {
       return false;
     }
+  }
+
+
+  public function saveChildren( $future_events )
+  {
+    if( !$this->recurring )
+    {
+      return null;
+    }
+    else
+    {
+      $this->storeChildren($future_events);
+    }
+  }
+
+
+  public function storeChildren( $future_events )
+  {
+    // Log::debug("store children ...");
+    // Log::debug($future_events);
+    // delete all children
+    Appointment::whereParentId($this->id)->delete();
+
+    if ( is_array($future_events) )
+    {
+      foreach ($future_events as $key => $future_date)
+      {
+        $child = new Appointment();
+
+        // custom date
+        $child->date_from   = $future_date["from"];
+        $child->date_to     = $future_date["to"];
+
+        // copy values from parent
+        $child->location_id = $this->location_id;
+        $child->user_id     = $this->user_id;
+        $child->type        = $this->type;
+        $child->description = $this->description;
+        $child->note        = $this->note;
+        $child->edited_by   = $this->edited_by;
+        $child->created_by  = $this->created_by;
+        $child->parent_id   = $this->id;
+
+        $child->save();
+      }
+    }
+
+
+  }
+
+
+  public function getRecurringFutureEvents($time_from, $time_to)
+  {
+    Log::debug("get future events");
+    $from_date = Carbon::parse($this->date_from);
+    $to_date = Carbon::parse($this->repeat_until." ".$time_from);
+
+    Log::debug("from: ".$from_date);
+    Log::debug("to: ".$to_date);
+    $dates = null;
+
+    for ($date=$from_date; $date->lte($to_date); $date->addWeek() )
+    {
+      Log::debug($date->format("Y-m-d H:i")." : ".$this->date_from);
+      if ( (string) $date->format("Y-m-d H:i") !== (string)$this->date_from )
+      {
+        $dates[] =
+        [
+          "from" => $date->format('Y-m-d')." ".$time_from,
+          "to" => $date->format('Y-m-d')." ".$time_to,
+        ];
+      }
+    }
+
+    return $dates;
   }
 
 
@@ -92,7 +193,7 @@ class Appointment extends Model
     $is_booked = false;
     if ( $user_id )
     {
-      $appointments = Appointment::idNotIn( $appointment_id )->userId($user_id)->period($date_from, $date_to)->get();
+      $appointments = Appointment::idNotIn($appointment_id)->userId($user_id)->period($date_from, $date_to)->get();
       // $appointments = Appointment::userId($user_id)->period($date_from, $date_to)->get();
 
       if ( $appointments && $appointments->count() )

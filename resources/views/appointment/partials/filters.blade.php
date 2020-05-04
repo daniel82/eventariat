@@ -30,7 +30,7 @@
   <div class="row">
     <div class="col-md-10">
       <div class="text-center">
-        <h3 class="m-0 pt-2">@{{date_from_hr}} - @{{date_to_hr}}</h3>
+        <h3 class="pt-2 appointment-range">@{{date_from_hr}} - @{{date_to_hr}}</h3>
       </div>
     </div>
     <div class="col-md-2">
