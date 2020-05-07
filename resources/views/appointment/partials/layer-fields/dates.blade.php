@@ -64,7 +64,7 @@
 </div>
 
 
-<div v-if="recurring!=0 && type==4" class="form-group row" >
+<div v-if="recurring!=0 && (type==4 || type==5) " class="form-group row" >
   <span class="col-xs-4">Letzter Termin</span>
   <div class="col-xs-8">
     <div class="d-flex">
