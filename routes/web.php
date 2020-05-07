@@ -15,6 +15,8 @@ Route::get('/', function () {
   return redirect( "/dienstplan" );
 });
 
+Route::get('/booking',  "BookingComController@index");
+
 
 Route::middleware([ "auth", "locale"])->group(function ()
 {
