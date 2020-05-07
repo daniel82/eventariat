@@ -8,7 +8,7 @@
         [
           "class"    => "d-block form-control ev-date-field ",
           "v-model"  =>"apt_date_from",
-          "min"      => $today,
+          ":min"      => "getDateMin()",
           "@change"  => "validateDates"
         ])
       }}
@@ -33,18 +33,18 @@
         [
           "class"    => "d-block form-control ev-date-field ",
           "v-model"  =>"apt_date_to",
-          "min"      => $today,
+          ":min"      => "getDateMin()",
           "@change"  => "validateDates"
         ])
       }}
 
       {{
         Form::select("time2_to", $to_hours, null,
-          [
-            "class"    =>"form-control ev-date-field  ml-3",
-            "v-model"  =>"time_to",
-            "@change"  => "validateTimes"
-          ]
+        [
+          "class"    =>"form-control ev-date-field  ml-3",
+          "v-model"  =>"time_to",
+          "@change"  => "validateTimes"
+        ]
          )
        }}
     </div>

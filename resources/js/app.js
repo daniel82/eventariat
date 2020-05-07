@@ -216,10 +216,17 @@ function startCalendarApp()
           + ((this.user_ids.length) ? "&users[]="+this.user_ids : '')
           + ((this.location_ids.length) ? "&locations[]="+this.location_ids : '');
       }
+
+
     },
 
     methods:
     {
+      getDateMin: function()
+      {
+        return ( this.type != "1" ) ? this.today : null;
+      },
+
       toggleDropdownMenu : function (type)
       {
         if ($("."+type).hasClass("show"))
@@ -317,7 +324,6 @@ function startCalendarApp()
 
       updateItems_ajaxCallback : function( response )
       {
-        // _log("updateItems_ajaxCallback");
         if ( typeof response === "object" )
         {
           this.items        = response.items;
@@ -332,22 +338,26 @@ function startCalendarApp()
           })
 
           setTimeout(this.equalHeightItems, 1000);
+
+          if ( this.requested_nav === "today" && $(".is-today").length )
+          {
+            setTimeout(this.scrollToToday, 1300);
+          }
         }
 
         this.busy = "";
-
-        if ( this.requested_nav === "today" && $(".is-today").length )
-        {
-          $("body").animate(
-            {
-              // scrollTop: ($(".is-today").offset().top - 400)
-              scrollTop: ($(".is-today").offset().top)
-            },
-            500
-          );
-        }
-
         this.requested_nav = null;
+      },
+
+      scrollToToday : function()
+      {
+        $("html,body").animate(
+          {
+            scrollTop: ( $(".is-today").offset().top-200 )
+            // scrollTop: ($(".is-today").offset().top)
+          },
+          500
+        );
       },
 
 
