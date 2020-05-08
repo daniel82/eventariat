@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Api\Yr;
+// use App\Api\Yr;
 use App\Appointment;
 use App\Location;
 use App\User;
@@ -24,8 +24,8 @@ class AppointmentRepository
     $data["today"]  = date("Y-m-d");
 
     // TODO find logic when update forecast
-    $yr = new Yr();
-    $yr->getForecast($data["today"]);
+    // $yr = new Yr();
+    // $yr->getForecast($data["today"]);
 
     $data["user"]       = \Auth::user();
     // $data["users"]      = ( $data["user"]->can_see_other_appointments ) ? User::orderBy("employment")->orderBy("first_name")->get() : collect([$data["user"]]);

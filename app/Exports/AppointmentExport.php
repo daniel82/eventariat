@@ -3,7 +3,7 @@
 namespace App\Exports;
 
 use Illuminate\Support\Facades\Log;
-use App\Api\Yr;
+// use App\Api\Yr;
 use App\Appointment;
 use App\Location;
 use App\User;
