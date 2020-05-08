@@ -52,7 +52,7 @@
 </div>
 
 
-<div class="form-group row" v-if="type==5">
+<div class="form-group row" v-if="type==5||type==4">
   {{ Form::label("recurring", "Wiederholung", ["class"=> "d-block col-xs-4"]) }}
   <div class="col-xs-8">
     <select name="type" id="type" class="form-control d-block" v-model="recurring" @change="previewRecurringFutureDates" >
@@ -64,7 +64,7 @@
 </div>
 
 
-<div v-if="recurring!=0 && type==5" class="form-group row" >
+<div v-if="recurring!=0 && (type==5 || type==4)" class="form-group row" >
   <span class="col-xs-4">Letzter Termin</span>
   <div class="col-xs-8">
     <div class="d-flex">
