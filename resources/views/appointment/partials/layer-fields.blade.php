@@ -3,4 +3,5 @@
 @include("appointment.partials.layer-fields.description")
 @include("appointment.partials.layer-fields.user_id")
 @include("appointment.partials.layer-fields.dates")
+@include("appointment.partials.message")
 @include("appointment.partials.layer-fields.buttons")
