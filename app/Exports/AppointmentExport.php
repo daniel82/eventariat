@@ -395,7 +395,9 @@ class AppointmentExport
                                             return false;
                                           }
 
-                                        });
+                                        })->values();
+
+            // $date_data["appointments"] = $date_data["appointments"]->values();
           }
           else
           {
