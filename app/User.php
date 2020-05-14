@@ -167,7 +167,6 @@ class User extends Authenticatable
 
   public function canSee( $appointment_type )
   {
-    // Log::debug($this->appointment_types);
     return in_array($appointment_type, $this->appointment_types);
   }
 

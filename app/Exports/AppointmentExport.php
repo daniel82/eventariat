@@ -112,7 +112,7 @@ class AppointmentExport
     // dd($from_month);
     // birthdays
     $users = collect();
-    if ( $user->canSee("events") )
+    if ( $user->canSee("birthdates") )
     {
       $users = User::birthdate($from_month, $to_month)->get();
     }
@@ -307,7 +307,7 @@ class AppointmentExport
       // Geburtstage
       $birthday_kids = $users->filter(function ($user, $key) use($the_date)
       {
-        return ( substr($user->birthdate, 5, 5) ) == substr($the_date, 5, 5) ;
+        return ( substr($user->birthdate, 5, 5) ) == substr($the_date, 5, 5);
       });
 
       if ( $birthday_kids )
@@ -363,7 +363,10 @@ class AppointmentExport
         }
       }
 
-    }
+
+    } // end of foreach loop
+
+
 
 
     // can only see co workers same day, same location
@@ -388,11 +391,12 @@ class AppointmentExport
                                           // appointment type 4 = work
                                           if ( isset($a["type"]) )
                                           {
-                                            return ($a["type"] != 4 || $a["type"] == 4 && $location_ids->contains($a["location_id"]) );
+                                            return ($a["type"] != 4 || ($a["type"] == 4 && $location_ids->contains($a["location_id"])) );
                                           }
                                           else
                                           {
-                                            return false;
+                                            // Log::debug($a);
+                                            return true;
                                           }
 
                                         })->values();
@@ -412,8 +416,6 @@ class AppointmentExport
       // check if user has date
     }
 
-    // TODO #2
-    // exlcude all items other users where not IN capabilities
 
 
     $data["items"] = $items;
