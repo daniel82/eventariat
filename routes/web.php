@@ -15,6 +15,10 @@ Route::get('/', function () {
   return redirect( "/dienstplan" );
 });
 
+Route::get('/info', function () {
+  phpinfo();
+});
+
 // Route::get('/booking',  "BookingComController@index");
 
 
