@@ -35,9 +35,9 @@ class Appointment extends Model
   // common update method
   public function saveEntry( $request )
   {
-    Log::debug("Appointment@saveEntry");
+    // Log::debug("Appointment@saveEntry");
     $user = \Auth::user();
-    Log::debug($request->all());
+    // Log::debug($request->all());
 
     $time_from = ( $tf = $request->get("time_from") ) ? $tf : config("appointment.day_start");
     $time_to   = ( $tt = $request->get("time_to") ) ? $tt : config("appointment.day_end");

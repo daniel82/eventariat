@@ -39,7 +39,7 @@ class SynchYr extends Command
      */
     public function handle()
     {
-        Log::info("Yr import ".date("Y-m-d H:i:s" ) );
+        // Log::info("Yr import ".date("Y-m-d H:i:s" ) );
         $yr = new Yr();
         $yr->getForecast(date("Y-m-d"));
     }
