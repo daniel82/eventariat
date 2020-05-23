@@ -9,17 +9,30 @@ class WeatherForecast extends Model
   protected $fillable = ["date", "temparature", "icon"];
 
 
-  public static function getAsJsonByDate( $date )
+  public static function getByPeriod($from, $to)
   {
-    $json = null;
-    if ( $forecast = WeatherForecast::where("date", $date)->first() )
+    $where =
+    [
+      ["date", ">=", $from ],
+      ["date", "<=", $to ]
+    ];
+
+    $weather = [];
+
+    if ( $weather_forecasts = WeatherForecast::where($where)->get() )
     {
-      $json = [
-        "icon" => $forecast->icon.".svg",
-        "temperature" => $forecast->temperature
-      ];
+      foreach ($weather_forecasts as $key => $forecast)
+      {
+        $weather[$forecast->date] = [
+                                      "icon" => $forecast->icon.".svg",
+                                      "temperature" => $forecast->temperature
+                                    ];
+      }
     }
 
-    return $json;
+    return $weather;
   }
+
+
+
 }

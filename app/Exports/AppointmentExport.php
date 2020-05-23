@@ -30,6 +30,42 @@ class AppointmentExport
   }
 
 
+  public function getUserObject( $user_id )
+  {
+    if ( is_numeric($user_id) )
+    {
+      if ( !isset($this->users[$user_id]) or !is_object($this->users[$user_id]) )
+      {
+        $this->users[$user_id] = User::find($user_id);
+      }
+
+      return $this->users[$user_id];
+    }
+    else
+    {
+      return null;
+    }
+  }
+
+
+  public function getLocationObject( $location_id )
+  {
+    if ( is_numeric($location_id) )
+    {
+      if ( !isset($this->locations[$location_id]) or !is_object($this->locations[$location_id]) )
+      {
+        $this->locations[$location_id] = Location::find($location_id);
+      }
+
+      return $this->locations[$location_id];
+    }
+    else
+    {
+      return null;
+    }
+  }
+
+
   public function index( Request $request )
   {
     $date_from      = $request->get("date_from" );
@@ -37,9 +73,11 @@ class AppointmentExport
 
     $user_ids       = $request->get("users");
     $location_ids   = $request->get("locations");
-    $this->type_ids = $request->get("types", []);
+    $nav  = $request->get("nav", null);
 
-    $nav            = $request->get("nav", null);
+    $this->type_ids = $request->get("types", []);
+    $this->users     = [];
+    $this->locations = [];
 
     $user = \Auth::user();
 
@@ -98,6 +136,9 @@ class AppointmentExport
     $from_month      = Carbon::create($date_from)->month;
     $to_month        = Carbon::create($date_to)->month;
     $period          = new CarbonPeriod($date_from, '1 day', $date_to);
+
+    // get weater forecast for whole month
+    $this->weather =  \App\WeatherForecast::getByPeriod($date_from, $date_to);
 
     $data =
     [
@@ -223,8 +264,9 @@ class AppointmentExport
       $week                             = $date->week();
       $items[$the_date]["week"]         = $week;
       $data["weeks"][$week]             = $week;
-      $items[$the_date]["forecast"]     = \App\WeatherForecast::getAsJsonByDate( $the_date );
 
+
+      $items[$the_date]["forecast"]     = ( isset($this->weather[$the_date]) && is_array($this->weather[$the_date]) ) ? $this->weather[$the_date] : null;
 
       // Urlaub
       $leave_dates = $leave_days->filter(function ($appointment, $key) use($the_date, $the_date_start)
@@ -342,7 +384,7 @@ class AppointmentExport
 
       if ( !$user->can_see_other_appointments )
       {
-        $user_ids  = [$user->id];
+        $user_ids = [$user->id];
       }
 
 
@@ -365,7 +407,6 @@ class AppointmentExport
 
 
     } // end of foreach loop
-
 
 
 
@@ -519,7 +560,7 @@ class AppointmentExport
 
     foreach ($appointments as $key => $appointment)
     {
-      $title = ($appointment->user ) ? $appointment->user->getCalendarName() : null;
+      $title = ( $user = $this->getUserObject( $appointment->user_id ) ) ? $user->getCalendarName() : null;
 
       $items[] =
       [
@@ -551,7 +592,7 @@ class AppointmentExport
 
     foreach ($appointments as $key => $appointment)
     {
-      $title = ($appointment->user) ? $appointment->user->getCalendarName() : null;
+      $title = ( $user = $this->getUserObject( $appointment->user_id ) ) ? $user->getCalendarName(" (BS)") : null;
 
       $items[] =
       [
@@ -561,7 +602,7 @@ class AppointmentExport
         "time_from"      => formatDate( $appointment->date_from, $format="H:i" ),
         "date_to"        => formatDate( $appointment->date_to, $format="Y-m-d" ),
         "time_to"        => formatDate( $appointment->date_to, $format="H:i" ),
-        "title"          => $title." (BS)",
+        "title"          => $title,
         "description"    => null,
         "location_id"    => null,
         "user_id"        => $appointment->user_id,
@@ -583,7 +624,7 @@ class AppointmentExport
 
     foreach ($appointments as $key => $appointment)
     {
-      $title = ($appointment->user ) ? $appointment->user->getCalendarName() : null;
+      $title = ( $user = $this->getUserObject( $appointment->user_id ) ) ? $user->getCalendarName() : null;
 
       $items[] =
       [
@@ -616,7 +657,7 @@ class AppointmentExport
 
     foreach ($appointments as $key => $appointment)
     {
-      $title = ($appointment->user ) ? $appointment->user->getCalendarName() : null;
+      $title = ( $user = $this->getUserObject( $appointment->user_id ) ) ? $user->getCalendarName() : null;
 
       $items[] =
       [
@@ -651,26 +692,26 @@ class AppointmentExport
 
    foreach ($appointments as $key => $appointment)
    {
-      $title = ($appointment->user ) ? $appointment->user->getCalendarName(). "(frei)" : null;
+    $title = ( $user = $this->getUserObject( $appointment->user_id ) ) ? $user->getCalendarName("(frei)") : null;
 
-      $items[] =
-      [
-        "id"             => $appointment->id,
-        "type_class"     => "free-day",
-        "date_from"      => formatDate( $appointment->date_from, $format="Y-m-d" ),
-        "time_from"      => formatDate( $appointment->date_from, $format="H:i" ),
-        "date_to"        => formatDate( $appointment->date_to, $format="Y-m-d" ),
-        "time_to"        => formatDate( $appointment->date_to, $format="H:i" ),
-        "title"          => $title,
-        "description"    => null,
-        "location_id"    => null,
-        "user_id"        => $appointment->user_id,
-        "type"           => $appointment->type,
-        "type_text"      => $appointment->getTypeHumanReadable(),
-        "note"           => $appointment->note,
-        "recurring"      => $appointment->recurring,
-        "repeat_until"   => $appointment->repeat_until,
-      ];
+    $items[] =
+    [
+      "id"             => $appointment->id,
+      "type_class"     => "free-day",
+      "date_from"      => formatDate( $appointment->date_from, $format="Y-m-d" ),
+      "time_from"      => formatDate( $appointment->date_from, $format="H:i" ),
+      "date_to"        => formatDate( $appointment->date_to, $format="Y-m-d" ),
+      "time_to"        => formatDate( $appointment->date_to, $format="H:i" ),
+      "title"          => $title,
+      "description"    => null,
+      "location_id"    => null,
+      "user_id"        => $appointment->user_id,
+      "type"           => $appointment->type,
+      "type_text"      => $appointment->getTypeHumanReadable(),
+      "note"           => $appointment->note,
+      "recurring"      => $appointment->recurring,
+      "repeat_until"   => $appointment->repeat_until,
+    ];
    }
 
    return $items;
@@ -685,6 +726,9 @@ class AppointmentExport
 
    foreach ($appointments as $key => $appointment)
    {
+      $user = $this->getUserObject( $appointment->user_id );
+
+      $location = $this->getLocationObject($appointment->location_id);
       $items[] =
       [
         "id"             => $appointment->id,
@@ -693,21 +737,20 @@ class AppointmentExport
         "time_from"      => date("H:i", strtotime($appointment->date_from) ),
         "date_to"        => date("Y-m-d", strtotime($appointment->date_to) ),
         "time_to"        => date("H:i", strtotime($appointment->date_to) ),
-        "title"          => ($appointment->user ) ? $appointment->user->getCalendarName() : null,
+        "title"          => ($user) ? $user->getCalendarName() : null,
 
         "description"    => $appointment->description,
         "location_id"    => $appointment->location_id,
 
-        "user_id"        => $appointment->user_id,
-        "type"           => $appointment->type,
-        "type_text"      => $appointment->getTypeHumanReadable(),
-        "note"           => $appointment->note,
+        "user_id"          => $appointment->user_id,
+        "type"             => $appointment->type,
+        "type_text"        => $appointment->getTypeHumanReadable(),
+        "note"             => $appointment->note,
 
-        "tooltip_title"    => ($appointment->user ) ? $appointment->user->getFullName() : null,
-        "tooltip_location" => ( $appointment->location) ? $appointment->location->name : null,
-        "recurring"      => $appointment->recurring,
-        "repeat_until"   => $appointment->repeat_until,
-
+        "tooltip_title"    => ($user) ? $user->getFullName() : null,
+        "tooltip_location" => ($location) ? $location->name : null,
+        "recurring"        => $appointment->recurring,
+        "repeat_until"     => $appointment->repeat_until,
       ];
    }
 

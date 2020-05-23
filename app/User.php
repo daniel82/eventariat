@@ -120,9 +120,9 @@ class User extends Authenticatable
 
 
 
-  public function getCalendarName()
+  public function getCalendarName( $suffix = null)
   {
-    return $this->first_name." ".$this->last_name[0].".";
+    return $this->first_name." ".$this->last_name[0].".".$suffix;
   }
 
   public function getFullName()
