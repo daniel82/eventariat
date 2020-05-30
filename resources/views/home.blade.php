@@ -20,7 +20,11 @@
                         <tbody>
                             @foreach( $shift_requests as $sr )
                                 <tr>
-                                    <td>{{ $sr->user->first_name}} {{$sr->user->last_name}}</td>
+                                    <td>
+                                        @if ( is_object($sr->user) )
+                                            {{ $sr->user->first_name}} {{$sr->user->last_name}}
+                                        @endif
+                                    </td>
                                     <td>{{formatDate($sr->date_from, "d.m.Y")}} - {{formatDate($sr->date_to, "d.m.Y")}}</td>
                                     <td>{{$sr->type_hr}}</td>
                                 </tr>
