@@ -21,8 +21,8 @@
                             @foreach( $shift_requests as $sr )
                                 <tr class="shift-request-{{ $sr->id }}">
                                     <td>
-                                        @if ( is_object($sr->user) )
-                                            {{ $sr->user->first_name}} {{$sr->user->last_name}}
+                                        @if ($user = \App\User::whereId($sr->user_id)->withTrashed()->first())
+                                            {{ $user->first_name }} {{ $user->last_name }}
                                         @endif
                                     </td>
                                     <td>{{formatDate($sr->date_from, "d.m.Y")}} - {{formatDate($sr->date_to, "d.m.Y")}}</td>

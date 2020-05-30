@@ -31,8 +31,8 @@
             <td><span class="ev-shift-request__status status-{{ $item->status }}"><i class="fa fa-circle" aria-hidden="true"></i></span></td>
 
             <td>
-              @if ( is_object($item->user) )
-                {{ $item->user->first_name }} {{ $item->user->last_name }}
+              @if ($user = \App\User::whereId($item->user_id)->withTrashed()->first())
+                {{ $user->first_name }} {{ $user->last_name }}
               @endif
             </td>
             <td>{{ $item->type_hr}}</td>
