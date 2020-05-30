@@ -23,6 +23,9 @@
                                     <td>
                                         @if ($user = \App\User::whereId($sr->user_id)->withTrashed()->first())
                                             {{ $user->first_name }} {{ $user->last_name }}
+                                            @if ( $user->deleted_at )
+                                                <span class="color-red"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                            @endif
                                         @endif
                                     </td>
                                     <td>{{formatDate($sr->date_from, "d.m.Y")}} - {{formatDate($sr->date_to, "d.m.Y")}}</td>

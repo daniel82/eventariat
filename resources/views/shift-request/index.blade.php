@@ -33,6 +33,9 @@
             <td>
               @if ($user = \App\User::whereId($item->user_id)->withTrashed()->first())
                 {{ $user->first_name }} {{ $user->last_name }}
+                @if ( $user->deleted_at )
+                  <span class="color-red"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                @endif
               @endif
             </td>
             <td>{{ $item->type_hr}}</td>
