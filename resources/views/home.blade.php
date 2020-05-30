@@ -19,7 +19,7 @@
                         </thead>
                         <tbody>
                             @foreach( $shift_requests as $sr )
-                                <tr>
+                                <tr class="shift-request-{{ $sr->id }}">
                                     <td>
                                         @if ( is_object($sr->user) )
                                             {{ $sr->user->first_name}} {{$sr->user->last_name}}
