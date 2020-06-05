@@ -19,5 +19,6 @@
     @include("appointment.partials.filters")
     @include("appointment.partials.layer")
     @include("appointment.partials.calendar")
+    @include("appointment.partials.footer-nav")
   </div>
 @endsection
