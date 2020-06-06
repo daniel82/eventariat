@@ -108,8 +108,36 @@
 
 .ev-calendar-nav
 {
-  display: flex;
-  justify-content: flex-end;
+  // display: flex;
+  justify-content: space-between;
+
+  .col
+  {
+    // flex-grow: 0;
+  }
+
+
+  .nav-btn
+  {
+    width: 24%;
+    flex-basis: 24%;
+    flex-grow: 0;
+
+    @media(max-width: $screen-lg)
+    {
+      width: 25%;
+      flex-basis: 25%;
+      flex-grow: 0;
+    }
+
+    @media(max-width: $screen-md)
+    {
+      width: 28%;
+      flex-basis: 28%;
+    }
+  }
+
+
 
   button
   {
