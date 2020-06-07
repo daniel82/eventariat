@@ -195,6 +195,17 @@ class AppointmentExport
     }
 
 
+    $sick_days = collect();
+    if ( $user->canSee("sick") && $this->includeType(7) )
+    {
+      $sick_days = Appointment::sick()
+                    ->userIds($user_ids)
+                    ->period($date_from, $date_to)
+                    ->orderBy("date_from", "ASC")
+                    ->orderBy("user_id", "ASC")->get();
+    }
+
+
     $school_days = collect();
     if ( $user->canSee("school") && $this->includeType(8) )
     {
@@ -225,17 +236,6 @@ class AppointmentExport
     if ( $user->canSee("private_dates") && $this->includeType(5) )
     {
       $private_dates = Appointment::privateDates()
-                    ->userIds($user_ids)
-                    ->dateFromBetween($date_from, $date_to)
-                    ->orderBy("date_from", "ASC")
-                    ->orderBy("user_id", "ASC")->get();
-    }
-
-
-    $sick_days = collect();
-    if ( $user->canSee("sick") && $this->includeType(7) )
-    {
-      $sick_days = Appointment::sick()
                     ->userIds($user_ids)
                     ->dateFromBetween($date_from, $date_to)
                     ->orderBy("date_from", "ASC")
