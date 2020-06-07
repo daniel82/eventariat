@@ -31,7 +31,7 @@
   <div class="row">
     <div class="col-lg-9">
       <div class="text-center">
-        <h3 class="pt-2 appointment-range">@{{date_from_hr}} - @{{date_to_hr}}</h3>
+        <h3 id="appointment-range" class="pt-2 appointment-range">@{{date_from_hr}} - @{{date_to_hr}}</h3>
       </div>
     </div>
     <div class="col-lg-3">

@@ -269,7 +269,7 @@ function startCalendarApp()
       nextMonth : function()
       {
         let request_data = this.getRequestData();
-        request_data.nav = "next";
+        this.requested_nav = request_data.nav = "next";
         this.ajaxRequest(request_data);
       },
 
@@ -277,7 +277,7 @@ function startCalendarApp()
       prevMonth : function()
       {
         let request_data = this.getRequestData();
-        request_data.nav = "prev";
+        this.requested_nav = request_data.nav = "prev";
         this.ajaxRequest(request_data);
       },
 
@@ -324,8 +324,7 @@ function startCalendarApp()
 
       updateItems_ajaxCallback : function( response )
       {
-        if ( typeof response === "object" )
-        {
+        if (typeof response === "object") {
           this.items        = response.items;
           this.date_from    = response.date_from;
           this.date_to      = response.date_to;
@@ -335,13 +334,14 @@ function startCalendarApp()
 
           $(function () {
             $('[data-toggle="popover"]').popover()
-          })
+          });
 
           setTimeout(this.equalHeightItems, 1000);
 
-          if ( this.requested_nav === "today" && $(".is-today").length )
-          {
+          if (this.requested_nav === "today" && $(".is-today").length) {
             setTimeout(this.scrollToToday, 1300);
+          } else if(this.requested_nav === "next" || this.requested_nav === "prev") {
+            this.scrollToElement("#appointment-range");
           }
         }
 
@@ -351,9 +351,16 @@ function startCalendarApp()
 
       scrollToToday : function()
       {
+        this.scrollToElement(".is-today");
+      },
+
+
+      scrollToElement : function ( css_query )
+      {
+        console.log("scroll to: "+css_query);
         $("html,body").animate(
           {
-            scrollTop: ( $(".is-today").offset().top-200 )
+            scrollTop: ( $(css_query).offset().top-200 )
             // scrollTop: ($(".is-today").offset().top)
           },
           500
