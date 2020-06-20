@@ -75,8 +75,11 @@ class ShiftRequest extends Model
 
     $this->user_id        = ($this->user_id) ? $this->user_id : $user->id;
     $this->type           = $request->get("type");
-    $this->date_from      = $request->get("date_from")." ".$time_from;
-    $this->date_to        = $request->get("date_to")." ".$time_to;
+
+    $date_from            = formatDate($request->get("date_from"), $format = "Y-m-d");
+    $date_to              = formatDate($request->get("date_to"), $format = "Y-m-d" );
+    $this->date_from      = $date_from." ".$time_from;
+    $this->date_to        = $date_to." ".$time_to;
 
     $this->note           = $request->get("note");
     $this->edited_by      = $user->id;

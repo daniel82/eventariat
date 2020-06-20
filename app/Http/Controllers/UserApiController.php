@@ -39,7 +39,7 @@ class UserApiController extends Controller
             $now = strtotime($date);
             $year = date("Y", $now);
 
-            $user = User::find($id);
+            $user = User::findOrFail($id);
 
             $data["leave_days"]          = $user->getTotalLeaveDays();
             $data["hours_of_work"]       = $user->hours_of_work;

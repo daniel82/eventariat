@@ -54,8 +54,15 @@ class AppointmentApiRepository
 
   public function update( Request $request, $appointment_id )
   {
-    Log::debug("AppointmentApiRepository@update");
+    Log::info("AppointmentApiRepository@update: ".$appointment_id);
     $appointment = Appointment::findOrFail($appointment_id);
+
+    $user = \Auth::user();
+    if ( is_object($user) ) {
+      Log::info("updated by: ".$user->id);
+    }
+    Log::info("user_id: ".$appointment->user_id);
+    Log::debug($request->all());
     $saved = $appointment->saveEntry( $request );
 
     if ( $saved && $appointment->id && is_numeric($appointment->id) )
@@ -111,7 +118,16 @@ class AppointmentApiRepository
 
   public function destroy( Request $request, $appointment_id )
   {
+    Log::info("AppointmentApiRepository@destroy");
     $appointment = Appointment::findOrFail($appointment_id);
+
+    $user = \Auth::user();
+    if ( is_object($user) ) {
+      Log::info($appointment->id." deleted by: ".$user->id);
+      Log::info("user_id: ".$appointment->user_id);
+      Log::info("location_id: ".$appointment->location_id);
+      Log::info($appointment->date_from."/".$appointment->date_to);
+    }
 
     $message = "Termin wurde entfernt";
     if ( $email = $appointment->userEmail() )

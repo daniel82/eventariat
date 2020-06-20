@@ -19,7 +19,7 @@ class CheckIfAdmin
       $user = Auth::user();
       $may = false;
 
-      if ( $user->isAdmin() ){
+      if ( is_object($user) && $user->isAdmin() ){
         if ( $request->is("admin/*")  )
         {
           $may = true;

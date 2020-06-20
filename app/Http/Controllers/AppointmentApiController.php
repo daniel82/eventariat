@@ -87,7 +87,6 @@ class AppointmentApiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Log::debug("AppointmentApiController@update");
         $data = $this->appointmentApiRepository->update( $request, $id );
         return response()->json($data);
     }
@@ -100,8 +99,6 @@ class AppointmentApiController extends Controller
      */
     public function destroy( Request $request, $id)
     {
-        // Log::debug("AppointmentApiController@delete");
-        // Log::debug( $request->all() );
         $data = $this->appointmentApiRepository->destroy( $request, $id );
         return response()->json($data);
     }
