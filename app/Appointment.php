@@ -54,6 +54,17 @@ class Appointment extends Model
     $this->created_by     = ($this->id) ? $this->created_by : $user->id;
     $this->repeat_until   = $request->get("repeat_until", null);
 
+
+    // set location id null if appointment not "arbeit"
+    if ($this->type != 4) {
+      $this->location_id = null;
+    }
+
+    // set user id null if appoint ereignis/event or ferienwohnung
+    if( $this->type==2 or $this->type == 3 ) {
+      $this->user_id = null;
+    }
+
     // excepction for recurring events
     // check if is recurring && if user is booked
     $future_events = null;
