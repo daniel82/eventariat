@@ -747,8 +747,12 @@ class AppointmentExport
         "type_text"        => $appointment->getTypeHumanReadable(),
         "note"             => $appointment->note,
 
+        "parent_id"        => $appointment->parent_id,
+        "recurring_dates"  => $appointment->recurring_dates,
+
         "tooltip_title"    => ($user) ? $user->getFullName() : null,
         "tooltip_location" => ($location) ? $location->name : null,
+
         "recurring"        => $appointment->recurring,
         "repeat_until"     => $appointment->repeat_until,
       ];
