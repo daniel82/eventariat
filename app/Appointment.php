@@ -73,24 +73,23 @@ class Appointment extends Model
     $future_events = null;
     if ( $this->recurring==='weekly' && $this->repeat_until) {
       $future_events = $this->getRecurringFutureEvents($time_from, $time_to);
-      if ( $future_events )
-      {
-        foreach ($future_events as $future_date)
-        {
-          $children_ids = Appointment::whereParentId($this->id)->pluck("id");
-          if ( $this->isUserBooked($this->user_id, $future_date["from"], $future_date["to"], $children_ids) )
-          {
-            return false;
-          }
-        }
-      }
     } else if ($this->recurring==='daily' && !empty($this->recurring_dates)) {
       // prepare recurrig dates as future events for saving
       $future_events = $this->getRecurringDates($this->recurring_dates, $time_from, $time_to, $date_from);
-      foreach ($this->recurring_dates as $child_date)
+    }
+
+    // Log::info('id?');
+    // Log::info($this->id);
+    // Log::info($future_events);
+
+    if ( $future_events )
+    {
+      foreach ($future_events as $future_date)
       {
-        $children_ids = Appointment::whereParentId($this->id)->pluck("id");
-        if ( $this->isUserBookedOnDate($this->user_id, $child_date, $children_ids) )
+        $children_ids = ($this->id) ? Appointment::whereParentId($this->id)->pluck("id") : [];
+        // Log::debug("children_ids");
+        // Log::debug($children_ids);
+        if ( $this->isUserBooked($this->user_id, $future_date["from"], $future_date["to"], $children_ids) )
         {
           return false;
         }
@@ -108,6 +107,25 @@ class Appointment extends Model
     {
       return false;
     }
+  }
+
+  public function isUserBooked( $user_id, $date_from, $date_to, $appointment_id )
+  {
+    $is_booked = false;
+    if ( $user_id )
+    {
+      $appointments = Appointment::idNotIn($appointment_id)->userId($user_id)->period($date_from, $date_to)->get();
+      // $appointments = Appointment::userId($user_id)->period($date_from, $date_to)->get();
+
+      if ( $appointments && $appointments->count() )
+      {
+        // Log::debug("appointment");
+        // Log::debug($appointments);
+        $is_booked = true;
+      }
+    }
+
+    return $is_booked;
   }
 
 
@@ -220,43 +238,6 @@ class Appointment extends Model
 
 
     $this->save();
-  }
-
-
-  public function isUserBooked( $user_id, $date_from, $date_to, $appointment_id )
-  {
-    $is_booked = false;
-    if ( $user_id )
-    {
-      $appointments = Appointment::idNotIn($appointment_id)->userId($user_id)->period($date_from, $date_to)->get();
-      // $appointments = Appointment::userId($user_id)->period($date_from, $date_to)->get();
-
-      if ( $appointments && $appointments->count() )
-      {
-        // Log::debug("appointment");
-        // Log::debug($appointments);
-        $is_booked = true;
-      }
-    }
-
-    return $is_booked;
-  }
-
-
-  public function isUserBookedOnDate( $user_id, $date, $appointment_id )
-  {
-    $is_booked = false;
-    if ( $user_id )
-    {
-      $appointments = Appointment::idNotIn($appointment_id)->userId($user_id)->whereDateFrom($date)->get();
-
-      if ( $appointments && $appointments->count() )
-      {
-        $is_booked = true;
-      }
-    }
-
-    return $is_booked;
   }
 
 
