@@ -18,7 +18,8 @@
         a,
         .nav-link
         {
-            // color: white;
+            color: white;
+            font-weight: 500;
             display: block;
 
             @media(min-width: 1024px) {
@@ -68,6 +69,8 @@
 
     .navbar-toggler
     {
+        color: white;
+        font-weight: 500;
         border: 2px solid white;
     }
 }
