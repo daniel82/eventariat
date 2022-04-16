@@ -459,6 +459,11 @@ function startCalendarApp()
           this.setRepeatUntil();
           this.ajaxGetRecurringFutureDates();
         }
+        else if ( this.recurring === "daily" )
+        {
+          this.setRepeatUntil();
+          this.ajaxGetRecurringFutureDates();
+        }
         else
         {
           this.future_events = null;
@@ -467,8 +472,10 @@ function startCalendarApp()
 
       ajaxGetRecurringFutureDates : function( )
       {
+        const isWeekly = ( this.recurring && this.apt_date_from && this.apt_repeat_until );
+        const isDaily = ( this.recurring && this.apt_date_from );
 
-        if ( this.recurring && this.apt_date_from && this.apt_repeat_until )
+        if ( isWeekly || isDaily )
         {
           let request_data =
           {
@@ -602,6 +609,7 @@ function startCalendarApp()
         this.apt_repeat_until= null;
         this.recurring       = 0;
         this.future_events   = null;
+        this.recurring_dates = [];
       },
 
       resetMessage : function()
@@ -769,10 +777,12 @@ function startCalendarApp()
           this.time_to         = this.items[date].appointments[key].time_to;
 
           this.apt_repeat_until= this.items[date].appointments[key].repeat_until;
+          this.recurring_dates = this.items[date].appointments[key].recurring_dates;
           this.recurring       = this.items[date].appointments[key].recurring;
           this.note            = this.items[date].appointments[key].note;
 
           this.loadTooltip(appointment);
+          this.previewRecurringFutureDates();
         }
 
         this.toggleLayer();
@@ -799,6 +809,7 @@ function startCalendarApp()
           repeat_until: this.apt_repeat_until,
           note        : this.note,
           recurring   : this.recurring,
+          recurring_dates : this.recurring_dates,
           action      : action
         };
 
@@ -936,6 +947,12 @@ function startCalendarApp()
       // {
       //   return 'week';
       // },
+      //
+
+      isRecurring : function(appointment)
+      {
+        return (appointment.recurring==='weekly' || appointment.recurring==='daily');
+      },
 
       isNewLocation : function( location_id, date )
       {
