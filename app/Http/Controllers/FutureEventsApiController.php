@@ -10,6 +10,18 @@ class FutureEventsApiController extends Controller
 {
   public function index( Request $request )
   {
+
+    $type = $request->get("type");
+
+    if ($type === 'weekly') {
+      return $this->weekly($request);
+    } elseif ($type === 'daily') {
+      return $this->daily($request);
+    }
+  }
+
+  public function weekly( Request $request )
+  {
     $from = $request->get("from");
     $to = $request->get("to");
 
@@ -39,4 +51,36 @@ class FutureEventsApiController extends Controller
 
     return response()->json( $data );
   }
-}
+
+
+  public function daily( Request $request )
+  {
+    $from = $request->get("from");
+
+    $data = null;
+
+    if ($from) {
+      $from_date = Carbon::parse($from);
+
+      $weekStartDate = $from_date->startOfWeek();
+      $weekEndDate = $from_date->endOfWeek();
+
+      $i = 0;
+      for ($date=$from_date->startOfWeek(); $date->lte($weekEndDate); $date->addDay() )
+      {
+        $i++;
+
+        $data[$date->format('Y-m-d')] = sprintf("%s %s", $date->locale('de')->shortDayName, $date->format('d.m'));
+
+        if ($i > 6) {
+          break;
+        }
+      }
+
+    }
+
+    return response()->json( $data );
+  }
+
+
+} // end of class
