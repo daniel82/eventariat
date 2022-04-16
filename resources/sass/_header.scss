@@ -11,20 +11,24 @@
 {
     .nav-item
     {
-        border-right:1px solid #9F9C99;
+        @media(min-width: 1024px) {
+            border-right:1px solid #9F9C99;
+        }
 
         a,
         .nav-link
         {
-            color: white;
-            padding: 0.5rem 1.5rem;
+            // color: white;
             display: block;
+
+            @media(min-width: 1024px) {
+                padding: 0.5rem 1rem;
+            }
 
             &:hover,
             &:focus
             {
-                // color: $color_green;
-                // color: #FF6F61;
+                color: #FF6F61;
                 text-decoration: underline;
             }
 
@@ -64,7 +68,7 @@
 
     .navbar-toggler
     {
-        background: white;
+        border: 2px solid white;
     }
 }
 
@@ -78,13 +82,13 @@
     @media(max-width: $screen-md)
     {
         display: block;
-        border-top:1px solid rgba(255,255,255,0.5);
+        // border-top:1px solid rgba(255,255,255,0.5);
     }
 }
 
 .ev-header__title
 {
-    text-align: center;
+    // text-align: center;
     color: white;
     font-size: 1.6rem;
     padding: 1rem 1rem 0.2rem 1rem;

@@ -19,12 +19,12 @@
 
 body
 {
-  padding-top: 130px;
+  padding-top: 60px;
 
-  @media(max-width: $screen-md)
-  {
-    padding-top: 180px;
-  }
+  // @media(max-width: $screen-md)
+  // {
+  //   padding-top: 180px;
+  // }
 }
 
 .ev-color-square
