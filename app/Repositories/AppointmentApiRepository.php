@@ -39,7 +39,7 @@ class AppointmentApiRepository
       }
       else
       {
-        $message .=  sprintf(" Noch keine E-Mail hinterlegt.");
+        $message .=  sprintf("Noch keine E-Mail hinterlegt.");
       }
 
       return ["status"=> "ok", "message"=>$message, "id"=> $appointment->id ];
