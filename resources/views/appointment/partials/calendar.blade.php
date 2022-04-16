@@ -14,7 +14,7 @@
       <div class="appointment-col__items ">
 
         <div v-if="col.appointments.length">
-          <div v-for="(appointment, key) in col.appointments" class="ev-appointment " :class="appointment.type_class" >
+          <div v-for="(appointment, key) in col.appointments" class="ev-appointment " :class="appointment.type_class">
 
             <span v-if="isNewLocation(appointment.location_id, date)" class="mt-2 font-weight-bold" :class="locationClass(appointment.location_id)">@{{ appointment.tooltip_location }}</span>
 
@@ -56,6 +56,9 @@
 
             <button v-else-if="is_admin" :id="buildAppointmentId(appointment)" @click="editAppointment(date,key)" :class="locationClass(appointment.location_id)" @mouseover="showTooltip(appointment)" @mouseout="hideTooltip()">
               <span class="mr-2 d-inline-block ev-appointment__duration">@{{ getItemDuration(appointment) }}</span>@{{ appointment.title }}
+              <i class="fa fa-star" aria-hidden="true" v-if="isRecurring(appointment)"></i>
+              <i class="fa fa-star-half-o" aria-hidden="true" v-if="appointment.parent_id"></i>
+
               <i class="fa fa-info-circle ev-appointment__note-info" aria-hidden="true"  v-if="appointment.note"></i>
             </button>
 

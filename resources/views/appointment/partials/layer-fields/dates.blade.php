@@ -21,7 +21,6 @@
       }}
     </div>
   </div>
-
 </div>
 
 <div class="form-group row">
@@ -51,11 +50,10 @@
   </div>
 </div>
 
-
 <div class="form-group row" v-if="type==5||type==4">
   {{ Form::label("recurring", "Wiederholung", ["class"=> "d-block col-xs-4"]) }}
   <div class="col-xs-8">
-    <select name="type" id="type" class="form-control d-block" v-model="recurring" @change="previewRecurringFutureDates" >
+    <select name="type" id="type" class="form-control d-block" v-model="recurring" @change="previewRecurringFutureDates">
       @foreach( config("appointment.recurring") as $item )
         <option value="{{ $item["id"] }}">{{ $item["text"] }}</option>
       @endforeach
@@ -63,8 +61,7 @@
   </div>
 </div>
 
-
-<div v-if="recurring!=0 && (type==5 || type==4)" class="form-group row" >
+<div v-if="recurring=='weekly' && (type==5 || type==4)" class="form-group row" >
   <span class="col-xs-4">Letzter Termin</span>
   <div class="col-xs-8">
     <div class="d-flex">
@@ -81,18 +78,23 @@
   </div>
 </div>
 
-
-
-
-<div v-if="future_events" class="form-group row">
+<div v-if="future_events && recurring==='weekly'" class="form-group row">
   <span class="col-xs-4">Termine:</span>
   <div class="col-xs-8">
-    <div v-for="(event, index) in future_events" class="d-block w-100 ">
+    <div v-for="(event, index) in future_events" class="d-block w-100">
       <span class="d-inline-block w-50">@{{ event }}</span>
       <span class="d-inline-block">@{{ time_from }}-@{{ time_to }} Uhr</span>
-
     </div>
   </div>
 </div>
 
-
+<div v-if="future_events && recurring==='daily'" class="form-group row">
+  <span class="col-xs-4">Termine:</span>
+  <div class="col-xs-8 d-flex">
+    <div v-for="(event, date) in future_events" class="d-inline-block">
+      <label class="text-center" :class="(date===apt_date_from) ? 'font-weight-bold color-red' : '' ">
+        <input type="checkbox" value="date" class="form-control" name="recurring_dates[]" :value="date" v-model="recurring_dates">@{{ event }}
+      </label>
+    </div>
+  </div>
+</div>
