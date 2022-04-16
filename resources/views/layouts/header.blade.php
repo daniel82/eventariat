@@ -3,7 +3,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark ev-header">
       <a class="navbar-brand" href="#">Dienstplan</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span> Menü</button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars" aria-hidden="true"></i> Menü</button>
 
       @if ( isset($head["user"]) && is_object($head["user"]) )
         <div class="collapse navbar-collapse" id="navbarColor01">
