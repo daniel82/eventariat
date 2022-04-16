@@ -84,6 +84,7 @@ class AppointmentRepository
       "description"     => "",
       "recurring"       => "0",
       "future_events"   => null,
+      "recurring_dates" => [],
       "apt_date_from"   => $data["today"],
       "apt_date_to"     => $data["today"],
       "apt_repeat_until"=> null,

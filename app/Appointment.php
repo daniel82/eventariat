@@ -35,24 +35,27 @@ class Appointment extends Model
   // common update method
   public function saveEntry( $request )
   {
-    // Log::debug("Appointment@saveEntry");
+    Log::debug("Appointment@saveEntry");
     $user = \Auth::user();
-    // Log::debug($request->all());
+    Log::debug($request->all());
 
     $time_from = ( $tf = $request->get("time_from") ) ? $tf : config("appointment.day_start");
     $time_to   = ( $tt = $request->get("time_to") ) ? $tt : config("appointment.day_end");
+
+    $date_from = $request->get("date_from");
 
     $this->location_id    = $request->get("location_id");
     $this->user_id        = $request->get("user_id");
     $this->type           = $request->get("type");
     $this->description    = $request->get("description");
-    $this->date_from      = $request->get("date_from")." ".$time_from;
+    $this->date_from      = $date_from." ".$time_from;
     $this->date_to        = $request->get("date_to")." ".$time_to;
     $this->note           = $request->get("note");
     $this->recurring      = $request->get("recurring", null);
     $this->edited_by      = $user->id;
     $this->created_by     = ($this->id) ? $this->created_by : $user->id;
     $this->repeat_until   = $request->get("repeat_until", null);
+    $this->recurring_dates= $request->get("recurring_dates", []);
 
 
     // set location id null if appointment not "arbeit"
@@ -68,10 +71,7 @@ class Appointment extends Model
     // excepction for recurring events
     // check if is recurring && if user is booked
     $future_events = null;
-    // Log::debug($this->recurring);
-    // Log::debug($this->repeat_until);
-    if ( $this->recurring && $this->repeat_until)
-    {
+    if ( $this->recurring==='weekly' && $this->repeat_until) {
       $future_events = $this->getRecurringFutureEvents($time_from, $time_to);
       if ( $future_events )
       {
@@ -84,12 +84,21 @@ class Appointment extends Model
           }
         }
       }
+    } else if ($this->recurring==='daily' && !empty($this->recurring_dates)) {
+      // prepare recurrig dates as future events for saving
+      $future_events = $this->getRecurringDates($this->recurring_dates, $time_from, $time_to, $date_from);
+      foreach ($this->recurring_dates as $child_date)
+      {
+        $children_ids = Appointment::whereParentId($this->id)->pluck("id");
+        if ( $this->isUserBookedOnDate($this->user_id, $child_date, $children_ids) )
+        {
+          return false;
+        }
+      }
     }
-
 
     if ( !$this->isUserBooked($this->user_id, $this->date_from, $this->date_to, $this->id) )
     {
-      // Log::debug($this);
       $this->save();
 
       $this->saveChildren( $future_events );
@@ -145,8 +154,6 @@ class Appointment extends Model
         $child->save();
       }
     }
-
-
   }
 
 
@@ -176,6 +183,28 @@ class Appointment extends Model
     return $dates;
   }
 
+  public function getRecurringDates($recurring_dates, $time_from, $time_to, $parent_date)
+  {
+    // Log::debug("prepare recurring_dates");
+    // Log::debug($parent_date);
+    // Log::debug($time_from);
+    // Log::debug($time_to);
+    $dates = [];
+
+    foreach ($recurring_dates as $date) {
+      Log::debug($date);
+      if ($date != $parent_date) {
+        $dates[] =
+          [
+            "from" => $date." ".$time_from,
+            "to" => $date." ".$time_to,
+          ];
+      }
+    }
+
+    return $dates;
+  }
+
 
   public function assumeShiftRequest( ShiftRequest $shiftRequest )
   {
@@ -196,11 +225,6 @@ class Appointment extends Model
 
   public function isUserBooked( $user_id, $date_from, $date_to, $appointment_id )
   {
-    // Log::info("is user booked?");
-    // Log::info($user_id);
-    // Log::info($date_from);
-    // Log::info($date_to);
-    // Log::info($appointment_id);
     $is_booked = false;
     if ( $user_id )
     {
@@ -218,6 +242,22 @@ class Appointment extends Model
     return $is_booked;
   }
 
+
+  public function isUserBookedOnDate( $user_id, $date, $appointment_id )
+  {
+    $is_booked = false;
+    if ( $user_id )
+    {
+      $appointments = Appointment::idNotIn($appointment_id)->userId($user_id)->whereDateFrom($date)->get();
+
+      if ( $appointments && $appointments->count() )
+      {
+        $is_booked = true;
+      }
+    }
+
+    return $is_booked;
+  }
 
 
   // scopes
@@ -400,4 +440,23 @@ class Appointment extends Model
   }
 
 
-}
+  public function getRecurringDatesAttribute($value)
+  {
+    if (is_string($value) && trim($value)) {
+      return json_decode($value);
+    } else {
+      return null;
+    }
+  }
+
+  public function setRecurringDatesAttribute($value)
+  {
+    if (is_array($value) && !empty($value)) {
+      $this->attributes['recurring_dates'] = json_encode($value);
+    } else {
+      return null;
+    }
+  }
+
+
+} // end of class

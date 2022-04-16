@@ -22,6 +22,7 @@ return [
     [
         [ "id" => 0, "text"=>"nein" ],
         [ "id" => "weekly", "text"=>"wöchentlich" ],
+        [ "id" => "daily", "text"=>"täglich" ],
     ],
 
     'weekend_map' =>
@@ -37,4 +38,3 @@ return [
     ]
 
 ];
-
