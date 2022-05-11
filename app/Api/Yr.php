@@ -3,6 +3,8 @@
 namespace App\Api;
 
 use App\WeatherForecast;
+use Illuminate\Support\Facades\Http;
+
 
 class Yr
 {
@@ -13,7 +15,20 @@ class Yr
     $this->json = null;
     try
     {
-      $xml = file_get_contents("https://www.yr.no/place/Germany/Sachsen/Pirna/forecast.xml");
+      // $xml = file_get_contents("https://api.met.no/weatherapi/locationforecast/2.0/classic?altitude=0&lat=50.962388952197706&lon=13.941356461376616");
+
+      $ep = "https://api.met.no/weatherapi/locationforecast/2.0/classic?altitude=0&lat=50.962388952197706&lon=13.941356461376616";
+
+      $client = new \GuzzleHttp\Client();
+      $response = $client->request('GET', $ep, [
+          'headers' => [
+            'User-Agent' => 'eventarit'
+          ]
+       ]);
+
+      $xml = $response->getBody();
+
+
       $this->json = $this->namespacedXMLToArray($xml);
     }
     catch(Exception $e)
@@ -27,20 +42,25 @@ class Yr
   public function getForecast( $from_date )
   {
 
-    if ( $this->json )
+    if ( isset($this->json['product']['time']) )
     {
-      $times = $this->json["forecast"]["tabular"]["time"];
+
+      $times = $this->json['product']['time'];
 
       foreach ( $times as $key => $time)
       {
-        if ( isset($time["@attributes"]["period"]) && $time["@attributes"]["period"] == 2 )
+        if ( isset($time['location']['symbol']) && isset($time['location']['maxTemperature']) )
         {
+          $temperature = $time['location']['maxTemperature']['@attributes']['value'];
+          if ( !empty($time['location']['minTemperature']['@attributes']['value'])) {
+            $temperature = ($temperature + $time['location']['minTemperature']['@attributes']['value']) / 2;
+          }
 
           $date = date("Y-m-d",  strtotime($time["@attributes"]["from"]) );
           $forecast = WeatherForecast::firstOrNew( ["date"=>$date] );
           $forecast->date        = $date;
-          $forecast->icon        = str_replace(" ", "_", strtolower( $time["symbol"]["@attributes"]["name"] ) );
-          $forecast->temperature = $time["temperature"]["@attributes"]["value"];
+          $forecast->icon        = str_replace(" ", "_", strtolower( $time['location']['symbol']["@attributes"]["code"] ) );
+          $forecast->temperature = (int)$temperature;
           $forecast->save();
         }
       }
