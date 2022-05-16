@@ -4,6 +4,7 @@ namespace App\Api;
 
 use App\WeatherForecast;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 
 class Yr
@@ -51,17 +52,24 @@ class Yr
       {
         if ( isset($time['location']['symbol']) && isset($time['location']['maxTemperature']) )
         {
+
           $temperature = $time['location']['maxTemperature']['@attributes']['value'];
-          if ( !empty($time['location']['minTemperature']['@attributes']['value'])) {
-            $temperature = ($temperature + $time['location']['minTemperature']['@attributes']['value']) / 2;
+          // if ( !empty($time['location']['minTemperature']['@attributes']['value'])) {
+          //   $temperature = ($temperature + $time['location']['minTemperature']['@attributes']['value']) / 2;
+          // }
+
+          $hours = date("h:i",  strtotime($time["@attributes"]["from"]) );
+
+          if ($hours === '12:00') {
+            $date = date("Y-m-d",  strtotime($time["@attributes"]["from"]) );
+            // echo $date."\n";
+            $forecast = WeatherForecast::firstOrNew( ["date"=>$date] );
+            $forecast->date        = $date;
+            $forecast->icon        = str_replace(" ", "_", strtolower( $time['location']['symbol']["@attributes"]["code"] ) );
+            $forecast->temperature = (int)$temperature;
+            $forecast->save();
           }
 
-          $date = date("Y-m-d",  strtotime($time["@attributes"]["from"]) );
-          $forecast = WeatherForecast::firstOrNew( ["date"=>$date] );
-          $forecast->date        = $date;
-          $forecast->icon        = str_replace(" ", "_", strtolower( $time['location']['symbol']["@attributes"]["code"] ) );
-          $forecast->temperature = (int)$temperature;
-          $forecast->save();
         }
       }
     }
